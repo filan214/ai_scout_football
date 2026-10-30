@@ -1,0 +1,101 @@
+{
+  "key": "5a8ff5269de9d898af31813c467453d3376312ecf5eba3045a0b2654d74e661b",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:46+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 445,
+    "completion": 271,
+    "reasoning": 0,
+    "total": 716
+  },
+  "fact_sheet": {
+    "player.name": "Rémy Lascary",
+    "player.age": 23,
+    "player.position": "ST",
+    "player.team": "Brest",
+    "player.league": "Ligue 1",
+    "player.market_value_m": 4.0,
+    "player.minutes": 1195,
+    "player.matches": 27,
+    "player.minutes_share_pct": 39,
+    "player.small_sample": true,
+    "player.contract_months_left": 23.8,
+    "stats.xg.p90": 0.42,
+    "stats.xg.pct": 69,
+    "stats.shots.p90": 2.6,
+    "stats.shots.pct": 68,
+    "stats.xa.p90": 0.14,
+    "stats.xa.pct": 91,
+    "stats.key_passes.p90": 0.98,
+    "stats.key_passes.pct": 67,
+    "stats.successful_dribbles.p90": 1.5,
+    "stats.successful_dribbles.pct": 95,
+    "stats.xgot.p90": 0.44,
+    "stats.xgot.pct": 73,
+    "fit.score": 87.4,
+    "fit.rank": 3,
+    "fit.performance": 80.2,
+    "fit.age_score": 100,
+    "fit.value_score": 96.7,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Rémy Lascary is a 23-year-old striker for Brest with strong expected goals and dribbling numbers in limited minutes. His small sample of 1195 minutes across 27 matches means the stats need caution.",
+    "strengths": [
+      {
+        "text": "Averages 0.42 expected goals per 90, in the 69th percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      },
+      {
+        "text": "Completes 1.5 successful dribbles per 90, in the 95th percentile.",
+        "fact_keys": [
+          "stats.successful_dribbles.p90",
+          "stats.successful_dribbles.pct"
+        ]
+      },
+      {
+        "text": "Records 0.14 expected assists per 90, in the 91st percentile.",
+        "fact_keys": [
+          "stats.xa.p90",
+          "stats.xa.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample: only 1195 minutes over 27 matches, a 39% minutes share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Market value is €4.0m with 23.8 contract months left.",
+        "fact_keys": [
+          "player.market_value_m",
+          "player.contract_months_left"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 14,
+    "verified": 14,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

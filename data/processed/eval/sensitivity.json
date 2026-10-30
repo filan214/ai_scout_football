@@ -1,0 +1,341 @@
+{
+  "perturbation": 0.1,
+  "target_groups": [
+    [
+      "Arsenal FC",
+      "CB"
+    ],
+    [
+      "Arsenal FC",
+      "DM"
+    ]
+  ],
+  "league_groups": [
+    [
+      "Aston Villa",
+      "CB"
+    ],
+    [
+      "Aston Villa",
+      "ST"
+    ],
+    [
+      "Brentford FC",
+      "AM"
+    ],
+    [
+      "Brentford FC",
+      "CM"
+    ],
+    [
+      "Brentford FC",
+      "DM"
+    ],
+    [
+      "Brighton & Hove Albion",
+      "AM"
+    ],
+    [
+      "Brighton & Hove Albion",
+      "CM"
+    ],
+    [
+      "Brighton & Hove Albion",
+      "DM"
+    ],
+    [
+      "Burnley FC",
+      "AM"
+    ],
+    [
+      "Burnley FC",
+      "CM"
+    ],
+    [
+      "Burnley FC",
+      "DM"
+    ],
+    [
+      "Burnley FC",
+      "FB"
+    ],
+    [
+      "Burnley FC",
+      "ST"
+    ],
+    [
+      "Burnley FC",
+      "W"
+    ],
+    [
+      "Crystal Palace",
+      "AM"
+    ],
+    [
+      "Crystal Palace",
+      "CM"
+    ],
+    [
+      "Crystal Palace",
+      "DM"
+    ],
+    [
+      "Crystal Palace",
+      "ST"
+    ],
+    [
+      "Crystal Palace",
+      "W"
+    ],
+    [
+      "Everton FC",
+      "CB"
+    ],
+    [
+      "Everton FC",
+      "CM"
+    ],
+    [
+      "Everton FC",
+      "FB"
+    ],
+    [
+      "Everton FC",
+      "ST"
+    ],
+    [
+      "Fulham FC",
+      "AM"
+    ],
+    [
+      "Fulham FC",
+      "CM"
+    ],
+    [
+      "Fulham FC",
+      "ST"
+    ],
+    [
+      "Fulham FC",
+      "W"
+    ],
+    [
+      "Leeds United",
+      "AM"
+    ],
+    [
+      "Manchester City",
+      "CM"
+    ],
+    [
+      "Manchester United",
+      "AM"
+    ],
+    [
+      "Nottingham Forest",
+      "ST"
+    ],
+    [
+      "Sunderland AFC",
+      "CM"
+    ],
+    [
+      "Sunderland AFC",
+      "DM"
+    ],
+    [
+      "Sunderland AFC",
+      "FB"
+    ],
+    [
+      "Sunderland AFC",
+      "ST"
+    ],
+    [
+      "Tottenham Hotspur",
+      "CM"
+    ],
+    [
+      "Tottenham Hotspur",
+      "ST"
+    ],
+    [
+      "Tottenham Hotspur",
+      "W"
+    ],
+    [
+      "West Ham United",
+      "DM"
+    ],
+    [
+      "Wolverhampton Wanderers",
+      "CB"
+    ],
+    [
+      "Wolverhampton Wanderers",
+      "ST"
+    ]
+  ],
+  "variants": {
+    "fit_weights.performance +0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 1.0,
+        "min": 1.0,
+        "groups_dropped": 0,
+        "players_mean": 1.0
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.9386548410938654,
+        "min": 0.6666666666666666,
+        "groups_dropped": 0,
+        "players_mean": 0.9386548410938654
+      }
+    },
+    "fit_weights.performance -0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 1.0,
+        "min": 1.0,
+        "groups_dropped": 0,
+        "players_mean": 1.0
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.8920916481892092,
+        "min": 0.6666666666666666,
+        "groups_dropped": 0,
+        "players_mean": 0.8920916481892092
+      }
+    },
+    "fit_weights.age +0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 1.0,
+        "min": 1.0,
+        "groups_dropped": 0,
+        "players_mean": 1.0
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.920177383592018,
+        "min": 0.8181818181818182,
+        "groups_dropped": 0,
+        "players_mean": 0.920177383592018
+      }
+    },
+    "fit_weights.age -0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 1.0,
+        "min": 1.0,
+        "groups_dropped": 0,
+        "players_mean": 1.0
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.9133549377451818,
+        "min": 0.5384615384615384,
+        "groups_dropped": 0,
+        "players_mean": 0.9133549377451818
+      }
+    },
+    "fit_weights.value +0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 0.9090909090909092,
+        "min": 0.8181818181818182,
+        "groups_dropped": 0,
+        "players_mean": 0.9090909090909092
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.8228438228438228,
+        "min": 0.5384615384615384,
+        "groups_dropped": 0,
+        "players_mean": 0.8228438228438228
+      }
+    },
+    "fit_weights.value -0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 0.9090909090909092,
+        "min": 0.8181818181818182,
+        "groups_dropped": 0,
+        "players_mean": 0.9090909090909092
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.8298368298368298,
+        "min": 0.5384615384615384,
+        "groups_dropped": 0,
+        "players_mean": 0.8298368298368298
+      }
+    },
+    "league_strength_floor +0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 0.4090909090909091,
+        "min": 0.0,
+        "groups_dropped": 1,
+        "players_mean": 0.8181818181818182
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.7497981693103645,
+        "min": 0.42857142857142855,
+        "groups_dropped": 0,
+        "players_mean": 0.7497981693103645
+      }
+    },
+    "stat_weight_blend +0.1 (extra)": {
+      "target_club": {
+        "groups": 2,
+        "mean": 0.75,
+        "min": 0.5,
+        "groups_dropped": 0,
+        "players_mean": 0.75
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.9370060833475469,
+        "min": 0.5384615384615384,
+        "groups_dropped": 0,
+        "players_mean": 0.9370060833475469
+      }
+    },
+    "league_strength_floor -0.1": {
+      "target_club": {
+        "groups": 2,
+        "mean": 0.4090909090909091,
+        "min": 0.0,
+        "groups_dropped": 1,
+        "players_mean": 0.8181818181818182
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.6564707650073504,
+        "min": 0.0,
+        "groups_dropped": 7,
+        "players_mean": 0.7916265107441579
+      }
+    },
+    "stat_weight_blend -0.1 (extra)": {
+      "target_club": {
+        "groups": 2,
+        "mean": 1.0,
+        "min": 1.0,
+        "groups_dropped": 0,
+        "players_mean": 1.0
+      },
+      "league_high_medium": {
+        "groups": 41,
+        "mean": 0.8977140745433427,
+        "min": 0.6666666666666666,
+        "groups_dropped": 0,
+        "players_mean": 0.8977140745433427
+      }
+    }
+  }
+}

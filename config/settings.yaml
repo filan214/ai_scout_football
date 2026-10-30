@@ -1,0 +1,98 @@
+# Every tunable number lives here (IMPLEMENTATION_GUIDE §3). Validated by scout.config.Settings.
+target_club: "Arsenal FC"         # CHANGE to your club (Transfermarkt name, e.g. "Chelsea FC", "Newcastle United")
+target_league: "premier_league"   # leagues.yaml key; needs.parquet covers every club of this league
+as_of_date: "2026-07-06"         # transfermarkt-datasets snapshot date (§15)
+analysis_season: "2025-26"
+backtest: {as_of_date: "2025-07-01", season_n: "2024-25", season_n1: "2025-26"}
+tiers_enabled: [1, 2]             # tier 3 = v1.1 (§14)
+
+ambition: "top4"
+# §6.5 quality benchmark per stat = squad level of the k-th best club of target_league (§15)
+ambition_club_rank: {survive: 17, midtable: 10, top4: 4, title: 1}
+
+squad:
+  reliable_minutes: 900           # depth counts min(1, minutes / reliable_minutes) per player (§15)
+  depth_targets: {ST: 2, W: 3, AM: 2, CM: 3, DM: 2, FB: 4, CB: 4}
+  # Formation-dependent groups: target scaled by the club's use of the position (share of outfield
+  # minutes vs the typical depth_targets share); below min_usage the club does not use it -> need 0 (§15)
+  optional_groups: [AM, W]
+  min_usage: 0.25
+# Candidate A: quality is the primary shortfall; these secondary weights are unchanged (§6.5).
+squad_rating_min_minutes: 600   # placement of non-pool squad profiles onto the unchanged pool
+min_rated_share: 0.5            # full-role rated minutes / group minutes
+upgrade_margin: 5.0            # percentile points above the best rated 900-minute regular
+need_weights: {depth: 0.20, age: 0.15, contract: 0.15}
+age_risk_threshold: 30
+contract_risk_months: 12
+priority_bands: {high: 60, medium: 35}
+stat_weight_blend: 0.7
+
+pool:
+  min_minutes_share: 0.30         # of league's available minutes (matches × 90)
+  min_matches_share: 0.5          # of league matches; FotMob per-90 lists need half the matches (§15)
+  age_min: 18
+  age_max: 27
+  ideal_age: [22, 26]
+  budget_m: 60
+fit_weights: {performance: 0.6, age: 0.2, value: 0.2}
+shortlist_size: 10
+min_ranked_groups: 2              # §6.6: always rank the top-N need groups, even when Low (§15)
+# §6.6 verdict per shortlisted player, computed (not written by the LLM, §15): "priority target" = High need
+# and fit rank <= priority_target; "strong option" = fit rank <= strong_option; else "monitor"
+verdict_ranks: {priority_target: 3, strong_option: 5}
+league_strength_floor: 0.6
+
+# Candidates; P1 coverage check confirms the final list. FotMob has no aerial-duel %, duel % or
+# cross stats, so those spec stats are substituted (IMPLEMENTATION_GUIDE §15).
+position_stats:
+  ST: [npxg, shots, xa, key_passes, successful_dribbles, xgot]
+  W:  [xa, key_passes, successful_dribbles, npxg, shots, big_chances_created]
+  AM: [xa, key_passes, npxg, successful_dribbles, accurate_passes_pct, shots]
+  CM: [accurate_passes_pct, accurate_long_balls, key_passes, tackles, interceptions, xa]
+  DM: [tackles, interceptions, ball_recoveries, accurate_passes_pct, accurate_passes, accurate_long_balls]
+  FB: [tackles, interceptions, xa, key_passes, ball_recoveries, successful_dribbles]
+  CB: [blocks, clearances, interceptions, tackles, accurate_passes_pct, accurate_long_balls]
+rate_stats: [accurate_passes_pct]   # % stats: not per-90, not league-adjusted
+stat_fallbacks: {npxg: xg}
+possession_adjustment:            # §6.4: defensive volume stats scaled to `reference` opponent possession (§15)
+  reference: 0.5
+  stats: [tackles, interceptions, clearances, blocks, ball_recoveries, defensive_actions]
+coverage_threshold: 0.95          # §6.2: usable if non-null for this share of qualifying players in every league
+min_stats_per_group: 4            # §6.2: warn below this many usable stats
+
+llm:                              # ZenMux, OpenAI-compatible gateway (§15)
+  base_url: "https://zenmux.ai/api/v1"
+  api_key_env: "ZENMUX_API_KEY"   # read from the environment or .env
+  primary_model: "deepseek/deepseek-v4.1-flash"  # slugs checked against GET /models on 2026-10-23
+  fallback_model: "deepseek/deepseek-v4-flash"   # ZenMux takes one fallback (provider.fallback)
+  temperature: 0.2
+  timeout_seconds: 180
+  reasoning: false                # copying facts needs no reasoning; v1 spent 71% of its tokens on it (§15)
+  max_completion_tokens: 800
+
+reports:
+  small_sample_minutes_share: 0.5 # below this share of league minutes the fact sheet flags a small sample
+
+# §6.1: name_threshold is a rapidfuzz score; clubs pair by shared player names (min_club_overlap, §15)
+evaluation:                       # §7.2-§7.4
+  bootstrap_resamples: 1000
+  ci: 0.95
+  seed: 7
+  perturbation: 0.1               # ± step for fit_weights, league_strength_floor (and stat_weight_blend, extra)
+  clubelo_timeout_seconds: 10
+  calibration_clubs: 20
+  calibration_max_ppg_rho: -0.6
+  calibration_title_min_share: 0.3
+  calibration_survive_max_share: 0.1
+  calibration_min_evidence_share: 0.95
+  calibration_top_clubs: 2
+  calibration_top_max_high: 1
+
+idmap: {name_threshold: 88, min_club_overlap: 3}
+
+# Leagues missing from transfermarkt-datasets get FotMob player profiles; their SciSports market
+# values are scaled to the Transfermarkt scale with a ratio fitted on a sample of players in both (§15).
+value_calibration: {sample_per_league: 25, seed: 7, max_date_gap_days: 92}
+
+scraping_delay_seconds: 3
+scraping_max_retries: 3

@@ -1,0 +1,104 @@
+{
+  "key": "c67028a225d06a99ec3e24673035c364e17c86159dcf91fa6da005855bc921ac",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:20+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 443,
+    "completion": 380,
+    "reasoning": 0,
+    "total": 823
+  },
+  "fact_sheet": {
+    "player.name": "Enzo Barrenechea",
+    "player.age": 25,
+    "player.position": "DM",
+    "player.team": "Benfica",
+    "player.league": "Primeira Liga",
+    "player.market_value_m": 12.0,
+    "player.minutes": 1798,
+    "player.matches": 26,
+    "player.minutes_share_pct": 59,
+    "player.small_sample": false,
+    "stats.tackles.p90": 2.2,
+    "stats.tackles.pct": 67,
+    "stats.interceptions.p90": 1.65,
+    "stats.interceptions.pct": 88,
+    "stats.ball_recoveries.p90": 5.46,
+    "stats.ball_recoveries.pct": 72,
+    "stats.accurate_passes_pct.value": 90.3,
+    "stats.accurate_passes_pct.pct": 92,
+    "stats.accurate_passes.p90": 64.7,
+    "stats.accurate_passes.pct": 86,
+    "stats.accurate_long_balls.p90": 4.5,
+    "stats.accurate_long_balls.pct": 92,
+    "fit.score": 87.7,
+    "fit.rank": 3,
+    "fit.performance": 82.9,
+    "fit.age_score": 100,
+    "fit.value_score": 90.0,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Enzo Barrenechea is a 25-year-old defensive midfielder at Benfica with strong passing and interception numbers over 1798 minutes. His fit score of 87.7 ranks 3rd, with a €12.0m market value.",
+    "strengths": [
+      {
+        "text": "Accurate passes at 90.3%, in the 92nd percentile, and 64.7 accurate passes per 90 in the 86th percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct",
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct"
+        ]
+      },
+      {
+        "text": "Interceptions of 1.65 per 90 sit in the 88th percentile, with 5.46 ball recoveries per 90 in the 72nd.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct",
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "Accurate long balls of 4.5 per 90 are in the 92nd percentile, and tackles of 2.2 per 90 in the 67th.",
+        "fact_keys": [
+          "stats.accurate_long_balls.p90",
+          "stats.accurate_long_balls.pct",
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Plays 59% of minutes across 26 matches, so his role is not full-time.",
+        "fact_keys": [
+          "player.minutes_share_pct",
+          "player.matches"
+        ]
+      },
+      {
+        "text": "Tackles of 2.2 per 90 rank only in the 67th percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 21,
+    "verified": 21,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

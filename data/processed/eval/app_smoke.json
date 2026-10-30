@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-30",
+  "checks": [
+    [
+      "Home",
+      false,
+      0
+    ],
+    [
+      "pages/1_Squad_needs.py",
+      false,
+      0
+    ],
+    [
+      "pages/2_Targets.py",
+      false,
+      0
+    ],
+    [
+      "pages/3_Scouting_report.py",
+      false,
+      0
+    ],
+    [
+      "pages/4_Evaluation.py",
+      false,
+      0
+    ],
+    [
+      "Home",
+      true,
+      0
+    ],
+    [
+      "pages/1_Squad_needs.py",
+      true,
+      0
+    ],
+    [
+      "pages/2_Targets.py",
+      true,
+      0
+    ],
+    [
+      "pages/3_Scouting_report.py",
+      true,
+      0
+    ],
+    [
+      "pages/4_Evaluation.py",
+      true,
+      0
+    ]
+  ],
+  "exceptions": 0
+}

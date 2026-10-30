@@ -1,0 +1,99 @@
+{
+  "key": "63d45d72857f7a3db81d8d0d560703f438fbcf34a27b018c3a74fb6330db9fa9",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:51+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 445,
+    "completion": 250,
+    "reasoning": 0,
+    "total": 695
+  },
+  "fact_sheet": {
+    "player.name": "Nikola Krstović",
+    "player.age": 26,
+    "player.position": "ST",
+    "player.team": "Atalanta",
+    "player.league": "Serie A",
+    "player.market_value_m": 30.0,
+    "player.minutes": 1786,
+    "player.matches": 33,
+    "player.minutes_share_pct": 52,
+    "player.small_sample": false,
+    "player.contract_months_left": 47.8,
+    "stats.xg.p90": 0.71,
+    "stats.xg.pct": 98,
+    "stats.shots.p90": 5.0,
+    "stats.shots.pct": 100,
+    "stats.xa.p90": 0.11,
+    "stats.xa.pct": 82,
+    "stats.key_passes.p90": 1.06,
+    "stats.key_passes.pct": 74,
+    "stats.successful_dribbles.p90": 0.9,
+    "stats.successful_dribbles.pct": 78,
+    "stats.xgot.p90": 0.57,
+    "stats.xgot.pct": 89,
+    "fit.score": 86.0,
+    "fit.rank": 5,
+    "fit.performance": 85.0,
+    "fit.age_score": 100,
+    "fit.value_score": 75.0,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Nikola Krstović is a 26-year-old striker with strong shot volume and expected goals numbers in Serie A. He offers high-percentile attacking output but has a limited minutes share this season.",
+    "strengths": [
+      {
+        "text": "Elite shot volume at 5.0 shots per 90, in the 100th percentile.",
+        "fact_keys": [
+          "stats.shots.p90",
+          "stats.shots.pct"
+        ]
+      },
+      {
+        "text": "Expected goals of 0.71 per 90, in the 98th percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      },
+      {
+        "text": "Expected goals on target of 0.57 per 90, in the 89th percentile.",
+        "fact_keys": [
+          "stats.xgot.p90",
+          "stats.xgot.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Minutes share is 52 percent across 33 matches, limiting his sample.",
+        "fact_keys": [
+          "player.minutes_share_pct",
+          "player.matches"
+        ]
+      },
+      {
+        "text": "Key passes are 1.06 per 90, in the 74th percentile.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 11,
+    "verified": 11,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

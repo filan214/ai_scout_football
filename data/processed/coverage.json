@@ -1,0 +1,255 @@
+{
+  "season": "2025-26",
+  "position_stats": {
+    "ST": [
+      "xg",
+      "shots",
+      "xa",
+      "key_passes",
+      "successful_dribbles",
+      "xgot"
+    ],
+    "W": [
+      "xa",
+      "key_passes",
+      "successful_dribbles",
+      "xg",
+      "shots",
+      "big_chances_created"
+    ],
+    "AM": [
+      "xa",
+      "key_passes",
+      "xg",
+      "successful_dribbles",
+      "accurate_passes_pct",
+      "shots"
+    ],
+    "CM": [
+      "accurate_passes_pct",
+      "accurate_long_balls",
+      "key_passes",
+      "tackles",
+      "interceptions",
+      "xa"
+    ],
+    "DM": [
+      "tackles",
+      "interceptions",
+      "ball_recoveries",
+      "accurate_passes_pct",
+      "accurate_passes",
+      "accurate_long_balls"
+    ],
+    "FB": [
+      "tackles",
+      "interceptions",
+      "xa",
+      "key_passes",
+      "ball_recoveries",
+      "successful_dribbles"
+    ],
+    "CB": [
+      "blocks",
+      "clearances",
+      "interceptions",
+      "tackles",
+      "accurate_passes_pct",
+      "accurate_long_balls"
+    ]
+  },
+  "coverage": {
+    "accurate_long_balls": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "accurate_passes": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "accurate_passes_pct": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "ball_recoveries": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "big_chances_created": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "blocks": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "clearances": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "interceptions": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "key_passes": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "npxg": {
+      "belgian_pro_league": 0.0,
+      "bundesliga": 0.0,
+      "championship": 0.0,
+      "eredivisie": 0.0,
+      "la_liga": 0.0,
+      "ligue_1": 0.0,
+      "premier_league": 0.0,
+      "primeira_liga": 0.0,
+      "serie_a": 0.0,
+      "super_lig": 0.0
+    },
+    "shots": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "successful_dribbles": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "tackles": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "xa": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "xg": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    },
+    "xgot": {
+      "belgian_pro_league": 1.0,
+      "bundesliga": 1.0,
+      "championship": 1.0,
+      "eredivisie": 1.0,
+      "la_liga": 1.0,
+      "ligue_1": 1.0,
+      "premier_league": 1.0,
+      "primeira_liga": 1.0,
+      "serie_a": 1.0,
+      "super_lig": 1.0
+    }
+  }
+}

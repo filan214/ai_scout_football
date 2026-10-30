@@ -1,0 +1,101 @@
+{
+  "key": "771a1a5c2a212d45d279f61c6feb8e9a7f50560a1c56b3bfbe941c0a30cecda5",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:43+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 445,
+    "completion": 259,
+    "reasoning": 0,
+    "total": 704
+  },
+  "fact_sheet": {
+    "player.name": "Nicolas Jackson",
+    "player.age": 25,
+    "player.position": "ST",
+    "player.team": "Bayern München",
+    "player.league": "Bundesliga",
+    "player.market_value_m": 40.0,
+    "player.minutes": 1004,
+    "player.matches": 23,
+    "player.minutes_share_pct": 33,
+    "player.small_sample": true,
+    "player.contract_months_left": 83.8,
+    "stats.xg.p90": 0.65,
+    "stats.xg.pct": 96,
+    "stats.shots.p90": 3.4,
+    "stats.shots.pct": 92,
+    "stats.xa.p90": 0.14,
+    "stats.xa.pct": 91,
+    "stats.key_passes.p90": 1.61,
+    "stats.key_passes.pct": 95,
+    "stats.successful_dribbles.p90": 1.0,
+    "stats.successful_dribbles.pct": 83,
+    "stats.xgot.p90": 0.71,
+    "stats.xgot.pct": 97,
+    "fit.score": 87.5,
+    "fit.rank": 2,
+    "fit.performance": 90.2,
+    "fit.age_score": 100,
+    "fit.value_score": 66.7,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Nicolas Jackson is a 25-year-old striker with strong shot and expected-goal numbers in limited Bundesliga minutes. His small sample of 1004 minutes makes the output harder to trust.",
+    "strengths": [
+      {
+        "text": "Elite expected goals at 0.65 per 90, in the 96th percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      },
+      {
+        "text": "High shot volume at 3.4 per 90, 92nd percentile.",
+        "fact_keys": [
+          "stats.shots.p90",
+          "stats.shots.pct"
+        ]
+      },
+      {
+        "text": "Strong creativity with 1.61 key passes per 90, 95th percentile.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample: only 1004 minutes across 23 matches, a 33% minutes share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Value score of 66.7 is modest relative to a €40.0m market value.",
+        "fact_keys": [
+          "fit.value_score",
+          "player.market_value_m"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 13,
+    "verified": 13,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

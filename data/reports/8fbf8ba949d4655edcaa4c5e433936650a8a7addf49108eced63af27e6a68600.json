@@ -1,0 +1,98 @@
+{
+  "key": "8fbf8ba949d4655edcaa4c5e433936650a8a7addf49108eced63af27e6a68600",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:27+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 452,
+    "completion": 279,
+    "reasoning": 0,
+    "total": 731
+  },
+  "fact_sheet": {
+    "player.name": "Antonio Blanco",
+    "player.age": 25,
+    "player.position": "DM",
+    "player.team": "Deportivo Alavés",
+    "player.league": "La Liga",
+    "player.market_value_m": 10.0,
+    "player.minutes": 3116,
+    "player.matches": 36,
+    "player.minutes_share_pct": 91,
+    "player.small_sample": false,
+    "player.contract_months_left": 11.8,
+    "stats.tackles.p90": 2.72,
+    "stats.tackles.pct": 85,
+    "stats.interceptions.p90": 1.56,
+    "stats.interceptions.pct": 85,
+    "stats.ball_recoveries.p90": 5.95,
+    "stats.ball_recoveries.pct": 83,
+    "stats.accurate_passes_pct.value": 85.5,
+    "stats.accurate_passes_pct.pct": 57,
+    "stats.accurate_passes.p90": 45.3,
+    "stats.accurate_passes.pct": 77,
+    "stats.accurate_long_balls.p90": 3.1,
+    "stats.accurate_long_balls.pct": 86,
+    "fit.score": 86.0,
+    "fit.rank": 6,
+    "fit.performance": 79.5,
+    "fit.age_score": 100,
+    "fit.value_score": 91.7,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Antonio Blanco is a 25-year-old defensive midfielder who played 3116 minutes across 36 matches for Deportivo Alavés. He ranks highly for tackles, interceptions and long balls, with a market value of €10.0m and 11.8 months left on his contract.",
+    "strengths": [
+      {
+        "text": "Averages 2.72 tackles per 90, in the 85th percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "Averages 1.56 interceptions per 90, in the 85th percentile.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Completes 3.1 accurate long balls per 90, in the 86th percentile.",
+        "fact_keys": [
+          "stats.accurate_long_balls.p90",
+          "stats.accurate_long_balls.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Contract has 11.8 months left, which is short.",
+        "fact_keys": [
+          "player.contract_months_left"
+        ]
+      },
+      {
+        "text": "Accurate passes percentage is 85.5, only the 57th percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 14,
+    "verified": 14,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

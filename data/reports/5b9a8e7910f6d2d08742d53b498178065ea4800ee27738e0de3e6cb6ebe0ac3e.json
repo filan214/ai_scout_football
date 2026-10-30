@@ -1,0 +1,99 @@
+{
+  "key": "5b9a8e7910f6d2d08742d53b498178065ea4800ee27738e0de3e6cb6ebe0ac3e",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:32+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 449,
+    "completion": 288,
+    "reasoning": 0,
+    "total": 737
+  },
+  "fact_sheet": {
+    "player.name": "Pepelu",
+    "player.age": 27,
+    "player.position": "DM",
+    "player.team": "Valencia CF",
+    "player.league": "La Liga",
+    "player.market_value_m": 8.0,
+    "player.minutes": 2232,
+    "player.matches": 31,
+    "player.minutes_share_pct": 65,
+    "player.small_sample": false,
+    "player.contract_months_left": 23.8,
+    "stats.tackles.p90": 2.42,
+    "stats.tackles.pct": 74,
+    "stats.interceptions.p90": 0.85,
+    "stats.interceptions.pct": 25,
+    "stats.ball_recoveries.p90": 5.69,
+    "stats.ball_recoveries.pct": 80,
+    "stats.accurate_passes_pct.value": 86.2,
+    "stats.accurate_passes_pct.pct": 65,
+    "stats.accurate_passes.p90": 48.0,
+    "stats.accurate_passes.pct": 81,
+    "stats.accurate_long_balls.p90": 3.8,
+    "stats.accurate_long_balls.pct": 95,
+    "fit.score": 84.0,
+    "fit.rank": 8,
+    "fit.performance": 78.9,
+    "fit.age_score": 90,
+    "fit.value_score": 93.3,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Pepelu is a 27-year-old defensive midfielder for Valencia CF with 2232 minutes across 31 matches and a €8.0m market value. His passing volume and long-ball accuracy stand out, though his interception rate is low.",
+    "strengths": [
+      {
+        "text": "Accurate long balls of 3.8 per 90 rank in the 95th percentile.",
+        "fact_keys": [
+          "stats.accurate_long_balls.p90",
+          "stats.accurate_long_balls.pct"
+        ]
+      },
+      {
+        "text": "Accurate passes of 48.0 per 90 rank in the 81st percentile.",
+        "fact_keys": [
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct"
+        ]
+      },
+      {
+        "text": "Ball recoveries of 5.69 per 90 rank in the 80th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Interceptions of 0.85 per 90 rank in only the 25th percentile.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Accurate passes percentage of 86.2 ranks in the 65th percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 14,
+    "verified": 14,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

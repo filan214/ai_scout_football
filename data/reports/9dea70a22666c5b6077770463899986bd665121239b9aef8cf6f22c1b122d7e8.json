@@ -1,0 +1,101 @@
+{
+  "key": "9dea70a22666c5b6077770463899986bd665121239b9aef8cf6f22c1b122d7e8",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:10:01+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 446,
+    "completion": 273,
+    "reasoning": 0,
+    "total": 719
+  },
+  "fact_sheet": {
+    "player.name": "Lukas Nmecha",
+    "player.age": 27,
+    "player.position": "ST",
+    "player.team": "Leeds United",
+    "player.league": "Premier League",
+    "player.market_value_m": 10.0,
+    "player.minutes": 1073,
+    "player.matches": 31,
+    "player.minutes_share_pct": 31,
+    "player.small_sample": true,
+    "player.contract_months_left": 11.8,
+    "stats.xg.p90": 0.6,
+    "stats.xg.pct": 98,
+    "stats.shots.p90": 2.5,
+    "stats.shots.pct": 81,
+    "stats.xa.p90": 0.13,
+    "stats.xa.pct": 94,
+    "stats.key_passes.p90": 0.92,
+    "stats.key_passes.pct": 76,
+    "stats.successful_dribbles.p90": 0.6,
+    "stats.successful_dribbles.pct": 66,
+    "stats.xgot.p90": 0.69,
+    "stats.xgot.pct": 99,
+    "fit.score": 83.6,
+    "fit.rank": 9,
+    "fit.performance": 78.8,
+    "fit.age_score": 90,
+    "fit.value_score": 91.7,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Lukas Nmecha is a 27-year-old striker for Leeds United with strong expected-goals and expected-goals-on-target numbers per 90. His 1073 minutes are a small sample, so the figures should be read with caution.",
+    "strengths": [
+      {
+        "text": "Expected goals of 0.6 per 90 rank in the 98th percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      },
+      {
+        "text": "Expected goals on target of 0.69 per 90 rank in the 99th percentile.",
+        "fact_keys": [
+          "stats.xgot.p90",
+          "stats.xgot.pct"
+        ]
+      },
+      {
+        "text": "Expected assists of 0.13 per 90 rank in the 94th percentile.",
+        "fact_keys": [
+          "stats.xa.p90",
+          "stats.xa.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Only 1073 minutes across 31 matches, a 31% minutes share, so the sample is small.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Contract has 11.8 months left and market value is €10.0m.",
+        "fact_keys": [
+          "player.contract_months_left",
+          "player.market_value_m"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 13,
+    "verified": 13,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

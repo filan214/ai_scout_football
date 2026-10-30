@@ -1,0 +1,5 @@
+{
+  "status": "unavailable",
+  "model": "deepseek/deepseek-v4-flash",
+  "error": "Error code: 402 - {'error': {'code': '402', 'type': 'reject_no_credit', 'message': 'Access denied: this model is only available to accounts with a balance greater than 0. This is an anti-abuse measure, not a usage charge. (request_id: 3666a32dfc614fc9a975f21a1832d212)'}}"
+}

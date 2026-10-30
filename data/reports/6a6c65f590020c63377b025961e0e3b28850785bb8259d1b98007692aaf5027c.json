@@ -1,0 +1,103 @@
+{
+  "key": "6a6c65f590020c63377b025961e0e3b28850785bb8259d1b98007692aaf5027c",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T19:37:13+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 454,
+    "completion": 291,
+    "reasoning": 0,
+    "total": 745
+  },
+  "fact_sheet": {
+    "player.name": "Equi Fernández",
+    "player.age": 23,
+    "player.position": "DM",
+    "player.team": "Bayer 04 Leverkusen",
+    "player.league": "Bundesliga",
+    "player.market_value_m": 20.0,
+    "player.minutes": 987,
+    "player.matches": 20,
+    "player.minutes_share_pct": 32,
+    "player.small_sample": true,
+    "player.contract_months_left": 47.8,
+    "stats.tackles.p90": 2.83,
+    "stats.tackles.pct": 97,
+    "stats.interceptions.p90": 1.09,
+    "stats.interceptions.pct": 80,
+    "stats.ball_recoveries.p90": 6.11,
+    "stats.ball_recoveries.pct": 99,
+    "stats.accurate_passes_pct.value": 89.5,
+    "stats.accurate_passes_pct.pct": 88,
+    "stats.accurate_passes.p90": 67.4,
+    "stats.accurate_passes.pct": 97,
+    "stats.accurate_long_balls.p90": 3.2,
+    "stats.accurate_long_balls.pct": 89,
+    "fit.score": 93.2,
+    "fit.rank": 1,
+    "fit.performance": 92.5,
+    "fit.age_score": 100,
+    "fit.value_score": 88.2,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 85.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Equi Fernández is a 23-year-old defensive midfielder with strong ball-winning and passing numbers in limited Bundesliga minutes. His 987 minutes across 20 matches mean the sample is small.",
+    "strengths": [
+      {
+        "text": "Elite ball recoveries at 6.11 per 90, in the 99th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "Tackles per 90 of 2.83, 97th percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "Accurate passes per 90 of 67.4 at 89.5%, both strong percentiles.",
+        "fact_keys": [
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct",
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample: 987 minutes over 20 matches, a 32% minutes share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Only 1.09 interceptions per 90, 80th percentile.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 14,
+    "verified": 14,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

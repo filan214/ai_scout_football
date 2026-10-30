@@ -1,0 +1,103 @@
+{
+  "key": "54778c74b681acda7e35eb45a6de497b870d75ee702e3b6b6ffe28682177746f",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:41+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 448,
+    "completion": 311,
+    "reasoning": 0,
+    "total": 759
+  },
+  "fact_sheet": {
+    "player.name": "Gonçalo Ramos",
+    "player.age": 25,
+    "player.position": "ST",
+    "player.team": "Paris Saint-Germain",
+    "player.league": "Ligue 1",
+    "player.market_value_m": 30.0,
+    "player.minutes": 1309,
+    "player.matches": 30,
+    "player.minutes_share_pct": 43,
+    "player.small_sample": true,
+    "player.contract_months_left": 59.8,
+    "stats.xg.p90": 0.62,
+    "stats.xg.pct": 94,
+    "stats.shots.p90": 4.0,
+    "stats.shots.pct": 98,
+    "stats.xa.p90": 0.1,
+    "stats.xa.pct": 77,
+    "stats.key_passes.p90": 1.17,
+    "stats.key_passes.pct": 81,
+    "stats.successful_dribbles.p90": 1.2,
+    "stats.successful_dribbles.pct": 89,
+    "stats.xgot.p90": 0.61,
+    "stats.xgot.pct": 93,
+    "fit.score": 88.8,
+    "fit.rank": 1,
+    "fit.performance": 89.7,
+    "fit.age_score": 100,
+    "fit.value_score": 75.0,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Gonçalo Ramos is a 25-year-old striker at Paris Saint-Germain with strong shooting and expected-goals numbers in limited minutes. His 1309 minutes across 30 matches mean the sample is small.",
+    "strengths": [
+      {
+        "text": "Elite shot volume at 4.0 shots per 90, in the 98th percentile.",
+        "fact_keys": [
+          "stats.shots.p90",
+          "stats.shots.pct"
+        ]
+      },
+      {
+        "text": "Expected goals of 0.62 per 90, 94th percentile, and expected goals on target of 0.61 per 90.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct",
+          "stats.xgot.p90"
+        ]
+      },
+      {
+        "text": "Successful dribbles of 1.2 per 90, 89th percentile, and key passes of 1.17 per 90.",
+        "fact_keys": [
+          "stats.successful_dribbles.p90",
+          "stats.successful_dribbles.pct",
+          "stats.key_passes.p90"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample: only 1309 minutes over 30 matches, a 43% minutes share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Expected assists of 0.1 per 90, 77th percentile, lower than his other attacking numbers.",
+        "fact_keys": [
+          "stats.xa.p90",
+          "stats.xa.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

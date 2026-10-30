@@ -1,0 +1,101 @@
+{
+  "key": "6d0d337b77b1ae9087ff07dbce66331a9623c64e5f05f4d381a10d279978a4a4",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:10:04+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 443,
+    "completion": 262,
+    "reasoning": 0,
+    "total": 705
+  },
+  "fact_sheet": {
+    "player.name": "Gift Orban",
+    "player.age": 23,
+    "player.position": "ST",
+    "player.team": "Verona",
+    "player.league": "Serie A",
+    "player.market_value_m": 7.0,
+    "player.minutes": 2036,
+    "player.matches": 28,
+    "player.minutes_share_pct": 60,
+    "player.small_sample": false,
+    "player.contract_months_left": 35.8,
+    "stats.xg.p90": 0.46,
+    "stats.xg.pct": 78,
+    "stats.shots.p90": 3.8,
+    "stats.shots.pct": 97,
+    "stats.xa.p90": 0.06,
+    "stats.xa.pct": 47,
+    "stats.key_passes.p90": 0.88,
+    "stats.key_passes.pct": 59,
+    "stats.successful_dribbles.p90": 0.8,
+    "stats.successful_dribbles.pct": 74,
+    "stats.xgot.p90": 0.4,
+    "stats.xgot.pct": 64,
+    "fit.score": 83.0,
+    "fit.rank": 10,
+    "fit.performance": 73.6,
+    "fit.age_score": 100,
+    "fit.value_score": 94.2,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Gift Orban is a 23-year-old striker at Verona with a high shot volume and strong expected goals output. His fit score of 83.0 ranks 10th, supported by a perfect age score and high value score.",
+    "strengths": [
+      {
+        "text": "Takes 3.8 shots per 90, in the 97th percentile.",
+        "fact_keys": [
+          "stats.shots.p90",
+          "stats.shots.pct"
+        ]
+      },
+      {
+        "text": "Generates 0.46 expected goals per 90, in the 78th percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      },
+      {
+        "text": "Age 23 with a fit age score of 100 and value score of 94.2.",
+        "fact_keys": [
+          "player.age",
+          "fit.age_score",
+          "fit.value_score"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Provides only 0.06 expected assists per 90, in the 47th percentile.",
+        "fact_keys": [
+          "stats.xa.p90",
+          "stats.xa.pct"
+        ]
+      },
+      {
+        "text": "Played 60% of minutes across 28 matches, with 2036 minutes total.",
+        "fact_keys": [
+          "player.minutes_share_pct",
+          "player.matches",
+          "player.minutes"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 15,
+    "verified": 15,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

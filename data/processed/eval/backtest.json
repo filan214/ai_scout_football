@@ -1,0 +1,235 @@
+{
+  "season_n": "2024-25",
+  "season_n1": "2025-26",
+  "as_of_date": "2025-07-01",
+  "club": "Arsenal FC",
+  "groups": {
+    "CB": {
+      "need_score": 28.921897500048527,
+      "priority": "Low",
+      "picks": 10,
+      "picks_scored": 9,
+      "pool": 300,
+      "pool_scored": 184,
+      "attrition": 0.09999999999999998,
+      "median_picks": 78.694953766015,
+      "median_pool": 52.60350291287827,
+      "uplift": 0.4960021559086911,
+      "hit_rate": 1.0,
+      "ci_low": 0.3233928277522783,
+      "ci_high": 0.6946626721310539,
+      "picked": [
+        {
+          "player": "Jeff Chabot",
+          "team": "VfB Stuttgart",
+          "league": "bundesliga",
+          "outcome": 85.7
+        },
+        {
+          "player": "Amos Pieper",
+          "team": "SV Werder Bremen",
+          "league": "bundesliga",
+          "outcome": 87.6
+        },
+        {
+          "player": "Konstantinos Mavropanos",
+          "team": "West Ham United",
+          "league": "premier_league",
+          "outcome": 87.5
+        },
+        {
+          "player": "Marco Friedl",
+          "team": "SV Werder Bremen",
+          "league": "bundesliga",
+          "outcome": 78.7
+        },
+        {
+          "player": "Anthony Rouault",
+          "team": "VfB Stuttgart",
+          "league": "bundesliga",
+          "outcome": 67.9
+        },
+        {
+          "player": "Matte Smets",
+          "team": "KRC Genk",
+          "league": "belgian_pro_league",
+          "outcome": 81.2
+        },
+        {
+          "player": "Kobe Cools",
+          "team": "FCV Dender EH",
+          "league": "belgian_pro_league",
+          "outcome": null
+        },
+        {
+          "player": "Emin Bayram",
+          "team": "KVC Westerlo",
+          "league": "belgian_pro_league",
+          "outcome": 62.4
+        },
+        {
+          "player": "Trevoh Chalobah",
+          "team": "Chelsea",
+          "league": "premier_league",
+          "outcome": 75.6
+        },
+        {
+          "player": "Malang Sarr",
+          "team": "Lens",
+          "league": "ligue_1",
+          "outcome": 76.8
+        }
+      ]
+    },
+    "FB": {
+      "need_score": 27.20152873771657,
+      "priority": "Low",
+      "picks": 10,
+      "picks_scored": 8,
+      "pool": 285,
+      "pool_scored": 194,
+      "attrition": 0.19999999999999996,
+      "median_picks": 79.94998671073401,
+      "median_pool": 54.30234053020432,
+      "uplift": 0.47231198379494943,
+      "hit_rate": 1.0,
+      "ci_low": 0.35113450805043595,
+      "ci_high": 0.6719287510288886,
+      "picked": [
+        {
+          "player": "Ian Maatsen",
+          "team": "Aston Villa",
+          "league": "premier_league",
+          "outcome": 91.6
+        },
+        {
+          "player": "Paul Joly",
+          "team": "Auxerre",
+          "league": "ligue_1",
+          "outcome": null
+        },
+        {
+          "player": "Gabriel Suazo",
+          "team": "Toulouse",
+          "league": "ligue_1",
+          "outcome": 86.3
+        },
+        {
+          "player": "Luca Pellegrini",
+          "team": "Lazio",
+          "league": "serie_a",
+          "outcome": 60.0
+        },
+        {
+          "player": "Pedro Porro",
+          "team": "Tottenham Hotspur",
+          "league": "premier_league",
+          "outcome": 88.0
+        },
+        {
+          "player": "Nuno Tavares",
+          "team": "Lazio",
+          "league": "serie_a",
+          "outcome": 77.1
+        },
+        {
+          "player": "Vanderson",
+          "team": "Monaco",
+          "league": "ligue_1",
+          "outcome": null
+        },
+        {
+          "player": "Flávio Nazinho",
+          "team": "Cercle Brugge",
+          "league": "belgian_pro_league",
+          "outcome": 82.5
+        },
+        {
+          "player": "Alfie Doughty",
+          "team": "Luton Town",
+          "league": "championship",
+          "outcome": 77.4
+        },
+        {
+          "player": "Matheus Nunes",
+          "team": "Manchester City",
+          "league": "premier_league",
+          "outcome": 75.2
+        }
+      ]
+    }
+  },
+  "overall": {
+    "picks": 20,
+    "picks_scored": 17,
+    "pool": 585,
+    "pool_scored": 378,
+    "attrition": 0.15000000000000002,
+    "median_picks": 78.694953766015,
+    "median_pool": 53.216812647754224,
+    "uplift": 0.4787611254905919,
+    "hit_rate": 1.0,
+    "ci_low": 0.3837404046069388,
+    "ci_high": 0.6381287647539693,
+    "median_performance_season_n": 85.2767851518856,
+    "median_outcome_season_n1": 78.694953766015,
+    "median_age": 25.0,
+    "median_market_value_m": 11.0
+  },
+  "league_pooled": {
+    "clubs": 20,
+    "groups": 48,
+    "picks": 439,
+    "picks_scored": 340,
+    "pool": 10870,
+    "pool_scored": 6767,
+    "attrition": 0.2255125284738041,
+    "median_picks": 79.45195696444411,
+    "median_pool": 52.36095101055835,
+    "uplift": 0.5173894940988175,
+    "hit_rate": 0.9705882352941176,
+    "ci_low": 0.4860847077396501,
+    "ci_high": 0.5445417560506682,
+    "median_performance_season_n": 84.52869435550708,
+    "median_outcome_season_n1": 79.45195696444411,
+    "median_age": 24.0,
+    "median_market_value_m": 18.0
+  },
+  "naive_baseline": {
+    "rule": "top shortlist_size by season_n performance only (fit weights 1/0/0)",
+    "target_club": {
+      "picks": 20,
+      "picks_scored": 15,
+      "pool": 585,
+      "pool_scored": 378,
+      "attrition": 0.25,
+      "median_picks": 81.2191159809473,
+      "median_pool": 53.216812647754224,
+      "uplift": 0.5261927939679938,
+      "hit_rate": 1.0,
+      "ci_low": 0.3942281339233507,
+      "ci_high": 0.6740686920119757,
+      "median_performance_season_n": 86.21583370429622,
+      "median_outcome_season_n1": 81.2191159809473,
+      "median_age": 25.0,
+      "median_market_value_m": 19.0
+    },
+    "league_pooled": {
+      "picks": 439,
+      "picks_scored": 342,
+      "pool": 10870,
+      "pool_scored": 6767,
+      "attrition": 0.22095671981776766,
+      "median_picks": 80.12378380534798,
+      "median_pool": 52.36095101055835,
+      "uplift": 0.5302201785676386,
+      "hit_rate": 0.9941520467836257,
+      "ci_low": 0.5047149564047386,
+      "ci_high": 0.5565135015332802,
+      "median_performance_season_n": 85.87231771607436,
+      "median_outcome_season_n1": 80.12378380534798,
+      "median_age": 24.0,
+      "median_market_value_m": 30.0
+    }
+  }
+}

@@ -1,0 +1,21 @@
+# Secrets
+.env
+.streamlit/secrets.toml
+.env.*
+!.env.example
+.codex/
+.agents/
+.aws/
+
+# Raw and intermediate data (rebuilt by pipeline.py)
+data/raw/
+data/interim/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest_tmp/
+.ruff_cache/
+*.part

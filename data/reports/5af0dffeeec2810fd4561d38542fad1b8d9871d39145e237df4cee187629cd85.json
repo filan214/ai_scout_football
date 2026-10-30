@@ -1,0 +1,100 @@
+{
+  "key": "5af0dffeeec2810fd4561d38542fad1b8d9871d39145e237df4cee187629cd85",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:57+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 445,
+    "completion": 296,
+    "reasoning": 0,
+    "total": 741
+  },
+  "fact_sheet": {
+    "player.name": "Georges Mikautadze",
+    "player.age": 25,
+    "player.position": "ST",
+    "player.team": "Villarreal",
+    "player.league": "La Liga",
+    "player.market_value_m": 30.0,
+    "player.minutes": 2117,
+    "player.matches": 32,
+    "player.minutes_share_pct": 62,
+    "player.small_sample": false,
+    "player.contract_months_left": 59.8,
+    "stats.xg.p90": 0.48,
+    "stats.xg.pct": 76,
+    "stats.shots.p90": 2.8,
+    "stats.shots.pct": 71,
+    "stats.xa.p90": 0.11,
+    "stats.xa.pct": 79,
+    "stats.key_passes.p90": 1.19,
+    "stats.key_passes.pct": 79,
+    "stats.successful_dribbles.p90": 1.4,
+    "stats.successful_dribbles.pct": 93,
+    "stats.xgot.p90": 0.63,
+    "stats.xgot.pct": 92,
+    "fit.score": 85.7,
+    "fit.rank": 7,
+    "fit.performance": 84.5,
+    "fit.age_score": 100,
+    "fit.value_score": 75.0,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Georges Mikautadze is a 25-year-old striker for Villarreal with 2117 minutes across 32 matches and a €30.0m market value. He ranks 7th with a fit score of 85.7 for Arsenal's striker need.",
+    "strengths": [
+      {
+        "text": "High-quality shooting: 0.63 expected goals on target per 90, in the 92nd percentile.",
+        "fact_keys": [
+          "stats.xgot.p90",
+          "stats.xgot.pct"
+        ]
+      },
+      {
+        "text": "Strong dribbling with 1.4 successful dribbles per 90, 93rd percentile.",
+        "fact_keys": [
+          "stats.successful_dribbles.p90",
+          "stats.successful_dribbles.pct"
+        ]
+      },
+      {
+        "text": "Creates chances: 1.19 key passes per 90 and 0.11 expected assists per 90, both 79th percentile.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct",
+          "stats.xa.p90",
+          "stats.xa.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Played 62% of available minutes, so his role was not full-time.",
+        "fact_keys": [
+          "player.minutes_share_pct"
+        ]
+      },
+      {
+        "text": "Expected goals of 0.48 per 90 is solid but only 76th percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

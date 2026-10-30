@@ -1,0 +1,99 @@
+{
+  "key": "03bbfc2da156adde0c22dda977367db56b31b6523ece9102b94a6a0740b5c16f",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:54+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 447,
+    "completion": 257,
+    "reasoning": 0,
+    "total": 704
+  },
+  "fact_sheet": {
+    "player.name": "Lassine Sinayoko",
+    "player.age": 26,
+    "player.position": "ST",
+    "player.team": "Auxerre",
+    "player.league": "Ligue 1",
+    "player.market_value_m": 10.0,
+    "player.minutes": 2780,
+    "player.matches": 32,
+    "player.minutes_share_pct": 91,
+    "player.small_sample": false,
+    "player.contract_months_left": 11.8,
+    "stats.xg.p90": 0.39,
+    "stats.xg.pct": 63,
+    "stats.shots.p90": 3.0,
+    "stats.shots.pct": 84,
+    "stats.xa.p90": 0.11,
+    "stats.xa.pct": 82,
+    "stats.key_passes.p90": 1.29,
+    "stats.key_passes.pct": 88,
+    "stats.successful_dribbles.p90": 1.0,
+    "stats.successful_dribbles.pct": 83,
+    "stats.xgot.p90": 0.39,
+    "stats.xgot.pct": 61,
+    "fit.score": 85.9,
+    "fit.rank": 6,
+    "fit.performance": 79.4,
+    "fit.age_score": 100,
+    "fit.value_score": 91.7,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "ST"
+  },
+  "report": {
+    "summary": "Lassine Sinayoko is a 26-year-old striker for Auxerre with 2,780 minutes across 32 matches and a €10.0m market value. He offers strong shot volume and passing creativity, with a fit score of 85.9 and rank 6.",
+    "strengths": [
+      {
+        "text": "Takes 3.0 shots per 90, in the 84th percentile.",
+        "fact_keys": [
+          "stats.shots.p90",
+          "stats.shots.pct"
+        ]
+      },
+      {
+        "text": "Creates 1.29 key passes per 90, in the 88th percentile.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct"
+        ]
+      },
+      {
+        "text": "Plays 91% of minutes with 32 matches and 2,780 minutes.",
+        "fact_keys": [
+          "player.minutes_share_pct",
+          "player.matches",
+          "player.minutes"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Contract has 11.8 months left.",
+        "fact_keys": [
+          "player.contract_months_left"
+        ]
+      },
+      {
+        "text": "Expected goals per 90 is 0.39, in the 63rd percentile.",
+        "fact_keys": [
+          "stats.xg.p90",
+          "stats.xg.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

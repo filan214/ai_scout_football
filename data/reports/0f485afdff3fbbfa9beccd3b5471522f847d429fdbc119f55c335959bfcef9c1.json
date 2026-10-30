@@ -1,0 +1,98 @@
+{
+  "key": "0f485afdff3fbbfa9beccd3b5471522f847d429fdbc119f55c335959bfcef9c1",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:14+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 454,
+    "completion": 285,
+    "reasoning": 0,
+    "total": 739
+  },
+  "fact_sheet": {
+    "player.name": "Equi Fernández",
+    "player.age": 23,
+    "player.position": "DM",
+    "player.team": "Bayer 04 Leverkusen",
+    "player.league": "Bundesliga",
+    "player.market_value_m": 20.0,
+    "player.minutes": 987,
+    "player.matches": 20,
+    "player.minutes_share_pct": 32,
+    "player.small_sample": true,
+    "player.contract_months_left": 47.8,
+    "stats.tackles.p90": 2.83,
+    "stats.tackles.pct": 97,
+    "stats.interceptions.p90": 1.09,
+    "stats.interceptions.pct": 80,
+    "stats.ball_recoveries.p90": 6.11,
+    "stats.ball_recoveries.pct": 99,
+    "stats.accurate_passes_pct.value": 89.5,
+    "stats.accurate_passes_pct.pct": 88,
+    "stats.accurate_passes.p90": 67.4,
+    "stats.accurate_passes.pct": 97,
+    "stats.accurate_long_balls.p90": 3.2,
+    "stats.accurate_long_balls.pct": 89,
+    "fit.score": 92.2,
+    "fit.rank": 1,
+    "fit.performance": 92.5,
+    "fit.age_score": 100,
+    "fit.value_score": 83.3,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Equi Fernández is a 23-year-old defensive midfielder with strong ball-winning and passing numbers in limited Bundesliga minutes. His small sample of 987 minutes across 20 matches means the stats need caution.",
+    "strengths": [
+      {
+        "text": "Elite ball recoveries at 6.11 per 90, 99th percentile, and tackles at 2.83 per 90, 97th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct",
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "Accurate passing of 89.5 percent and 67.4 accurate passes per 90, 97th percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct"
+        ]
+      },
+      {
+        "text": "Age 23 with 47.8 contract months left and a €20.0m market value.",
+        "fact_keys": [
+          "player.age",
+          "player.contract_months_left",
+          "player.market_value_m"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample: only 987 minutes over 20 matches, a 32 percent minutes share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

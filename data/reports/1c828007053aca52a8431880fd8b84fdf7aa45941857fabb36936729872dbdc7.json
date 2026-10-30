@@ -1,0 +1,105 @@
+{
+  "key": "1c828007053aca52a8431880fd8b84fdf7aa45941857fabb36936729872dbdc7",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:22+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 449,
+    "completion": 347,
+    "reasoning": 0,
+    "total": 796
+  },
+  "fact_sheet": {
+    "player.name": "Nico González",
+    "player.age": 24,
+    "player.position": "DM",
+    "player.team": "Manchester City",
+    "player.league": "Premier League",
+    "player.market_value_m": 40.0,
+    "player.minutes": 1567,
+    "player.matches": 25,
+    "player.minutes_share_pct": 46,
+    "player.small_sample": true,
+    "player.contract_months_left": 35.8,
+    "stats.tackles.p90": 2.41,
+    "stats.tackles.pct": 98,
+    "stats.interceptions.p90": 1.38,
+    "stats.interceptions.pct": 98,
+    "stats.ball_recoveries.p90": 5.17,
+    "stats.ball_recoveries.pct": 99,
+    "stats.accurate_passes_pct.value": 90.3,
+    "stats.accurate_passes_pct.pct": 92,
+    "stats.accurate_passes.p90": 68.3,
+    "stats.accurate_passes.pct": 99,
+    "stats.accurate_long_balls.p90": 2.0,
+    "stats.accurate_long_balls.pct": 73,
+    "fit.score": 87.0,
+    "fit.rank": 4,
+    "fit.performance": 89.4,
+    "fit.age_score": 100,
+    "fit.value_score": 66.7,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Nico González is a 24-year-old defensive midfielder with strong ball-winning and passing numbers in the Premier League. His 1567 minutes are a small sample, so the stats should be read with caution.",
+    "strengths": [
+      {
+        "text": "Elite tackles per 90 of 2.41 and interceptions per 90 of 1.38, both in the 98th percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct",
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Ball recoveries per 90 of 5.17, in the 99th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "Accurate passes per 90 of 68.3 at 90.3 percent accuracy, in the 99th and 92nd percentiles.",
+        "fact_keys": [
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct",
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample: 1567 minutes across 25 matches, a 46 percent minutes share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Accurate long balls per 90 of 2.0 sit in the 73rd percentile, below his other passing numbers.",
+        "fact_keys": [
+          "stats.accurate_long_balls.p90",
+          "stats.accurate_long_balls.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

@@ -1,0 +1,100 @@
+{
+  "key": "884c1084249801fea4f07b842b5f6a922a9fa825456d0f68513156fb7ce0fcb7",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:30+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 458,
+    "completion": 300,
+    "reasoning": 0,
+    "total": 758
+  },
+  "fact_sheet": {
+    "player.name": "Leon Avdullahu",
+    "player.age": 22,
+    "player.position": "DM",
+    "player.team": "TSG 1899 Hoffenheim",
+    "player.league": "Bundesliga",
+    "player.market_value_m": 30.0,
+    "player.minutes": 2838,
+    "player.matches": 33,
+    "player.minutes_share_pct": 93,
+    "player.small_sample": false,
+    "player.contract_months_left": 59.8,
+    "stats.tackles.p90": 1.49,
+    "stats.tackles.pct": 47,
+    "stats.interceptions.p90": 1.08,
+    "stats.interceptions.pct": 71,
+    "stats.ball_recoveries.p90": 5.45,
+    "stats.ball_recoveries.pct": 92,
+    "stats.accurate_passes_pct.value": 90.0,
+    "stats.accurate_passes_pct.pct": 90,
+    "stats.accurate_passes.p90": 58.3,
+    "stats.accurate_passes.pct": 94,
+    "stats.accurate_long_balls.p90": 3.0,
+    "stats.accurate_long_balls.pct": 87,
+    "fit.score": 85.9,
+    "fit.rank": 7,
+    "fit.performance": 84.9,
+    "fit.age_score": 100,
+    "fit.value_score": 75.0,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Leon Avdullahu is a 22-year-old defensive midfielder at Hoffenheim with 2,838 minutes across 33 matches and a €30.0m market value. He ranks highly for ball recoveries and passing accuracy, though his tackle success is below average.",
+    "strengths": [
+      {
+        "text": "Elite ball recoveries at 5.45 per 90, in the 92nd percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "Very accurate passer: 90.0% accuracy and 58.3 accurate passes per 90, 94th percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct"
+        ]
+      },
+      {
+        "text": "Strong interception numbers at 1.08 per 90, 71st percentile.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Tackle success is modest at 1.49 per 90, only the 47th percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "Market value is €30.0m, with 59.8 contract months left.",
+        "fact_keys": [
+          "player.market_value_m",
+          "player.contract_months_left"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 15,
+    "verified": 15,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

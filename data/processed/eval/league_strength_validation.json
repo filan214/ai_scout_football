@@ -1,0 +1,165 @@
+{
+  "status": "ok",
+  "source": "UEFA men's association coefficients",
+  "season_year": 2026,
+  "five_season": {
+    "measure": "uefa_coefficient",
+    "n": 9,
+    "pearson": 0.9326215129143879,
+    "spearman": 0.8666666666666667,
+    "table": [
+      {
+        "league": "premier_league",
+        "index_0_100": 100.0,
+        "uefa_country": "ENG",
+        "uefa_position": 1,
+        "uefa_coefficient": 119.519,
+        "uefa_season_points": 28.68
+      },
+      {
+        "league": "serie_a",
+        "index_0_100": 65.421,
+        "uefa_country": "ITA",
+        "uefa_position": 2,
+        "uefa_coefficient": 99.946,
+        "uefa_season_points": 19.0
+      },
+      {
+        "league": "bundesliga",
+        "index_0_100": 62.259,
+        "uefa_country": "GER",
+        "uefa_position": 4,
+        "uefa_coefficient": 92.902,
+        "uefa_season_points": 21.785
+      },
+      {
+        "league": "ligue_1",
+        "index_0_100": 61.924,
+        "uefa_country": "FRA",
+        "uefa_position": 5,
+        "uefa_coefficient": 83.498,
+        "uefa_season_points": 18.321
+      },
+      {
+        "league": "la_liga",
+        "index_0_100": 52.068,
+        "uefa_country": "ESP",
+        "uefa_position": 3,
+        "uefa_coefficient": 97.046,
+        "uefa_season_points": 22.093
+      },
+      {
+        "league": "belgian_pro_league",
+        "index_0_100": 15.417,
+        "uefa_country": "BEL",
+        "uefa_position": 8,
+        "uefa_coefficient": 62.25,
+        "uefa_season_points": 11.4
+      },
+      {
+        "league": "primeira_liga",
+        "index_0_100": 11.836,
+        "uefa_country": "POR",
+        "uefa_position": 6,
+        "uefa_coefficient": 73.166,
+        "uefa_season_points": 20.5
+      },
+      {
+        "league": "super_lig",
+        "index_0_100": 4.664,
+        "uefa_country": "TUR",
+        "uefa_position": 9,
+        "uefa_coefficient": 51.875,
+        "uefa_season_points": 11.075
+      },
+      {
+        "league": "eredivisie",
+        "index_0_100": 0.0,
+        "uefa_country": "NED",
+        "uefa_position": 7,
+        "uefa_coefficient": 67.929,
+        "uefa_season_points": 9.979
+      }
+    ]
+  },
+  "single_season": {
+    "measure": "uefa_season_points",
+    "n": 9,
+    "pearson": 0.8507367524799999,
+    "spearman": 0.7333333333333334,
+    "table": [
+      {
+        "league": "premier_league",
+        "index_0_100": 100.0,
+        "uefa_country": "ENG",
+        "uefa_position": 1,
+        "uefa_coefficient": 119.519,
+        "uefa_season_points": 28.68
+      },
+      {
+        "league": "serie_a",
+        "index_0_100": 65.421,
+        "uefa_country": "ITA",
+        "uefa_position": 2,
+        "uefa_coefficient": 99.946,
+        "uefa_season_points": 19.0
+      },
+      {
+        "league": "bundesliga",
+        "index_0_100": 62.259,
+        "uefa_country": "GER",
+        "uefa_position": 4,
+        "uefa_coefficient": 92.902,
+        "uefa_season_points": 21.785
+      },
+      {
+        "league": "ligue_1",
+        "index_0_100": 61.924,
+        "uefa_country": "FRA",
+        "uefa_position": 5,
+        "uefa_coefficient": 83.498,
+        "uefa_season_points": 18.321
+      },
+      {
+        "league": "la_liga",
+        "index_0_100": 52.068,
+        "uefa_country": "ESP",
+        "uefa_position": 3,
+        "uefa_coefficient": 97.046,
+        "uefa_season_points": 22.093
+      },
+      {
+        "league": "belgian_pro_league",
+        "index_0_100": 15.417,
+        "uefa_country": "BEL",
+        "uefa_position": 8,
+        "uefa_coefficient": 62.25,
+        "uefa_season_points": 11.4
+      },
+      {
+        "league": "primeira_liga",
+        "index_0_100": 11.836,
+        "uefa_country": "POR",
+        "uefa_position": 6,
+        "uefa_coefficient": 73.166,
+        "uefa_season_points": 20.5
+      },
+      {
+        "league": "super_lig",
+        "index_0_100": 4.664,
+        "uefa_country": "TUR",
+        "uefa_position": 9,
+        "uefa_coefficient": 51.875,
+        "uefa_season_points": 11.075
+      },
+      {
+        "league": "eredivisie",
+        "index_0_100": 0.0,
+        "uefa_country": "NED",
+        "uefa_position": 7,
+        "uefa_coefficient": 67.929,
+        "uefa_season_points": 9.979
+      }
+    ]
+  }
+}

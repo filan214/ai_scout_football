@@ -1,0 +1,191 @@
+{
+  "metrics": [
+    {
+      "version": "Before",
+      "backtest uplift %": 50.90021915047813,
+      "CI low %": 47.182726960804786,
+      "CI high %": 54.07534679192698,
+      "picks scored": "309/400",
+      "mean Jaccard (10 variants)": 0.8488208760936035,
+      "faithfulness %": 100.0
+    },
+    {
+      "version": "After",
+      "backtest uplift %": 51.738949409881755,
+      "CI low %": 48.60847077396501,
+      "CI high %": 54.45417560506682,
+      "picks scored": "340/439",
+      "mean Jaccard (10 variants)": 0.8557948555509531,
+      "faithfulness %": null
+    }
+  ],
+  "bands": [
+    {
+      "version": "Before",
+      "ambition": "title",
+      "High": 2,
+      "Medium": 11,
+      "Low": 127,
+      "used cells": 135
+    },
+    {
+      "version": "Before",
+      "ambition": "survive",
+      "High": 0,
+      "Medium": 2,
+      "Low": 138,
+      "used cells": 135
+    },
+    {
+      "version": "After",
+      "ambition": "title",
+      "High": 6,
+      "Medium": 57,
+      "Low": 77,
+      "used cells": 135
+    },
+    {
+      "version": "After",
+      "ambition": "survive",
+      "High": 0,
+      "Medium": 2,
+      "Low": 138,
+      "used cells": 135
+    }
+  ],
+  "evidence_shares": [
+    {
+      "position": "ST",
+      "before rated %": 19.964664310954063,
+      "after rated %": 36.90973338,
+      "evidence": "insufficient"
+    },
+    {
+      "position": "W",
+      "before rated %": 83.86774975060567,
+      "after rated %": 83.86774975,
+      "evidence": "sufficient"
+    },
+    {
+      "position": "AM",
+      "before rated %": 0.0,
+      "after rated %": 0.0,
+      "evidence": "insufficient"
+    },
+    {
+      "position": "CM",
+      "before rated %": 67.7115987460815,
+      "after rated %": 71.94357367,
+      "evidence": "sufficient"
+    },
+    {
+      "position": "DM",
+      "before rated %": 50.49519807923169,
+      "after rated %": 65.18607442999999,
+      "evidence": "sufficient"
+    },
+    {
+      "position": "FB",
+      "before rated %": 90.35703833772315,
+      "after rated %": 90.35703834,
+      "evidence": "sufficient"
+    },
+    {
+      "position": "CB",
+      "before rated %": 77.02544031311155,
+      "after rated %": 77.02544031000001,
+      "evidence": "sufficient"
+    }
+  ],
+  "sensitivity": [
+    {
+      "variant": "fit_weights.performance +0.1",
+      "before league mean": 0.9173553719008265,
+      "after league mean": 0.9386548410938654
+    },
+    {
+      "variant": "fit_weights.performance -0.1",
+      "before league mean": 0.8732782369146007,
+      "after league mean": 0.8920916481892092
+    },
+    {
+      "variant": "fit_weights.age +0.1",
+      "before league mean": 0.8705234159779615,
+      "after league mean": 0.920177383592018
+    },
+    {
+      "variant": "fit_weights.age -0.1",
+      "before league mean": 0.9173553719008265,
+      "after league mean": 0.9133549377451818
+    },
+    {
+      "variant": "fit_weights.value +0.1",
+      "before league mean": 0.7376562831108285,
+      "after league mean": 0.8228438228438228
+    },
+    {
+      "variant": "fit_weights.value -0.1",
+      "before league mean": 0.7817334180970544,
+      "after league mean": 0.8298368298368298
+    },
+    {
+      "variant": "league_strength_floor +0.1",
+      "before league mean": 0.7236399963672692,
+      "after league mean": 0.7497981693103645
+    },
+    {
+      "variant": "stat_weight_blend +0.1 (extra)",
+      "before league mean": 0.9201101928374655,
+      "after league mean": 0.9370060833475469
+    },
+    {
+      "variant": "league_strength_floor -0.1",
+      "before league mean": 0.8429752066115703,
+      "after league mean": 0.6564707650073504
+    },
+    {
+      "variant": "stat_weight_blend -0.1 (extra)",
+      "before league mean": 0.9035812672176309,
+      "after league mean": 0.8977140745433427
+    }
+  ],
+  "acceptance": [
+    {
+      "check": "a",
+      "name": "Ambition monotonicity",
+      "passed": true,
+      "observed": "0 decreases / 420 comparisons",
+      "requirement": "0 decreases / 420 comparisons"
+    },
+    {
+      "check": "b",
+      "name": "Independent club-strength correlation",
+      "passed": false,
+      "observed": "Spearman -0.36883726935549355; complete results: True",
+      "requirement": "PPG rho <= -0.6; all clubs, full season"
+    },
+    {
+      "check": "c",
+      "name": "Meaning of ambition levels",
+      "passed": true,
+      "observed": "title 46.67%; survive 1.48% used cells Medium/High",
+      "requirement": "title >= 30%; survive <= 10%"
+    },
+    {
+      "check": "d",
+      "name": "Strongest clubs",
+      "passed": true,
+      "observed": "Arsenal FC: 0 High; Manchester City: 0 High",
+      "requirement": "Top 2 PPG clubs: <= 1 High each"
+    },
+    {
+      "check": "e",
+      "name": "Evidence coverage",
+      "passed": true,
+      "observed": "132/135 sufficient (97.78%)",
+      "requirement": ">= 95% used cells sufficient"
+    }
+  ],
+  "reports_status": "unavailable",
+  "committed": false
+}

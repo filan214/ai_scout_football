@@ -1,0 +1,99 @@
+{
+  "key": "1e8f9be9f3a9771c665cb42bbff394a1d6a75a931f703d254be7207f081cf44f",
+  "prompt_version": "v4",
+  "model_requested": "deepseek/deepseek-v4.1-flash",
+  "model_used": "deepseek/deepseek-v4.1-flash",
+  "generated_at": "2026-10-22T18:09:16+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 451,
+    "completion": 274,
+    "reasoning": 0,
+    "total": 725
+  },
+  "fact_sheet": {
+    "player.name": "Aidan Morris",
+    "player.age": 24,
+    "player.position": "DM",
+    "player.team": "Middlesbrough",
+    "player.league": "EFL Championship",
+    "player.market_value_m": 10.1,
+    "player.minutes": 3203,
+    "player.matches": 40,
+    "player.minutes_share_pct": 77,
+    "player.small_sample": false,
+    "player.contract_months_left": 23.8,
+    "stats.tackles.p90": 2.64,
+    "stats.tackles.pct": 89,
+    "stats.interceptions.p90": 0.93,
+    "stats.interceptions.pct": 50,
+    "stats.ball_recoveries.p90": 6.13,
+    "stats.ball_recoveries.pct": 94,
+    "stats.accurate_passes_pct.value": 91.9,
+    "stats.accurate_passes_pct.pct": 98,
+    "stats.accurate_passes.p90": 67.2,
+    "stats.accurate_passes.pct": 92,
+    "stats.accurate_long_balls.p90": 3.2,
+    "stats.accurate_long_balls.pct": 81,
+    "fit.score": 91.1,
+    "fit.rank": 2,
+    "fit.performance": 87.9,
+    "fit.age_score": 100,
+    "fit.value_score": 91.6,
+    "club_need.club": "Arsenal FC",
+    "club_need.ambition": "top4",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM"
+  },
+  "report": {
+    "summary": "Aidan Morris is a 24-year-old defensive midfielder with 3203 minutes across 40 matches for Middlesbrough. He ranks 2nd in fit score at 91.1 and stands out for tackling, ball recovery and passing accuracy.",
+    "strengths": [
+      {
+        "text": "Averages 2.64 tackles per 90, in the 89th percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "Completes 91.9% of passes, in the 98th percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct"
+        ]
+      },
+      {
+        "text": "Makes 6.13 ball recoveries per 90, in the 94th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Interceptions are 0.93 per 90, only the 50th percentile.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Market value is €10.1m with 23.8 contract months left.",
+        "fact_keys": [
+          "player.market_value_m",
+          "player.contract_months_left"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 15,
+    "verified": 15,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

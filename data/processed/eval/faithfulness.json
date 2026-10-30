@@ -1,0 +1,20 @@
+{
+  "club": "West Ham United",
+  "prompt_version": "v2",
+  "model": "deepseek/deepseek-v4.1-flash",
+  "reports": 0,
+  "numbers": 0,
+  "verified": 0,
+  "verified_rate": null,
+  "fully_verified_reports": 0,
+  "reports_with_missing_keys": 0,
+  "status": "unavailable",
+  "expected_reports": 20,
+  "error": "Error code: 402 - {'error': {'code': '402', 'type': 'reject_no_credit', 'message': 'Access denied: this model is only available to accounts with a balance greater than 0. This is an anti-abuse measure, not a usage charge. (request_id: 2c86341f76dd470d8131be0942524764)'}}",
+  "tokens": {
+    "prompt": 0,
+    "completion": 0,
+    "reasoning": 0,
+    "total": 0
+  }
+}
