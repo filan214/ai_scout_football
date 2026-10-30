@@ -125,7 +125,7 @@ def test_report_access_errors_are_actionable_without_provider_internals():
         status_code = 402
 
     text = llm.report_error_message(AccessError("sensitive provider response"))
-    assert "Enable credit or model access" in text and "facts remain available" in text
+    assert "free-model access" in text and "facts remain available" in text
     assert "sensitive" not in text
     assert "connection" in llm.report_error_message(ConnectionError("private transport detail"))
 
@@ -169,16 +169,29 @@ def test_completer_retries_invalid_json_sums_usage_and_sends_options(settings):
     assert len(client.kwargs) == 2 and client.kwargs[1]["messages"][-1]["role"] == "user"   # error fed back once
     first = client.kwargs[0]
     assert first["model"] == settings.llm.primary_model and first["response_format"] == {"type": "json_object"}
-    assert first["max_completion_tokens"] == settings.llm.max_completion_tokens
-    assert first["extra_body"] == {"reasoning": {"enabled": settings.llm.reasoning}}
+    assert first["max_tokens"] == settings.llm.max_completion_tokens
+    assert first["extra_body"] == {
+        "reasoning": {"enabled": settings.llm.reasoning},
+        "provider": {"require_parameters": True, "max_price": {"prompt": 0, "completion": 0, "request": 0}}}
 
 
 def test_only_confirmed_configured_fallback_is_sent(settings):
     configured = settings.model_copy(update={
-        "llm": settings.llm.model_copy(update={"fallback_models": ["confirmed/model"]})})
+        "llm": settings.llm.model_copy(update={
+            "provider": "zenmux", "free_only": False, "fallback_models": ["confirmed/model"]})})
     client = FakeClient([_report_obj("6.41").model_dump_json()])
     llm.make_completer(configured, report.ScoutingReport, client=client)("sys", "user")
     assert client.kwargs[0]["extra_body"]["provider"] == {"fallback": "confirmed/model"}
+
+
+def test_free_only_configuration_rejects_paid_model_and_fallback(settings):
+    from scout.config import LLM
+
+    data = settings.llm.model_dump()
+    with pytest.raises(ValueError, match="free_only"):
+        LLM.model_validate({**data, "primary_model": "paid/model"})
+    with pytest.raises(ValueError, match="fallback"):
+        LLM.model_validate({**data, "fallback_models": ["paid/model"]})
 
 
 def test_completer_gives_up_after_one_retry(settings):

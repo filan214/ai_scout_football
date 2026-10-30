@@ -85,6 +85,8 @@ class Pool(_Strict):
 
 
 class LLM(_Strict):
+    provider: Literal["zenmux", "openrouter"] = "zenmux"
+    free_only: bool = False
     base_url: str
     api_key_env: str
     primary_model: str
@@ -93,6 +95,17 @@ class LLM(_Strict):
     timeout_seconds: float
     reasoning: bool
     max_completion_tokens: int
+
+    @model_validator(mode="after")
+    def _free_routing(self):
+        if self.free_only:
+            if self.provider != "openrouter":
+                raise ValueError("free_only requires the supported OpenRouter free route")
+            if not (self.primary_model == "openrouter/free" or self.primary_model.endswith(":free")):
+                raise ValueError("free_only requires a free router or :free model")
+            if self.fallback_models:
+                raise ValueError("free_only requires empty fallback_models")
+        return self
 
 
 class Reports(_Strict):

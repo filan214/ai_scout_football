@@ -1,5 +1,23 @@
 {
-  "status": "unavailable",
-  "model": "deepseek/deepseek-v4-flash",
-  "error": "Error code: 402 - {'error': {'code': '402', 'type': 'reject_no_credit', 'message': 'Access denied: this model is only available to accounts with a balance greater than 0. This is an anti-abuse measure, not a usage charge. (request_id: 3666a32dfc614fc9a975f21a1832d212)'}}"
+  "status": "not_configured",
+  "provider": "openrouter",
+  "model": "openrouter/free",
+  "attempts": 0,
+  "http_status": null,
+  "error_message": "Set OPENROUTER_API_KEY in .env; no request has been made to OpenRouter.",
+  "previous_probe": {
+    "model": "minimax/minimax-m3.1-flash",
+    "attempts": 1,
+    "http_status": 402,
+    "error_type": "reject_no_credit",
+    "error_message": "Access denied: this model is only available to accounts with a balance greater than 0. This is an anti-abuse measure, not a usage charge. (request_id: 5d2cffa9d94642739d8641c7d205ba47)",
+    "request_id": "5d2cffa9d94642739d8641c7d205ba47",
+    "status": "failed",
+    "key_source": {
+      "env_var": "ZENMUX_API_KEY",
+      "source": ".env",
+      "masked": "sk-a\u2026588a",
+      "os_key_differs": false
+    }
+  }
 }

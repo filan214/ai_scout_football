@@ -1,4 +1,4 @@
-"""LLM client for the ZenMux gateway (OpenAI SDK) with a fallback model. Implements IMPLEMENTATION_GUIDE §6.7.
+"""OpenAI-compatible report client with free-only OpenRouter routing. Implements IMPLEMENTATION_GUIDE §6.7.
 
 openai 3.36.1 (checked): OpenAI(base_url, api_key, timeout).chat.completions.create(model, messages,
 temperature, response_format, extra_body). ZenMux (docs checked 2026-10-23, zenmux.ai/docs):
@@ -73,8 +73,12 @@ def add_usage(a: Usage, b: Usage) -> Usage:
 def report_error_message(error: Exception) -> str:
     """§9 actionable report-access errors without displaying provider internals or hiding player evidence."""
     if getattr(error, "status_code", None) == 402:
-        return ("ZenMux rejected report access. Enable credit or model access for the configured account, "
-                "then retry. No new report was generated; the player facts remain available below.")
+        return ("The report provider rejected access. Check the API key's account and free-model access; "
+                "the app will not switch to a paid model. No new report was generated; "
+                "the player facts remain available below.")
+    if getattr(error, "status_code", None) == 429:
+        return ("The free report service reached a rate or daily usage limit. Wait for the limit to reset, "
+                "then retry. Cached reports and player facts remain available.")
     if getattr(error, "status_code", None) in (401, 403):
         return ("The report provider rejected authentication or model access. Check the configured API key "
                 "and account permissions, then retry. The player facts remain available below.")
@@ -97,18 +101,24 @@ def make_completer(
             raise RuntimeError(f"{llm.api_key_env} is not set (environment or .env)")
         client = OpenAI(base_url=llm.base_url, api_key=key, timeout=llm.timeout_seconds)
     extra: dict[str, Any] = {"reasoning": {"enabled": llm.reasoning}}
-    if llm.fallback_models:
+    if llm.provider == "openrouter":
+        extra["provider"] = {"require_parameters": True}
+        if llm.free_only:
+            extra["provider"]["max_price"] = {"prompt": 0, "completion": 0, "request": 0}
+    elif llm.fallback_models:
         extra["provider"] = {"fallback": llm.fallback_models[0]}
 
     def complete(system: str, user: str) -> tuple[T, str, Usage]:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         used: Usage = dict.fromkeys(USAGE_KEYS, 0)
         for attempt in (1, 2):
+            cap = {"max_tokens" if llm.provider == "openrouter" else "max_completion_tokens":
+                   llm.max_completion_tokens}
             resp = client.chat.completions.create(
                 model=llm.primary_model,
                 messages=messages,
                 temperature=llm.temperature,
-                max_completion_tokens=llm.max_completion_tokens,
+                **cap,
                 response_format={"type": "json_object"},
                 extra_body=extra,
             )

@@ -26,7 +26,7 @@ The current run uses 2025–26 statistics and the 2026-07-06 squad/value snapsho
 | Need calibration | **4/5 pass.** PPG correlation is **−0.369**, failing the required ≤−0.6. Goal difference: −0.555; market value (secondary, non-independent): −0.716. |
 | Ambition and evidence | Zero decreases / 420 comparisons; 132/135 used cells have sufficient evidence (97.8%). |
 | Level meaning | At title, 46.7% of used cells are Medium/High; at survive, 1.5%. Arsenal and Manchester City have zero High positions at title. |
-| Reports | New evidence/upgrade prompt v2: **0/20 generated, faithfulness unavailable**. ZenMux rejected access with HTTP 402. Historical 311/311 checks do not validate the new contract. |
+| Reports | New evidence/upgrade prompt v2: **0/20 generated, faithfulness unavailable**. Free OpenRouter routing is configured; a user-created OPENROUTER_API_KEY is needed before verification. Historical 311/311 checks do not validate the new contract. |
 | Backtest | Pooled uplift **+51.7%** (95% CI 48.6% to 54.5%; 340/439 scored). |
 | Simple baseline | **Still better on next-season output:** +53.0% uplift; median outcome 80.1 vs model 79.5. |
 | Cost proxy | Median value €18m model vs €30m baseline; both median age 24. |
@@ -83,9 +83,11 @@ python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Open the local URL printed by Streamlit. The default brief is Arsenal FC, top-four ambition, a €60m market-value limit, and ages 18–27. Other briefs work for needs and targets; a report without a current cached match requires `ZENMUX_API_KEY` and enabled gateway access. Report regeneration currently returns HTTP 402.
+Open the local URL printed by Streamlit. The default brief is Arsenal FC, top-four ambition, a €60m market-value limit, and ages 18–27. Other briefs work for needs and targets; an uncached report needs `OPENROUTER_API_KEY`. Create your own key at [OpenRouter API keys](https://openrouter.ai/settings/keys) and put it in the local .env. The configured free router requires no top-up; current free limits are 50 requests/day and 20/minute, with failed attempts also counting. Paid fallbacks are disabled and report requests enforce a zero-price cap. [Official free-model details](https://openrouter.ai/collections/free-models). The router may choose different free models; each saved report records the model that answered. New faithfulness results must be measured after generation.
 
-To rebuild the data and reports, copy `.env.example` to `.env`, set `ZENMUX_API_KEY`, then run `python pipeline.py --stage all`. You can also run one stage with `--stage ingest|clean|features|needs|rank|reports|eval`. Use `python pipeline.py --stage reports --club "West Ham United" --ambition title` to resume the case-study reports once access is enabled. A first ingest takes about two hours because FotMob requests are rate-limited; cached raw responses are skipped on later runs. Raw data is not redistributed. If preparing a public repository, include the generated `data/processed/` and `data/reports/` artifacts needed for the no-key demo.
+Run `python scripts/check_llm_access.py` for a single minimal access check. Restart Streamlit after changing the key. For deployment, add `OPENROUTER_API_KEY` to Streamlit Cloud secrets yourself; do not publish the key.
+
+To rebuild the data and reports, copy .env.example to .env only if you do not already have a local file, set OPENROUTER_API_KEY, then run `python pipeline.py --stage all`. You can also run one stage with `--stage ingest|clean|features|needs|rank|reports|eval`. Use `python pipeline.py --stage reports --club "West Ham United" --ambition title` to resume the case-study reports after the access check. Free limits may require splitting regeneration across days if retries exhaust the quota. A first ingest takes about two hours because FotMob requests are rate-limited; cached raw responses are skipped on later runs. Raw data is not redistributed.
 
 ```powershell
 python -m pytest -q
