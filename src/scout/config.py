@@ -88,7 +88,7 @@ class LLM(_Strict):
     base_url: str
     api_key_env: str
     primary_model: str
-    fallback_model: str | None = None
+    fallback_models: list[str] = Field(default_factory=list, max_length=1)
     temperature: float
     timeout_seconds: float
     reasoning: bool

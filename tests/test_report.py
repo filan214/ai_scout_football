@@ -130,6 +130,21 @@ def test_report_access_errors_are_actionable_without_provider_internals():
     assert "connection" in llm.report_error_message(ConnectionError("private transport detail"))
 
 
+def test_local_key_overrides_stale_environment_without_mutating_it(settings, tmp_path, monkeypatch):
+    monkeypatch.setattr(llm, "ROOT", tmp_path)
+    name = settings.llm.api_key_env
+    monkeypatch.setenv(name, "old-environment-credential")
+    (tmp_path / ".env").write_text(name + "=test-current-local-credential", encoding="utf-8")
+    assert llm.api_key(settings) == "test-current-local-credential"
+    status = llm.api_key_status(settings)
+    assert status["source"] == ".env" and status["os_key_differs"]
+    assert status["masked"] == "test…tial"
+    assert "test-current-local-credential" not in json.dumps(status)
+    (tmp_path / ".env").unlink()
+    assert llm.api_key(settings) == "old-environment-credential"
+    assert llm.api_key_status(settings)["source"] == "OS environment"
+
+
 class FakeClient:
     """Mimics openai's client.chat.completions.create."""
 
@@ -155,8 +170,15 @@ def test_completer_retries_invalid_json_sums_usage_and_sends_options(settings):
     first = client.kwargs[0]
     assert first["model"] == settings.llm.primary_model and first["response_format"] == {"type": "json_object"}
     assert first["max_completion_tokens"] == settings.llm.max_completion_tokens
-    assert first["extra_body"] == {"reasoning": {"enabled": settings.llm.reasoning},
-                                   "provider": {"fallback": settings.llm.fallback_model}}
+    assert first["extra_body"] == {"reasoning": {"enabled": settings.llm.reasoning}}
+
+
+def test_only_confirmed_configured_fallback_is_sent(settings):
+    configured = settings.model_copy(update={
+        "llm": settings.llm.model_copy(update={"fallback_models": ["confirmed/model"]})})
+    client = FakeClient([_report_obj("6.41").model_dump_json()])
+    llm.make_completer(configured, report.ScoutingReport, client=client)("sys", "user")
+    assert client.kwargs[0]["extra_body"]["provider"] == {"fallback": "confirmed/model"}
 
 
 def test_completer_gives_up_after_one_retry(settings):

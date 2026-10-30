@@ -16,7 +16,7 @@ import re
 from collections.abc import Callable
 from typing import Any, TypeVar
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 from openai import OpenAI
 from pydantic import BaseModel, ValidationError
 
@@ -28,9 +28,26 @@ FENCE_RE = re.compile(r"^\s*```(?:json)?\s*|\s*```\s*$")
 
 
 def api_key(settings: Settings) -> str | None:
-    """The key named by settings.llm.api_key_env, from the environment or the project's .env file."""
-    load_dotenv(ROOT / ".env")
-    return os.environ.get(settings.llm.api_key_env) or None
+    """Resolve the configured key: explicit local .env first, OS environment second (§6.7)."""
+    return _resolve_api_key(settings)[0]
+
+
+def _resolve_api_key(settings: Settings) -> tuple[str | None, str]:
+    name = settings.llm.api_key_env
+    local = dotenv_values(ROOT / ".env").get(name)
+    if local:
+        return local, ".env"
+    value = os.environ.get(name) or None
+    return value, "OS environment" if value else "unavailable"
+
+
+def api_key_status(settings: Settings) -> dict:
+    """Safe key provenance for access checks; never return the full credential."""
+    key, source = _resolve_api_key(settings)
+    masked = key[:4] + "…" + key[-4:] if key and len(key) > 8 else "****" if key else None
+    return {"env_var": settings.llm.api_key_env, "source": source, "masked": masked,
+            "os_key_differs": bool(key and os.environ.get(settings.llm.api_key_env)
+                                   and key != os.environ[settings.llm.api_key_env])}
 
 
 Usage = dict[str, int]
@@ -80,8 +97,8 @@ def make_completer(
             raise RuntimeError(f"{llm.api_key_env} is not set (environment or .env)")
         client = OpenAI(base_url=llm.base_url, api_key=key, timeout=llm.timeout_seconds)
     extra: dict[str, Any] = {"reasoning": {"enabled": llm.reasoning}}
-    if llm.fallback_model:
-        extra["provider"] = {"fallback": llm.fallback_model}
+    if llm.fallback_models:
+        extra["provider"] = {"fallback": llm.fallback_models[0]}
 
     def complete(system: str, user: str) -> tuple[T, str, Usage]:
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]

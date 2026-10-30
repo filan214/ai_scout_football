@@ -314,6 +314,40 @@ def probe_clubelo(settings: Settings) -> dict:
                 "spearman": None, "matched_clubs": 0}
 
 
+def probe_llm_access(settings: Settings, key: str) -> dict:
+    """§6.7 one minimal request, no retries/fallbacks or optional model parameters; redact credentials."""
+    url = settings.llm.base_url.rstrip("/") + "/chat/completions"
+    result = {"model": settings.llm.primary_model, "attempts": 1, "http_status": None,
+              "error_type": None, "error_message": None, "request_id": None}
+    try:
+        response = _session.post(
+            url, headers={"Authorization": "Bearer " + key},
+            json={"model": settings.llm.primary_model, "messages": [{"role": "user", "content": "Reply OK."}]},
+            timeout=settings.llm.timeout_seconds, allow_redirects=False,
+        )
+        result["http_status"] = response.status_code
+        result["request_id"] = response.headers.get("X-ZenMux-RequestId")
+        try:
+            payload = response.json()
+        except ValueError:
+            payload = {}
+        result["status"] = "ok" if response.status_code == 200 else "failed"
+        if result["status"] == "ok":
+            result["usage"] = payload.get("usage", {})
+        else:
+            error = payload.get("error", {})
+            if isinstance(error, dict):
+                result["error_type"] = error.get("type")
+                result["error_message"] = str(error.get("message", "No error.message returned"))
+            else:
+                result["error_message"] = "Provider returned no structured error"
+    except requests.RequestException as exc:
+        result.update(status="failed", error_type=type(exc).__name__, error_message=str(exc))
+    if result["error_message"]:
+        result["error_message"] = result["error_message"].replace(key, "[MASKED]")
+    return result
+
+
 UEFA_COEFFICIENTS = "https://comp.uefa.com/v2/coefficients"
 
 
