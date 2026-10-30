@@ -1,0 +1,124 @@
+{
+  "key": "e7d8fb8b4f6b59913ade599367372508bcd86ca28821eebe8f12ffba5806aa08",
+  "prompt_version": "v2",
+  "model_requested": "liquid/lfm-2.5-2.6b:free",
+  "model_used": "liquid/lfm-2.5-2.6b:free",
+  "generated_at": "2026-10-30T17:12:58+00:00",
+  "attempts": 2,
+  "usage": {
+    "prompt": 1442,
+    "completion": 4836,
+    "reasoning": 3968,
+    "total": 6278
+  },
+  "fact_sheet": {
+    "player.name": "Equi Fernández",
+    "player.age": 23,
+    "player.position": "DM",
+    "player.team": "Bayer 04 Leverkusen",
+    "player.league": "Bundesliga",
+    "player.market_value_m": 20.0,
+    "player.minutes": 987,
+    "player.matches": 20,
+    "player.minutes_share_pct": 32,
+    "player.small_sample": true,
+    "player.contract_months_left": 47.8,
+    "stats.tackles.p90": 2.83,
+    "stats.tackles.pct": 97,
+    "stats.interceptions.p90": 1.09,
+    "stats.interceptions.pct": 80,
+    "stats.ball_recoveries.p90": 6.11,
+    "stats.ball_recoveries.pct": 99,
+    "stats.accurate_passes_pct.value": 89.5,
+    "stats.accurate_passes_pct.pct": 88,
+    "stats.accurate_passes.p90": 67.4,
+    "stats.accurate_passes.pct": 97,
+    "stats.accurate_long_balls.p90": 3.2,
+    "stats.accurate_long_balls.pct": 89,
+    "fit.score": 91.5,
+    "fit.rank": 1,
+    "fit.performance": 91.4,
+    "fit.age_score": 100,
+    "fit.value_score": 83.3,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 65.2,
+    "fit.current_best_regular": "Soungoutou Magassa",
+    "fit.current_best_composite": 64.6,
+    "fit.upgrade_margin": 26.7,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 98.8,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 99.3,
+    "club_need.stat_weight.tackles": 0.1134,
+    "club_need.benchmark.interceptions": 100.0,
+    "club_need.stat_weight.interceptions": 0.1639,
+    "club_need.benchmark.ball_recoveries": 99.4,
+    "club_need.stat_weight.ball_recoveries": 0.2197,
+    "club_need.benchmark.accurate_passes_pct": 97.4,
+    "club_need.stat_weight.accurate_passes_pct": 0.2214,
+    "club_need.benchmark.accurate_passes": 99.1,
+    "club_need.stat_weight.accurate_passes": 0.1384,
+    "club_need.benchmark.accurate_long_balls": 97.8,
+    "club_need.stat_weight.accurate_long_balls": 0.1432,
+    "player.sub_position": "Defensive Midfield"
+  },
+  "report": {
+    "summary": "Equi Fernández (23) is a standout DM for Bayer 04 Leverkusen with a top-ranked fit score of 91.5 and strong defensive metrics. His small sample size and below-ambition benchmark present key considerations.",
+    "strengths": [
+      {
+        "text": "Excellent defensive performance with 97% tackle percentage and 99% ball recovery rate",
+        "fact_keys": [
+          "stats.tackles.pct",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "High fit score of 91.5 and performance rating of 91.4",
+        "fact_keys": [
+          "fit.score",
+          "fit.performance"
+        ]
+      },
+      {
+        "text": "Strong accurate passing at 89.5% overall",
+        "fact_keys": [
+          "accurate_passes.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample size of 987 minutes limits statistical reliability",
+        "fact_keys": [
+          "small_sample"
+        ]
+      },
+      {
+        "text": "Below ambition benchmark with significant upgrade margin of 26.7",
+        "fact_keys": [
+          "below_ambition_benchmark",
+          "upgrade_margin"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 9,
+    "verified": 9,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [
+      "accurate_passes.pct",
+      "below_ambition_benchmark",
+      "small_sample",
+      "upgrade_margin"
+    ],
+    "fully_verified": false
+  },
+  "flagged": true
+}

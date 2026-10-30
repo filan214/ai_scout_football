@@ -93,8 +93,9 @@ class LLM(_Strict):
     fallback_models: list[str] = Field(default_factory=list, max_length=1)
     temperature: float
     timeout_seconds: float
-    reasoning: bool
+    reasoning: bool | None
     max_completion_tokens: int
+    min_request_interval_seconds: float = Field(default=0, ge=0)
 
     @model_validator(mode="after")
     def _free_routing(self):

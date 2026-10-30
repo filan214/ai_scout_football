@@ -26,7 +26,7 @@ The current run uses 2025–26 statistics and the 2026-07-06 squad/value snapsho
 | Need calibration | **4/5 pass.** PPG correlation is **−0.369**, failing the required ≤−0.6. Goal difference: −0.555; market value (secondary, non-independent): −0.716. |
 | Ambition and evidence | Zero decreases / 420 comparisons; 132/135 used cells have sufficient evidence (97.8%). |
 | Level meaning | At title, 46.7% of used cells are Medium/High; at survive, 1.5%. Arsenal and Manchester City have zero High positions at title. |
-| Reports | New evidence/upgrade prompt v2: **0/20 generated, faithfulness unavailable**. Free OpenRouter routing is configured; a user-created OPENROUTER_API_KEY is needed before verification. Historical 311/311 checks do not validate the new contract. |
+| Reports | V0 prompt v2: **278/278 numeric claims verified (100.0%)** across 20 reports; 0 regenerated once, 0 flagged. Free API access verified; model/unit judgments still need review. [Examples and citations](docs/REPORT_EXAMPLES.md). |
 | Backtest | Pooled uplift **+51.7%** (95% CI 48.6% to 54.5%; 340/439 scored). |
 | Simple baseline | **Still better on next-season output:** +53.0% uplift; median outcome 80.1 vs model 79.5. |
 | Cost proxy | Median value €18m model vs €30m baseline; both median age 24. |
@@ -38,6 +38,11 @@ No parameters were tuned after seeing acceptance results. The work remains uncom
 ![Backtest of model and naive picks](docs/img/backtest.png)
 
 ![League-strength index compared with UEFA coefficients](docs/img/league_strength_uefa.png)
+
+
+### Pre-registered quality experiment
+
+V0 is retained under the stop rule. V1 selected six stats per position solely by player repeatability and possession correlation; it failed PPG calibration more severely (rho +0.207 vs V0 −0.369, requirement ≤−0.6). Both pass a/c/d/e. V1 reduced top-six-value-club shortlist bias (10% → 5%) and increased experiment backtest uplift (51.17% → 56.87%), but this does not establish better need calibration. V2 could not run because Sofascore ratings were inaccessible. No further variants or threshold changes were made. Full selection tables and frozen protocol: [QUALITY_EXPERIMENT.md](docs/QUALITY_EXPERIMENT.md); [results](docs/QUALITY_EXPERIMENT_RESULTS.md). Calibration (b) remains a documented limitation.
 
 ## How it works
 

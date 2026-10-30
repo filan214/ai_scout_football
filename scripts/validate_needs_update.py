@@ -152,15 +152,17 @@ def main():
             "Improvements: pooled uplift 50.90% → 51.74%; outcome median 78.71 → 79.45. "
             "The naive baseline still wins: 53.02% uplift versus 51.74%. "
             "Worse: floor −0.1 Jaccard 0.843 → 0.656; age −0.1 and blend −0.1 also decreased. "
-            "Model median value rose €15m → €18m. New report faithfulness is unavailable, not verified at 100%.",
+            "Model median value rose €15m → €18m. Current report completion and faithfulness are in "
+            "data/processed/eval/faithfulness.json; do not infer them from historical results.",
             "League-strength validation reran: five-season UEFA Pearson 0.9326 / Spearman 0.8667 (9 leagues). "
             "ClubElo's single eval retry returned HTTP 502; its correlation is null.",
             "## Reports and two review examples",
             "PROMPT_VERSION is v2 for the new evidence/upgrade contract (the earlier contract was named v4). "
             "All 20 fact sheets are saved in data/processed/report_fact_sheets.json. "
-            "ZenMux returned HTTP 402 reject_no_credit on 2026-10-29. Thus 0/20 new reports exist and the ≥95% "
-            "faithfulness requirement is unresolved. Historical cached reports are preserved but are not counted as "
-            "verification of the new contract. The two examples below are prepared fact sheets, not generated reports."]
+            f"Current generation status: {faith_new.get('status', 'ok')}, "
+            f"{faith_new['reports']}/{faith_new.get('expected_reports', 20)} reports. "
+            "Historical cached reports are not counted as verification of the new contract. "
+            "The two examples below are fact sheets; actual generated examples are in REPORT_EXAMPLES.md."]
     sheets = read(processed / "report_fact_sheets.json")["sheets"]
     for group in ("DM", "FB"):
         sheet = next(x for x in sheets if x["player.position"] == group)
@@ -169,11 +171,11 @@ def main():
             "Original player_season columns compare exactly, including every qualifying flag and percentile. "
             "Only sub_position was added. Streamlit AppTest rendered all five pages for West Ham/title "
             "with and without report access (10 page checks, zero exceptions). "
-            "Final pytest/Ruff output is recorded in HANDOFF.md. No commit: calibration b fails and live reports "
-            "remain blocked. No thresholds were adjusted.",
-            "After gateway access is enabled: run "
+            "Final pytest/Ruff output and branch/commit status are recorded in HANDOFF.md. "
+            "Calibration b remains a limitation. No thresholds were adjusted.",
+            "To regenerate V0 reports after configuring access: run "
             "`python pipeline.py --stage reports --club 'West Ham United' --ambition title`, "
-            "then rerun this audit. The requested two real report examples and faithfulness gate remain pending."]
+            "then rerun this audit. See current report status and examples before making a faithfulness claim."]
     (ROOT / "docs/NEEDS_IMPLEMENTATION.md").write_text("\n\n".join(out), encoding="utf-8")
     (processed / "eval/needs_update_comparison.json").write_text(json.dumps({
         "metrics": metrics, "bands": band_rows, "evidence_shares": shares,

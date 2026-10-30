@@ -36,6 +36,7 @@ SYSTEM_PROMPT = """Write a scouting report from the JSON facts. Reply with JSON 
 Rules:
 - Use only the facts. Copy numbers exactly; never calculate or round.
 - fact_keys: dotted paths of the facts a claim uses, e.g. "stats.tackles.pct".
+- Input keys are exact flat dotted keys. Copy each cited key verbatim; never shorten or invent a key.
 - Strengths and risks are about the player: stats, age, minutes, contract, value. small_sample true means few \
 minutes: state it as a risk.
 - Club need describes the squad, never a weakness of the candidate. Mention ambition and the supplied \
@@ -120,13 +121,14 @@ def nest(fact_sheet: dict) -> dict:
 
 
 def build_messages(fact_sheet: dict) -> tuple[str, str]:
-    """(system, user) prompt for PROMPT_VERSION; facts as compact nested JSON."""
-    return SYSTEM_PROMPT, json.dumps(nest(fact_sheet), ensure_ascii=False, separators=(",", ":"))
+    """(system, user) prompt; preserve exact dotted keys so small models can copy citations verbatim."""
+    return SYSTEM_PROMPT, json.dumps(fact_sheet, ensure_ascii=False, separators=(",", ":"))
 
 
 def cache_key(fact_sheet: dict, primary_model: str) -> str:
     """sha256(fact sheet JSON + PROMPT_VERSION + primary model) (§6.7)."""
-    payload = json.dumps(fact_sheet, sort_keys=True, ensure_ascii=False) + PROMPT_VERSION + primary_model
+    payload = (json.dumps(fact_sheet, sort_keys=True, ensure_ascii=False)
+               + PROMPT_VERSION + SYSTEM_PROMPT + primary_model)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 

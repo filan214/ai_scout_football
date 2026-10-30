@@ -1,0 +1,126 @@
+{
+  "key": "065f0ce16e949db487fc94c492ac63f976133973f7c176c9f3aee226196f3625",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "dots-studio/dots-3-note-preview:free",
+  "generated_at": "2026-10-30T18:23:16+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 846,
+    "completion": 5148,
+    "reasoning": 3959,
+    "total": 5994
+  },
+  "fact_sheet": {
+    "player.name": "Pedro Porro",
+    "player.age": 26,
+    "player.position": "FB",
+    "player.team": "Tottenham Hotspur",
+    "player.league": "Premier League",
+    "player.market_value_m": 35.0,
+    "player.minutes": 2798,
+    "player.matches": 34,
+    "player.minutes_share_pct": 82,
+    "player.small_sample": false,
+    "player.contract_months_left": 59.8,
+    "stats.tackles.p90": 2.44,
+    "stats.tackles.pct": 93,
+    "stats.interceptions.p90": 1.0,
+    "stats.interceptions.pct": 77,
+    "stats.xa.p90": 0.14,
+    "stats.xa.pct": 90,
+    "stats.key_passes.p90": 1.7,
+    "stats.key_passes.pct": 97,
+    "stats.ball_recoveries.p90": 4.28,
+    "stats.ball_recoveries.pct": 87,
+    "stats.successful_dribbles.p90": 0.6,
+    "stats.successful_dribbles.pct": 73,
+    "fit.score": 86.8,
+    "fit.rank": 7,
+    "fit.performance": 87.7,
+    "fit.age_score": 100,
+    "fit.value_score": 70.8,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 25.0,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Right-Back"
+  },
+  "report": {
+    "summary": "Pedro Porro is a 26‑year‑old right‑back who averages 2.44 tackles and 1.7 key passes per 90, achieving percentiles of 93 and 97. His fit score of 86.8 ranks 7th, and his 35.0 €m valuation leaves a 25.0 €m upgrade margin above the required 5.0 €m.",
+    "strengths": [
+      {
+        "text": "Averages 2.44 tackles and 4.28 ball recoveries per 90, ranking in the 93rd and 87th percentiles.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct",
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "Delivers 1.7 key passes and 0.14 expected assists per 90, placing him in the 97th and 90th percentiles.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct",
+          "stats.xa.p90",
+          "stats.xa.pct"
+        ]
+      },
+      {
+        "text": "Achieves a fit score of 86.8, ranks 7th, and offers a 25.0 €m upgrade margin over the required 5.0 €m.",
+        "fact_keys": [
+          "fit.score",
+          "fit.rank",
+          "fit.upgrade_margin",
+          "fit.required_upgrade_margin"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "The player is flagged as below the ambition benchmark, suggesting he may not meet the target.",
+        "fact_keys": [
+          "fit.below_ambition_benchmark"
+        ]
+      },
+      {
+        "text": "A 35.0 €m price tag consumes a large portion of the 60.0 €m budget, limiting further upgrades.",
+        "fact_keys": [
+          "player.market_value_m",
+          "club_need.budget_m"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 24,
+    "verified": 24,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

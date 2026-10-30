@@ -304,6 +304,9 @@ def run():
             [{"club": k, "value_m": v} for k, v in r["bias_top_clubs"].items()]))
     report += "\nV2 unavailable: Sofascore source failed. No substitute, extra variants or thresholds were tried. "
     report += "Production stays V0; no V1/V2 reports were generated. All results include selection/coverage changes.\n"
+    report += ("\nBacktest context: both experiment variants use West Ham/title; sensitivity uses top4. "
+               "The earlier deployment evaluation used Arsenal/top4. Each variant's backtest outcome uses "
+               "its own statistic composite, so higher uplift is not a common-outcome head-to-head win.\n")
     (ROOT / "docs/QUALITY_EXPERIMENT_RESULTS.md").write_text(report, encoding="utf-8")
     print(md(pd.DataFrame(rows)), decision)
 

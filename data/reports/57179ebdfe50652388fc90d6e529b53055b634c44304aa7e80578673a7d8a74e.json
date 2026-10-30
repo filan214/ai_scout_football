@@ -1,0 +1,117 @@
+{
+  "key": "57179ebdfe50652388fc90d6e529b53055b634c44304aa7e80578673a7d8a74e",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "nvidia/nemotron-3.5-super-vl:free",
+  "generated_at": "2026-10-30T18:21:53+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 913,
+    "completion": 6337,
+    "reasoning": 6000,
+    "total": 7250
+  },
+  "fact_sheet": {
+    "player.name": "Quentin Merlin",
+    "player.age": 24,
+    "player.position": "FB",
+    "player.team": "Rennes",
+    "player.league": "Ligue 1",
+    "player.market_value_m": 15.0,
+    "player.minutes": 2532,
+    "player.matches": 33,
+    "player.minutes_share_pct": 83,
+    "player.small_sample": false,
+    "player.contract_months_left": 35.8,
+    "stats.tackles.p90": 1.99,
+    "stats.tackles.pct": 74,
+    "stats.interceptions.p90": 1.24,
+    "stats.interceptions.pct": 87,
+    "stats.xa.p90": 0.16,
+    "stats.xa.pct": 89,
+    "stats.key_passes.p90": 1.67,
+    "stats.key_passes.pct": 94,
+    "stats.ball_recoveries.p90": 4.76,
+    "stats.ball_recoveries.pct": 87,
+    "stats.successful_dribbles.p90": 0.6,
+    "stats.successful_dribbles.pct": 63,
+    "fit.score": 87.8,
+    "fit.rank": 4,
+    "fit.performance": 83.9,
+    "fit.age_score": 100,
+    "fit.value_score": 87.5,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 21.1,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Left-Back"
+  },
+  "report": {
+    "summary": "Quentin Merlin is a 24-year-old left-back at Rennes valued at €15.0m with 35.8 months left on his contract. West Ham United pursues title ambition and requires a full-back upgrade, with a supplied margin of 21.1 against a required 5.0.",
+    "strengths": [
+      {
+        "text": "Averages 1.67 key passes per 90, placing him in the 94th percentile for that stat.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct"
+        ]
+      },
+      {
+        "text": "Records 4.76 ball recoveries per 90 at the 87th percentile and 1.24 interceptions per 90 at the 87th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct",
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Has played 2532 minutes, an 83% share, with 35.8 months left on his contract.",
+        "fact_keys": [
+          "player.minutes",
+          "player.minutes_share_pct",
+          "player.contract_months_left"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Completes 0.6 successful dribbles per 90, ranking in the 63rd percentile.",
+        "fact_keys": [
+          "stats.successful_dribbles.p90",
+          "stats.successful_dribbles.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

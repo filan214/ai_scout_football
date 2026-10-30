@@ -1,0 +1,119 @@
+{
+  "key": "b880b517f53a006fefd1aa1d47e27f1f17a9ce873f5331608e2c7a932b5da594",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "dots-studio/dots-3-note-preview:free",
+  "generated_at": "2026-10-30T18:21:10+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 848,
+    "completion": 3260,
+    "reasoning": 2902,
+    "total": 4108
+  },
+  "fact_sheet": {
+    "player.name": "Arthur",
+    "player.age": 23,
+    "player.position": "FB",
+    "player.team": "Bayer 04 Leverkusen",
+    "player.league": "Bundesliga",
+    "player.market_value_m": 8.0,
+    "player.minutes": 1132,
+    "player.matches": 20,
+    "player.minutes_share_pct": 37,
+    "player.small_sample": true,
+    "player.contract_months_left": 59.8,
+    "stats.tackles.p90": 1.59,
+    "stats.tackles.pct": 66,
+    "stats.interceptions.p90": 1.35,
+    "stats.interceptions.pct": 97,
+    "stats.xa.p90": 0.14,
+    "stats.xa.pct": 82,
+    "stats.key_passes.p90": 1.11,
+    "stats.key_passes.pct": 75,
+    "stats.ball_recoveries.p90": 4.69,
+    "stats.ball_recoveries.pct": 95,
+    "stats.successful_dribbles.p90": 1.1,
+    "stats.successful_dribbles.pct": 91,
+    "fit.score": 88.3,
+    "fit.rank": 3,
+    "fit.performance": 82.6,
+    "fit.age_score": 100,
+    "fit.value_score": 93.3,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 19.9,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Right-Back"
+  },
+  "report": {
+    "summary": "Arthur is a 23‑year‑old right‑back with a 97th‑percentile interception rate and a 95th‑percentile ball‑recovery rate. His fit score of 88.3 ranks third, but his 1,132 minutes represent a small sample.",
+    "strengths": [
+      {
+        "text": "Elite interception rate at the 97th percentile.",
+        "fact_keys": [
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Strong ball‑recovery ability at the 95th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "High overall fit score of 88.3, ranking third among candidates.",
+        "fact_keys": [
+          "fit.score",
+          "fit.rank"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample with only 1,132 minutes and a 37 % share.",
+        "fact_keys": [
+          "player.minutes",
+          "player.minutes_share_pct",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Tackle success only at the 66th percentile.",
+        "fact_keys": [
+          "stats.tackles.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 11,
+    "verified": 11,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

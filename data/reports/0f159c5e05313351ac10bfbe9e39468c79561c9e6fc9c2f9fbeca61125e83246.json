@@ -1,0 +1,127 @@
+{
+  "key": "0f159c5e05313351ac10bfbe9e39468c79561c9e6fc9c2f9fbeca61125e83246",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "dots-studio/dots-3-note-preview:free",
+  "generated_at": "2026-10-30T18:25:14+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 848,
+    "completion": 5095,
+    "reasoning": 3707,
+    "total": 5943
+  },
+  "fact_sheet": {
+    "player.name": "Mauro Júnior",
+    "player.age": 27,
+    "player.position": "FB",
+    "player.team": "PSV",
+    "player.league": "Eredivisie",
+    "player.market_value_m": 18.0,
+    "player.minutes": 2086,
+    "player.matches": 26,
+    "player.minutes_share_pct": 68,
+    "player.small_sample": false,
+    "player.contract_months_left": 35.8,
+    "stats.tackles.p90": 2.59,
+    "stats.tackles.pct": 82,
+    "stats.interceptions.p90": 1.64,
+    "stats.interceptions.pct": 92,
+    "stats.xa.p90": 0.21,
+    "stats.xa.pct": 85,
+    "stats.key_passes.p90": 1.47,
+    "stats.key_passes.pct": 71,
+    "stats.ball_recoveries.p90": 7.16,
+    "stats.ball_recoveries.pct": 97,
+    "stats.successful_dribbles.p90": 1.0,
+    "stats.successful_dribbles.pct": 73,
+    "fit.score": 86.0,
+    "fit.rank": 10,
+    "fit.performance": 84.9,
+    "fit.age_score": 90,
+    "fit.value_score": 85.0,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 22.2,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Left-Back"
+  },
+  "report": {
+    "summary": "Mauro Júnior is a 27-year-old left-back with a high fit score of 86.0 and a significant 22.2 upgrade margin for West Ham. He offers strong defensive presence with 7.16 ball recoveries per 90 in the 97th percentile.",
+    "strengths": [
+      {
+        "text": "Exceptional defensive work and ball recovery, with 7.16 ball recoveries per 90 in the 97th percentile and 2.59 tackles per 90 in the 82nd percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct",
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "Solid creative contribution from the back, including 0.21 expected assists per 90 in the 85th percentile and 1.47 key passes per 90.",
+        "fact_keys": [
+          "stats.xa.p90",
+          "stats.xa.pct",
+          "stats.key_passes.p90",
+          "stats.key_passes.pct"
+        ]
+      },
+      {
+        "text": "Strong overall fit with an upgrade margin of 22.2, exceeding the required 5.0 threshold for West Ham's squad.",
+        "fact_keys": [
+          "fit.upgrade_margin",
+          "fit.required_upgrade_margin",
+          "fit.score"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "The player falls short of the high benchmark composite of 89.0 required for West Ham's title ambition, with a below-ambition benchmark flag.",
+        "fact_keys": [
+          "fit.below_ambition_benchmark",
+          "fit.benchmark_composite",
+          "club_need.ambition"
+        ]
+      },
+      {
+        "text": "His key passes and successful dribbles are in lower percentiles (71st and 73rd) compared to his elite defensive metrics.",
+        "fact_keys": [
+          "stats.key_passes.pct",
+          "stats.successful_dribbles.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 17,
+    "verified": 17,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

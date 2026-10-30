@@ -1,0 +1,16 @@
+{
+  "reports": 20,
+  "regenerated_once": 0,
+  "flagged": 0,
+  "tokens": 113072,
+  "numbers": 278,
+  "verified": 278,
+  "verified_rate": 1.0,
+  "models_used": [
+    "dots-studio/dots-3-note-preview:free",
+    "liquid/lfm-2.5-2.6b:free",
+    "nvidia/nemotron-3.5-super-vl:free",
+    "xingchen-agi/xing4.0-29b-a4b:free"
+  ],
+  "scope": "current V0 batch; excludes earlier abandoned/uncached attempts"
+}

@@ -1,23 +1,54 @@
 {
-  "status": "not_configured",
-  "provider": "openrouter",
   "model": "openrouter/free",
-  "attempts": 0,
-  "http_status": null,
-  "error_message": "Set OPENROUTER_API_KEY in .env; no request has been made to OpenRouter.",
-  "previous_probe": {
-    "model": "minimax/minimax-m3.1-flash",
-    "attempts": 1,
-    "http_status": 402,
-    "error_type": "reject_no_credit",
-    "error_message": "Access denied: this model is only available to accounts with a balance greater than 0. This is an anti-abuse measure, not a usage charge. (request_id: 5d2cffa9d94642739d8641c7d205ba47)",
-    "request_id": "5d2cffa9d94642739d8641c7d205ba47",
-    "status": "failed",
-    "key_source": {
-      "env_var": "ZENMUX_API_KEY",
-      "source": ".env",
-      "masked": "sk-a\u2026588a",
-      "os_key_differs": false
+  "attempts": 1,
+  "http_status": 200,
+  "error_type": null,
+  "error_message": null,
+  "request_id": null,
+  "status": "ok",
+  "usage": {
+    "prompt_tokens": 13,
+    "completion_tokens": 55,
+    "total_tokens": 68,
+    "cost": 0,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0,
+      "upstream_inference_prompt_cost": 0,
+      "upstream_inference_completions_cost": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 62,
+      "image_tokens": 0,
+      "audio_tokens": 0
     }
+  },
+  "key_source": {
+    "env_var": "OPENROUTER_API_KEY",
+    "source": ".env",
+    "masked": "sk-o…a360",
+    "os_key_differs": false
+  },
+  "report_generation": {
+    "reports": 20,
+    "regenerated_once": 0,
+    "flagged": 0,
+    "tokens": 113072,
+    "numbers": 278,
+    "verified": 278,
+    "verified_rate": 1.0,
+    "models_used": [
+      "dots-studio/dots-3-note-preview:free",
+      "liquid/lfm-2.5-2.6b:free",
+      "nvidia/nemotron-3.5-super-vl:free",
+      "xingchen-agi/xing4.0-29b-a4b:free"
+    ],
+    "scope": "current V0 batch; excludes earlier abandoned/uncached attempts"
   }
 }

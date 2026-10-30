@@ -1,0 +1,122 @@
+{
+  "key": "f499b84a4e929268dcd8db8e62417c474833897d66306d8525036ad3b2912d3a",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "nvidia/nemotron-3.5-super-vl:free",
+  "generated_at": "2026-10-30T18:23:45+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 909,
+    "completion": 4218,
+    "reasoning": 3912,
+    "total": 5127
+  },
+  "fact_sheet": {
+    "player.name": "Lucas Pires",
+    "player.age": 25,
+    "player.position": "FB",
+    "player.team": "Burnley",
+    "player.league": "Premier League",
+    "player.market_value_m": 4.0,
+    "player.minutes": 1406,
+    "player.matches": 20,
+    "player.minutes_share_pct": 41,
+    "player.small_sample": true,
+    "player.contract_months_left": 23.8,
+    "stats.tackles.p90": 1.86,
+    "stats.tackles.pct": 61,
+    "stats.interceptions.p90": 1.28,
+    "stats.interceptions.pct": 84,
+    "stats.xa.p90": 0.1,
+    "stats.xa.pct": 69,
+    "stats.key_passes.p90": 1.28,
+    "stats.key_passes.pct": 90,
+    "stats.ball_recoveries.p90": 5.5,
+    "stats.ball_recoveries.pct": 93,
+    "stats.successful_dribbles.p90": 1.2,
+    "stats.successful_dribbles.pct": 96,
+    "fit.score": 86.8,
+    "fit.rank": 8,
+    "fit.performance": 79.1,
+    "fit.age_score": 100,
+    "fit.value_score": 96.7,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 16.3,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Left-Back"
+  },
+  "report": {
+    "summary": "Lucas Pires is a 25-year-old left-back at Burnley valued at €4.0m. West Ham United's title need shows a 16.3 upgrade margin over Malick Diouf, exceeding the required 5.0.",
+    "strengths": [
+      {
+        "text": "5.5 ball recoveries per 90, ranking in the 93rd percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "1.2 successful dribbles per 90, ranking in the 96th percentile.",
+        "fact_keys": [
+          "stats.successful_dribbles.p90",
+          "stats.successful_dribbles.pct"
+        ]
+      },
+      {
+        "text": "1.28 key passes per 90, ranking in the 90th percentile.",
+        "fact_keys": [
+          "stats.key_passes.p90",
+          "stats.key_passes.pct"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Only 1,406 minutes across 20 matches; small sample size.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "1.86 tackles per 90, ranking in the 61st percentile.",
+        "fact_keys": [
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 14,
+    "verified": 14,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

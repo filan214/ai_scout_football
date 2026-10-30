@@ -34,6 +34,11 @@ if faith and bt:
 
 # --- faithfulness
 st.header("1. Can we trust the report numbers?")
+access = ui.eval_json("fallback_probe")
+if access:
+    st.caption(f"Latest report API access check: HTTP {access.get('http_status', 'not tested')} · "
+               f"{access.get('status', 'unknown')} · {access.get('model', '')}. "
+               "Access success and report verification are separate checks.")
 if faith:
     if faith.get("status", "ok") != "ok":
         st.warning(f"Report verification is {faith['status']}: {faith['reports']}/"
@@ -160,3 +165,14 @@ if calibration:
     elo = calibration.get("clubelo", {"status": "unavailable"})
     st.caption(f"ClubElo: {elo['status']}. Independent need calibration uses league results. "
                + elo.get("error", ""))
+
+experiment = ui.eval_json("quality_experiment/summary")
+if experiment:
+    with st.expander("Quality-stat experiment: frozen selection and stop-rule result"):
+        st.write(experiment["decision"])
+        st.caption("Stat sets were selected by repeatability and possession correlation, without match-result "
+                   "labels. V2 is unavailable because Sofascore ratings could not be accessed. "
+                   "The current model remains V0.")
+        results = pd.DataFrame(experiment["results"])
+        view = results.astype(str)
+        st.dataframe(view, hide_index=True, width="stretch")

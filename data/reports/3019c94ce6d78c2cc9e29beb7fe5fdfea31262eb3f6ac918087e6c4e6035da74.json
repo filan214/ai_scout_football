@@ -1,0 +1,122 @@
+{
+  "key": "3019c94ce6d78c2cc9e29beb7fe5fdfea31262eb3f6ac918087e6c4e6035da74",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "dots-studio/dots-3-note-preview:free",
+  "generated_at": "2026-10-30T18:19:42+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 849,
+    "completion": 3086,
+    "reasoning": 2593,
+    "total": 3935
+  },
+  "fact_sheet": {
+    "player.name": "Hugo Bueno",
+    "player.age": 23,
+    "player.position": "FB",
+    "player.team": "Wolverhampton Wanderers",
+    "player.league": "Premier League",
+    "player.market_value_m": 12.0,
+    "player.minutes": 2364,
+    "player.matches": 35,
+    "player.minutes_share_pct": 69,
+    "player.small_sample": false,
+    "player.contract_months_left": 23.8,
+    "stats.tackles.p90": 2.55,
+    "stats.tackles.pct": 89,
+    "stats.interceptions.p90": 1.45,
+    "stats.interceptions.pct": 92,
+    "stats.xa.p90": 0.13,
+    "stats.xa.pct": 87,
+    "stats.key_passes.p90": 1.45,
+    "stats.key_passes.pct": 94,
+    "stats.ball_recoveries.p90": 4.38,
+    "stats.ball_recoveries.pct": 78,
+    "stats.successful_dribbles.p90": 1.2,
+    "stats.successful_dribbles.pct": 96,
+    "fit.score": 90.9,
+    "fit.rank": 1,
+    "fit.performance": 88.2,
+    "fit.age_score": 100,
+    "fit.value_score": 90.0,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 25.4,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Left-Back"
+  },
+  "report": {
+    "summary": "Hugo Bueno is a 23‑year‑old left‑back with 89th‑percentile tackles, 92nd‑percentile interceptions, 94th‑percentile key passes and 96th‑percentile dribbles, and a fit score of 90.9 ranked first. However, he falls below the 89.0 composite ambition benchmark and his contract ends in 23.8 months.",
+    "strengths": [
+      {
+        "text": "Tackles and interceptions are in the 89th and 92nd percentiles respectively.",
+        "fact_keys": [
+          "stats.tackles.pct",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Key passes and successful dribbles rank in the 94th and 96th percentiles.",
+        "fact_keys": [
+          "stats.key_passes.pct",
+          "stats.successful_dribbles.pct"
+        ]
+      },
+      {
+        "text": "Overall fit score is 90.9, rank 1, with perfect age and high value scores.",
+        "fact_keys": [
+          "fit.score",
+          "fit.rank",
+          "fit.age_score",
+          "fit.value_score"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Despite high scores, the player falls below the 89.0 composite benchmark for title ambition.",
+        "fact_keys": [
+          "fit.below_ambition_benchmark",
+          "fit.benchmark_composite"
+        ]
+      },
+      {
+        "text": "With 23.8 months remaining, contract uncertainty could affect long‑term planning.",
+        "fact_keys": [
+          "player.contract_months_left"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 16,
+    "verified": 16,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

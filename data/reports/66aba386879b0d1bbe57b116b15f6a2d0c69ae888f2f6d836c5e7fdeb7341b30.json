@@ -1,0 +1,128 @@
+{
+  "key": "66aba386879b0d1bbe57b116b15f6a2d0c69ae888f2f6d836c5e7fdeb7341b30",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "dots-studio/dots-3-note-preview:free",
+  "generated_at": "2026-10-30T18:15:26+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 876,
+    "completion": 5842,
+    "reasoning": 4758,
+    "total": 6718
+  },
+  "fact_sheet": {
+    "player.name": "André",
+    "player.age": 24,
+    "player.position": "DM",
+    "player.team": "Wolverhampton Wanderers",
+    "player.league": "Premier League",
+    "player.market_value_m": 25.0,
+    "player.minutes": 2766,
+    "player.matches": 35,
+    "player.minutes_share_pct": 81,
+    "player.small_sample": false,
+    "player.contract_months_left": 47.8,
+    "stats.tackles.p90": 2.67,
+    "stats.tackles.pct": 90,
+    "stats.interceptions.p90": 0.98,
+    "stats.interceptions.pct": 56,
+    "stats.ball_recoveries.p90": 6.9,
+    "stats.ball_recoveries.pct": 97,
+    "stats.accurate_passes_pct.value": 91.4,
+    "stats.accurate_passes_pct.pct": 96,
+    "stats.accurate_passes.p90": 39.0,
+    "stats.accurate_passes.pct": 82,
+    "stats.accurate_long_balls.p90": 1.9,
+    "stats.accurate_long_balls.pct": 69,
+    "fit.score": 85.7,
+    "fit.rank": 5,
+    "fit.performance": 83.1,
+    "fit.age_score": 100,
+    "fit.value_score": 79.2,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 65.2,
+    "fit.current_best_regular": "Soungoutou Magassa",
+    "fit.current_best_composite": 64.6,
+    "fit.upgrade_margin": 18.5,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 98.8,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 99.3,
+    "club_need.stat_weight.tackles": 0.1134,
+    "club_need.benchmark.interceptions": 100.0,
+    "club_need.stat_weight.interceptions": 0.1639,
+    "club_need.benchmark.ball_recoveries": 99.4,
+    "club_need.stat_weight.ball_recoveries": 0.2197,
+    "club_need.benchmark.accurate_passes_pct": 97.4,
+    "club_need.stat_weight.accurate_passes_pct": 0.2214,
+    "club_need.benchmark.accurate_passes": 99.1,
+    "club_need.stat_weight.accurate_passes": 0.1384,
+    "club_need.benchmark.accurate_long_balls": 97.8,
+    "club_need.stat_weight.accurate_long_balls": 0.1432,
+    "player.sub_position": "Defensive Midfield"
+  },
+  "report": {
+    "summary": "André is a 24-year-old defensive midfielder who has played 81% of available minutes for Wolverhampton Wanderers in the Premier League. He fits West Ham United's need for a title-challenging defensive midfielder, offering an upgrade margin of 18.5 over the current best composite.",
+    "strengths": [
+      {
+        "text": "André excels in ball recoveries with 6.9 per 90 in the 97th percentile, and tackles at 2.67 per 90 in the 90th percentile.",
+        "fact_keys": [
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct",
+          "stats.tackles.p90",
+          "stats.tackles.pct"
+        ]
+      },
+      {
+        "text": "He maintains a high passing accuracy of 91.4% in the 96th percentile, with 39.0 accurate passes per 90 in the 82nd percentile.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct",
+          "stats.accurate_passes.p90",
+          "stats.accurate_passes.pct"
+        ]
+      },
+      {
+        "text": "At 24 years old with 47.8 months left on his contract, he has a fit score of 85.7 and an age score of 100.",
+        "fact_keys": [
+          "player.age",
+          "player.contract_months_left",
+          "fit.score",
+          "fit.age_score"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "His interception rate of 0.98 per 90 is in only the 56th percentile, which is lower than his other defensive metrics.",
+        "fact_keys": [
+          "stats.interceptions.p90",
+          "stats.interceptions.pct"
+        ]
+      },
+      {
+        "text": "Although he offers an upgrade margin of 18.5, the below ambition benchmark flag is true for West Ham's title ambition.",
+        "fact_keys": [
+          "fit.upgrade_margin",
+          "fit.below_ambition_benchmark",
+          "club_need.ambition"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 18,
+    "verified": 18,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

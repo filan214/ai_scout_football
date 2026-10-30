@@ -69,8 +69,9 @@ llm:                              # free OpenRouter inference; no paid model fal
   fallback_models: []
   temperature: 0.2
   timeout_seconds: 180
-  reasoning: false                # copying facts needs no reasoning; v1 spent 71% of its tokens on it (§15)
-  max_completion_tokens: 800
+  reasoning: null                 # free endpoints may require reasoning; leave their default intact
+  max_completion_tokens: 8192     # reserve output for JSON after mandatory endpoint reasoning
+  min_request_interval_seconds: 4  # stay below the free tier's 20 requests/minute
 
 reports:
   small_sample_minutes_share: 0.5 # below this share of league minutes the fact sheet flags a small sample

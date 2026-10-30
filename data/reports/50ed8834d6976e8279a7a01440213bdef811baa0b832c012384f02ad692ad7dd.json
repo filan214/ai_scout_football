@@ -1,0 +1,128 @@
+{
+  "key": "50ed8834d6976e8279a7a01440213bdef811baa0b832c012384f02ad692ad7dd",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "dots-studio/dots-3-note-preview:free",
+  "generated_at": "2026-10-30T18:14:26+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 867,
+    "completion": 6905,
+    "reasoning": 5970,
+    "total": 7772
+  },
+  "fact_sheet": {
+    "player.name": "Enzo Barrenechea",
+    "player.age": 25,
+    "player.position": "DM",
+    "player.team": "Benfica",
+    "player.league": "Primeira Liga",
+    "player.market_value_m": 12.0,
+    "player.minutes": 1798,
+    "player.matches": 26,
+    "player.minutes_share_pct": 59,
+    "player.small_sample": false,
+    "stats.tackles.p90": 2.2,
+    "stats.tackles.pct": 67,
+    "stats.interceptions.p90": 1.65,
+    "stats.interceptions.pct": 88,
+    "stats.ball_recoveries.p90": 5.46,
+    "stats.ball_recoveries.pct": 72,
+    "stats.accurate_passes_pct.value": 90.3,
+    "stats.accurate_passes_pct.pct": 92,
+    "stats.accurate_passes.p90": 64.7,
+    "stats.accurate_passes.pct": 86,
+    "stats.accurate_long_balls.p90": 4.5,
+    "stats.accurate_long_balls.pct": 92,
+    "fit.score": 88.0,
+    "fit.rank": 4,
+    "fit.performance": 83.4,
+    "fit.age_score": 100,
+    "fit.value_score": 90.0,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 65.2,
+    "fit.current_best_regular": "Soungoutou Magassa",
+    "fit.current_best_composite": 64.6,
+    "fit.upgrade_margin": 18.7,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 98.8,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 99.3,
+    "club_need.stat_weight.tackles": 0.1134,
+    "club_need.benchmark.interceptions": 100.0,
+    "club_need.stat_weight.interceptions": 0.1639,
+    "club_need.benchmark.ball_recoveries": 99.4,
+    "club_need.stat_weight.ball_recoveries": 0.2197,
+    "club_need.benchmark.accurate_passes_pct": 97.4,
+    "club_need.stat_weight.accurate_passes_pct": 0.2214,
+    "club_need.benchmark.accurate_passes": 99.1,
+    "club_need.stat_weight.accurate_passes": 0.1384,
+    "club_need.benchmark.accurate_long_balls": 97.8,
+    "club_need.stat_weight.accurate_long_balls": 0.1432,
+    "player.sub_position": "Defensive Midfield"
+  },
+  "report": {
+    "summary": "Enzo Barrenechea is a 25-year-old defensive midfielder with a high fit score. He offers strong defensive metrics but remains below the title benchmark.",
+    "strengths": [
+      {
+        "text": "Strong passing accuracy with 90.3% accurate passes and 92% long balls.",
+        "fact_keys": [
+          "stats.accurate_passes_pct.value",
+          "stats.accurate_passes_pct.pct",
+          "stats.accurate_long_balls.pct"
+        ]
+      },
+      {
+        "text": "Solid defensive metrics with 88th percentile interceptions and 5.46 recoveries.",
+        "fact_keys": [
+          "stats.interceptions.pct",
+          "stats.interceptions.p90",
+          "stats.ball_recoveries.p90",
+          "stats.ball_recoveries.pct"
+        ]
+      },
+      {
+        "text": "High fit score of 88.0 and age of 25, providing an upgrade margin of 18.7.",
+        "fact_keys": [
+          "fit.score",
+          "player.age",
+          "fit.upgrade_margin",
+          "fit.current_best_composite",
+          "fit.age_score"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Below the ambition benchmark, with a composite benchmark of 98.8 for the title standard.",
+        "fact_keys": [
+          "fit.below_ambition_benchmark",
+          "fit.benchmark_composite",
+          "club_need.ambition"
+        ]
+      },
+      {
+        "text": "Played 1,798 minutes across 26 matches, representing a 59% minutes share, suggesting rotation.",
+        "fact_keys": [
+          "player.minutes",
+          "player.matches",
+          "player.minutes_share_pct"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 12,
+    "verified": 12,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

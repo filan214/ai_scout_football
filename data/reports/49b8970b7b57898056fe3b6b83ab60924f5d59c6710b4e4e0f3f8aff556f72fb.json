@@ -1,0 +1,119 @@
+{
+  "key": "49b8970b7b57898056fe3b6b83ab60924f5d59c6710b4e4e0f3f8aff556f72fb",
+  "prompt_version": "v2",
+  "model_requested": "openrouter/free",
+  "model_used": "liquid/lfm-2.5-2.6b:free",
+  "generated_at": "2026-10-30T18:22:21+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 872,
+    "completion": 3105,
+    "reasoning": 2477,
+    "total": 3977
+  },
+  "fact_sheet": {
+    "player.name": "Neco Williams",
+    "player.age": 25,
+    "player.position": "FB",
+    "player.team": "Nottingham Forest",
+    "player.league": "Premier League",
+    "player.market_value_m": 28.0,
+    "player.minutes": 3206,
+    "player.matches": 37,
+    "player.minutes_share_pct": 94,
+    "player.small_sample": false,
+    "player.contract_months_left": 35.8,
+    "stats.tackles.p90": 2.69,
+    "stats.tackles.pct": 94,
+    "stats.interceptions.p90": 1.32,
+    "stats.interceptions.pct": 91,
+    "stats.xa.p90": 0.11,
+    "stats.xa.pct": 78,
+    "stats.key_passes.p90": 1.01,
+    "stats.key_passes.pct": 80,
+    "stats.ball_recoveries.p90": 4.6,
+    "stats.ball_recoveries.pct": 87,
+    "stats.successful_dribbles.p90": 0.9,
+    "stats.successful_dribbles.pct": 90,
+    "fit.score": 87.1,
+    "fit.rank": 6,
+    "fit.performance": 86.3,
+    "fit.age_score": 100,
+    "fit.value_score": 76.7,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "FB",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 90.4,
+    "fit.current_best_regular": "Malick Diouf",
+    "fit.current_best_composite": 62.8,
+    "fit.upgrade_margin": 23.5,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 89.0,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 94.6,
+    "club_need.stat_weight.tackles": 0.224,
+    "club_need.benchmark.interceptions": 97.1,
+    "club_need.stat_weight.interceptions": 0.1571,
+    "club_need.benchmark.xa": 77.0,
+    "club_need.stat_weight.xa": 0.2216,
+    "club_need.benchmark.key_passes": 82.5,
+    "club_need.stat_weight.key_passes": 0.1416,
+    "club_need.benchmark.ball_recoveries": 94.1,
+    "club_need.stat_weight.ball_recoveries": 0.1876,
+    "club_need.benchmark.successful_dribbles": 90.0,
+    "club_need.stat_weight.successful_dribbles": 0.0681,
+    "player.sub_position": "Left-Back"
+  },
+  "report": {
+    "summary": "Neco Williams is a 25-year-old left-back for Nottingham Forest with strong defensive metrics and high fit score, though he falls short of West Ham's title ambition benchmark.",
+    "strengths": [
+      {
+        "text": "Excellent defensive contribution with 94% tackle percentage and 80% key pass rate",
+        "fact_keys": [
+          "stats.tackles.pct",
+          "stats.key_passes.pct"
+        ]
+      },
+      {
+        "text": "High work rate shown by 87% ball recovery percentage and 90% successful dribble rate",
+        "fact_keys": [
+          "stats.ball_recoveries.pct",
+          "stats.successful_dribbles.pct"
+        ]
+      },
+      {
+        "text": "Strong overall fit with 87.1 score and 6th rank among candidates",
+        "fact_keys": [
+          "fit.score",
+          "fit.rank"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Falls below West Ham's ambition benchmark",
+        "fact_keys": [
+          "fit.below_ambition_benchmark"
+        ]
+      },
+      {
+        "text": "Contract has 35.8 months remaining, requiring long-term commitment",
+        "fact_keys": [
+          "player.contract_months_left"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 8,
+    "verified": 8,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

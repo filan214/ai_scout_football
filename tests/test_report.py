@@ -55,7 +55,7 @@ def test_messages_are_compact_nested_json(settings):
     fs = report.build_fact_sheet(PLAYER, TARGET, NEED, settings, "Bundesliga")
     system, user = report.build_messages(fs)
     facts = json.loads(user)
-    assert facts["stats"]["ball_recoveries"]["pct"] == 91 and facts["club_need"]["position"] == "DM"
+    assert facts["stats.ball_recoveries.pct"] == 91 and facts["club_need.position"] == "DM"
     assert ": " not in user and "\n" not in user                     # no indentation or spaces
     assert "small_sample" in system and "verdict" not in system      # verdict is computed, not written
     assert report.nest({"a.b.c": 1, "a.b.d": 2, "e": 3}) == {"a": {"b": {"c": 1, "d": 2}}, "e": 3}
@@ -112,6 +112,13 @@ def test_cache_key_changes_with_facts_and_model(settings):
     key = report.cache_key(fs, "a/model")
     assert key == report.cache_key(dict(reversed(list(fs.items()))), "a/model")   # key order irrelevant
     assert key != report.cache_key(fs | {"fit.rank": 2}, "a/model") != report.cache_key(fs, "b/model")
+
+
+def test_prompt_text_change_invalidates_cache_even_when_version_is_unchanged(settings, monkeypatch):
+    fs = report.build_fact_sheet(PLAYER, TARGET, NEED, settings, "Bundesliga")
+    before = report.cache_key(fs, "same/model")
+    monkeypatch.setattr(report, "SYSTEM_PROMPT", report.SYSTEM_PROMPT + "\nCopy citation keys exactly.")
+    assert report.cache_key(fs, "same/model") != before
 
 
 def test_failed_batch_has_no_faithfulness_claim():
@@ -171,7 +178,6 @@ def test_completer_retries_invalid_json_sums_usage_and_sends_options(settings):
     assert first["model"] == settings.llm.primary_model and first["response_format"] == {"type": "json_object"}
     assert first["max_tokens"] == settings.llm.max_completion_tokens
     assert first["extra_body"] == {
-        "reasoning": {"enabled": settings.llm.reasoning},
         "provider": {"require_parameters": True, "max_price": {"prompt": 0, "completion": 0, "request": 0}}}
 
 

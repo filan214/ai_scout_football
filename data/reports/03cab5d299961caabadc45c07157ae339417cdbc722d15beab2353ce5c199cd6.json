@@ -1,0 +1,114 @@
+{
+  "key": "03cab5d299961caabadc45c07157ae339417cdbc722d15beab2353ce5c199cd6",
+  "prompt_version": "v2",
+  "model_requested": "liquid/lfm-2.5-2.6b:free",
+  "model_used": "liquid/lfm-2.5-2.6b:free",
+  "generated_at": "2026-10-30T17:13:05+00:00",
+  "attempts": 1,
+  "usage": {
+    "prompt": 719,
+    "completion": 2337,
+    "reasoning": 2114,
+    "total": 3056
+  },
+  "fact_sheet": {
+    "player.name": "Nico González",
+    "player.age": 24,
+    "player.position": "DM",
+    "player.team": "Manchester City",
+    "player.league": "Premier League",
+    "player.market_value_m": 40.0,
+    "player.minutes": 1567,
+    "player.matches": 25,
+    "player.minutes_share_pct": 46,
+    "player.small_sample": true,
+    "player.contract_months_left": 35.8,
+    "stats.tackles.p90": 2.41,
+    "stats.tackles.pct": 98,
+    "stats.interceptions.p90": 1.38,
+    "stats.interceptions.pct": 98,
+    "stats.ball_recoveries.p90": 5.17,
+    "stats.ball_recoveries.pct": 99,
+    "stats.accurate_passes_pct.value": 90.3,
+    "stats.accurate_passes_pct.pct": 92,
+    "stats.accurate_passes.p90": 68.3,
+    "stats.accurate_passes.pct": 99,
+    "stats.accurate_long_balls.p90": 2.0,
+    "stats.accurate_long_balls.pct": 73,
+    "fit.score": 89.4,
+    "fit.rank": 2,
+    "fit.performance": 93.5,
+    "fit.age_score": 100,
+    "fit.value_score": 66.7,
+    "club_need.club": "West Ham United",
+    "club_need.ambition": "title",
+    "club_need.budget_m": 60.0,
+    "club_need.position": "DM",
+    "club_need.definition": "Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary).",
+    "club_need.evidence": "sufficient",
+    "club_need.rated_share_pct": 65.2,
+    "fit.current_best_regular": "Soungoutou Magassa",
+    "fit.current_best_composite": 64.6,
+    "fit.upgrade_margin": 28.9,
+    "fit.required_upgrade_margin": 5.0,
+    "fit.benchmark_composite": 98.8,
+    "fit.below_ambition_benchmark": true,
+    "club_need.benchmark.tackles": 99.3,
+    "club_need.stat_weight.tackles": 0.1134,
+    "club_need.benchmark.interceptions": 100.0,
+    "club_need.stat_weight.interceptions": 0.1639,
+    "club_need.benchmark.ball_recoveries": 99.4,
+    "club_need.stat_weight.ball_recoveries": 0.2197,
+    "club_need.benchmark.accurate_passes_pct": 97.4,
+    "club_need.stat_weight.accurate_passes_pct": 0.2214,
+    "club_need.benchmark.accurate_passes": 99.1,
+    "club_need.stat_weight.accurate_passes": 0.1384,
+    "club_need.benchmark.accurate_long_balls": 97.8,
+    "club_need.stat_weight.accurate_long_balls": 0.1432,
+    "player.sub_position": "Defensive Midfield"
+  },
+  "report": {
+    "summary": "Nico González is a 24-year-old DM with elite defensive stats and a high fit score. Small sample and below-ambition benchmark present risks for West Ham's title ambition.",
+    "strengths": [
+      {
+        "text": "98% tackle and interception percentages with 99% ball recovery rate demonstrate elite defensive capabilities",
+        "fact_keys": [
+          "stats.tackles.pct",
+          "stats.interceptions.pct",
+          "stats.ball_recoveries.pct",
+          "fit.performance"
+        ]
+      },
+      {
+        "text": "High performance score of 93.5 and age score of 100 reflect outstanding current form",
+        "fact_keys": [
+          "fit.performance",
+          "fit.age_score"
+        ]
+      }
+    ],
+    "risks": [
+      {
+        "text": "Small sample of 1567 minutes limits statistical reliability for performance assessment",
+        "fact_keys": [
+          "player.small_sample"
+        ]
+      },
+      {
+        "text": "Below ambition benchmark indicates potential mismatch with West Ham's title ambition requirements",
+        "fact_keys": [
+          "fit.below_ambition_benchmark"
+        ]
+      }
+    ]
+  },
+  "faithfulness": {
+    "numbers": 6,
+    "verified": 6,
+    "verified_rate": 1.0,
+    "unverified": [],
+    "missing_fact_keys": [],
+    "fully_verified": true
+  },
+  "flagged": false
+}

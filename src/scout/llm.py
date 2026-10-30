@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import os
 import re
+import time
 from collections.abc import Callable
 from typing import Any, TypeVar
 
@@ -95,23 +96,31 @@ def make_completer(
     with the validation error when the reply does not parse into `schema` (usage of both calls summed).
     """
     llm = settings.llm
+    live_client = client is None
     if client is None:
         key = api_key(settings)
         if not key:
             raise RuntimeError(f"{llm.api_key_env} is not set (environment or .env)")
         client = OpenAI(base_url=llm.base_url, api_key=key, timeout=llm.timeout_seconds)
-    extra: dict[str, Any] = {"reasoning": {"enabled": llm.reasoning}}
+    extra: dict[str, Any] = {} if llm.reasoning is None else {"reasoning": {"enabled": llm.reasoning}}
     if llm.provider == "openrouter":
         extra["provider"] = {"require_parameters": True}
         if llm.free_only:
             extra["provider"]["max_price"] = {"prompt": 0, "completion": 0, "request": 0}
     elif llm.fallback_models:
         extra["provider"] = {"fallback": llm.fallback_models[0]}
+    last_request_at = 0.0
 
     def complete(system: str, user: str) -> tuple[T, str, Usage]:
+        nonlocal last_request_at
         messages = [{"role": "system", "content": system}, {"role": "user", "content": user}]
         used: Usage = dict.fromkeys(USAGE_KEYS, 0)
         for attempt in (1, 2):
+            if live_client:
+                wait = llm.min_request_interval_seconds - (time.monotonic() - last_request_at)
+                if wait > 0:
+                    time.sleep(wait)
+                last_request_at = time.monotonic()
             cap = {"max_tokens" if llm.provider == "openrouter" else "max_completion_tokens":
                    llm.max_completion_tokens}
             resp = client.chat.completions.create(
