@@ -184,3 +184,23 @@ def test_ingest_skips_existing_files(monkeypatch, tmp_path, settings):
     fetched.clear()
     assert pipeline.ingest_fotmob(settings, [1], refresh=False) == []
     assert fetched == []
+
+
+def test_snapshot_end_dates_reads_plain_and_gzipped_tables(tmp_path):
+    import zipfile
+    from datetime import date
+
+    zip_path = tmp_path / "player-scores.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("games.csv", "game_id,date\n1,2026-07-01\n2,2026-07-06\n3,\n")
+        zf.writestr("player_valuations.csv.gz", gzip.compress(b"player_id,date,market_value\n9,2026-06-12,1000\n"))
+    assert sources.snapshot_end_dates(zip_path) == {"games": date(2026, 7, 6), "player_valuations": date(2026, 6, 12)}
+
+
+def test_snapshot_end_dates_missing_table_is_none(tmp_path):
+    import zipfile
+
+    zip_path = tmp_path / "player-scores.zip"
+    with zipfile.ZipFile(zip_path, "w") as zf:
+        zf.writestr("clubs.csv", "club_id\n1\n")
+    assert sources.snapshot_end_dates(zip_path) == {"games": None, "player_valuations": None}

@@ -62,6 +62,7 @@ import re
 import shutil
 import time
 import zipfile
+from datetime import date
 from pathlib import Path
 
 import duckdb
@@ -242,19 +243,43 @@ def fetch_fotmob_player(player_id: str, settings: Settings) -> dict:
     return {key: payload.get(key) for key in PLAYER_KEYS}
 
 
-def download_transfermarkt(db_path: Path, settings: Settings) -> Path:
-    """Download transfermarkt-datasets (Kaggle mirror) and load every CSV table into one DuckDB file."""
-    dest_dir = db_path.parent
+def download_transfermarkt_zip(dest_dir: Path, settings: Settings) -> Path:
+    """Download the transfermarkt-datasets zip (Kaggle mirror, no login needed) into `dest_dir`."""
     dest_dir.mkdir(parents=True, exist_ok=True)
     zip_path = dest_dir / "player-scores.zip"
-    csv_dir = dest_dir / "csv"
-
     part = zip_path.with_name(zip_path.name + ".part")
     with _get(KAGGLE_TM_URL, settings, stream=True) as resp, open(part, "wb") as fh:
         for chunk in resp.iter_content(chunk_size=1 << 20):
             fh.write(chunk)
     part.replace(zip_path)
     log.info("downloaded %s (%.0f MB)", zip_path.name, zip_path.stat().st_size / 1e6)
+    return zip_path
+
+
+def snapshot_end_dates(zip_path: Path) -> dict[str, date | None]:
+    """Latest `date` in the games and player_valuations tables of a transfermarkt-datasets zip.
+
+    The weekly freshness check compares these with `as_of_date`: upstream updates paused at 2026-07-06 (§15).
+    """
+    ends: dict[str, date | None] = {}
+    with zipfile.ZipFile(zip_path) as zf:
+        for table in ("games", "player_valuations"):
+            member = next((m for m in zf.namelist() if re.fullmatch(rf"{table}\.csv(\.gz)?", Path(m).name)), None)
+            if member is None:
+                ends[table] = None
+                continue
+            with zf.open(member) as fh:
+                dates = pd.read_csv(fh, usecols=["date"], compression="gzip" if member.endswith(".gz") else None)
+            latest = pd.to_datetime(dates["date"], errors="coerce").max()
+            ends[table] = None if pd.isna(latest) else latest.date()
+    return ends
+
+
+def download_transfermarkt(db_path: Path, settings: Settings) -> Path:
+    """Download transfermarkt-datasets (Kaggle mirror) and load every CSV table into one DuckDB file."""
+    dest_dir = db_path.parent
+    zip_path = download_transfermarkt_zip(dest_dir, settings)
+    csv_dir = dest_dir / "csv"
 
     tmp_db = db_path.with_name(db_path.name + ".part")
     tmp_db.unlink(missing_ok=True)

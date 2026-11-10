@@ -1,0 +1,59 @@
+# Weekly check whether transfermarkt-datasets has resumed publishing (upstream paused at 2026-07-06).
+# It changes nothing in the repo: when newer data exists it opens one issue with the refresh steps.
+name: Transfermarkt snapshot check
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Compare snapshot with as_of_date
+        id: check
+        run: python scripts/check_tm_snapshot.py
+
+      - name: Open refresh issue
+        if: steps.check.outputs.newer == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GAMES_END: ${{ steps.check.outputs.games_end }}
+          VALUATIONS_END: ${{ steps.check.outputs.valuations_end }}
+          AS_OF: ${{ steps.check.outputs.as_of_date }}
+        run: |
+          title="Transfermarkt data updated: games to $GAMES_END"
+          open=$(gh issue list --state open --search "in:title \"$title\"" --json number --jq length)
+          if [ "$open" != "0" ]; then echo "Issue already open"; exit 0; fi
+          cat > body.md <<EOF
+          transfermarkt-datasets now has data newer than \`as_of_date\` ($AS_OF).
+
+          - Latest game: $GAMES_END
+          - Latest market valuation: $VALUATIONS_END
+
+          Refresh locally (PowerShell, project root):
+
+          1. Set \`as_of_date\` in \`config/settings.yaml\` to the new snapshot date.
+          2. \`Remove-Item data\raw\transfermarkt\transfermarkt-datasets.duckdb\`
+          3. \`python pipeline.py --stage all\`
+          4. \`python -m pytest -q\`, then commit \`data/processed/\` and \`config/settings.yaml\`.
+
+          Cached reports for changed fact sheets regenerate only on demand.
+          EOF
+          gh issue create --title "$title" --body-file body.md
