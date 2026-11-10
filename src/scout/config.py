@@ -19,6 +19,7 @@ INTERIM_DIR = DATA_DIR / "interim"
 PROCESSED_DIR = DATA_DIR / "processed"
 REPORTS_DIR = DATA_DIR / "reports"
 MANUAL_DIR = DATA_DIR / "manual"
+LIVE_DIR = PROCESSED_DIR / "live"  # weekly live squads/values overlay (§15)
 DOCS_DIR = ROOT / "docs"
 
 SEASON_RE = re.compile(r"^\d{4}-\d{2}$")
@@ -124,6 +125,10 @@ class ValueCalibration(_Strict):
     max_date_gap_days: int
 
 
+class Live(_Strict):
+    min_found_share: float = Field(default=0.6, ge=0, le=1)
+
+
 class PossessionAdjustment(_Strict):
     reference: float
     stats: list[str]
@@ -179,6 +184,7 @@ class Settings(_Strict):
     evaluation: Evaluation
     idmap: IdMap
     value_calibration: ValueCalibration
+    live: Live = Live()
     scraping_delay_seconds: float
     scraping_max_retries: int
 

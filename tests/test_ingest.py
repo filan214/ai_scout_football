@@ -204,3 +204,32 @@ def test_snapshot_end_dates_missing_table_is_none(tmp_path):
     with zipfile.ZipFile(zip_path, "w") as zf:
         zf.writestr("clubs.csv", "club_id\n1\n")
     assert sources.snapshot_end_dates(zip_path) == {"games": None, "player_valuations": None}
+
+
+def test_parse_fotmob_league_clubs_single_and_split_tables():
+    def row(i, name):
+        return {"id": i, "name": name}
+
+    single = {"details": {"selectedSeason": "2026/2027"},
+              "table": [{"data": {"table": {"all": [row(1, "A"), row(2, "B")]}}}]}
+    out = sources.parse_fotmob_league_clubs(single)
+    assert out.to_dict("list") == {"team_id": ["1", "2"], "team_name": ["A", "B"], "season": ["2026/2027"] * 2}
+    split = {"details": {"selectedSeason": "2026/2027"},
+             "table": [{"data": {"tables": [{"table": {"all": [row(1, "A")]}},
+                                            {"table": {"all": [row(2, "B"), row(1, "A")]}}]}}]}
+    assert sources.parse_fotmob_league_clubs(split)["team_id"].tolist() == ["1", "2"]
+
+
+def test_parse_fotmob_squad_skips_coach_and_types_fields():
+    payload = {"details": {"id": 9825, "name": "Arsenal"}, "squad": {"squad": [
+        {"title": "coach", "members": [{"id": 1, "name": "Coach"}]},
+        {"title": "keepers", "members": [{"id": 2, "name": "K", "dateOfBirth": "1995-09-15",
+                                          "transferValue": 23534518, "positionIdsDesc": "GK"}]},
+        {"title": "attackers", "members": [{"id": 3, "name": "S", "dateOfBirth": None, "transferValue": None,
+                                            "positionIdsDesc": "ST"}]},
+    ]}}
+    out = sources.parse_fotmob_squad(payload)
+    assert out["fotmob_id"].tolist() == ["2", "3"]
+    assert out["team_id"].tolist() == ["9825", "9825"] and out["team_name"].iloc[0] == "Arsenal"
+    assert out["date_of_birth"].iloc[0] == pd.Timestamp("1995-09-15") and pd.isna(out["date_of_birth"].iloc[1])
+    assert out["market_value_eur"].iloc[0] == 23534518 and pd.isna(out["market_value_eur"].iloc[1])

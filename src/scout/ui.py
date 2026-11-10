@@ -1,20 +1,22 @@
 """Shared Streamlit helpers: cached data, sidebar, live needs and shortlist. Implements IMPLEMENTATION_GUIDE §9.
 
 The app only reads data/processed/ and data/reports/ (rule 2); needs and ranking are recomputed live with the
-same pure functions as the pipeline.
+same pure functions as the pipeline. When the weekly live overlay exists (processed/live/, §15), clubs,
+market values, ages and contracts come from it; stats stay those of the analysis season.
 """
 
 from __future__ import annotations
 
 import json
 import os
+from datetime import date
 from html import escape
 
 import pandas as pd
 import streamlit as st
 
-from scout import llm, needs, rank
-from scout.config import DOCS_DIR, PROCESSED_DIR, Settings, load_leagues, load_settings
+from scout import features, llm, needs, rank
+from scout.config import DOCS_DIR, LIVE_DIR, PROCESSED_DIR, Settings, load_leagues, load_settings
 
 # Status palette (dataviz skill): priority is a state, always shown with its label.
 PRIORITY_COLORS = {"High": "#d03b3b", "Medium": "#fab219", "Low": "#2e8b73",
@@ -31,6 +33,8 @@ STAT_NAMES = {"xg": "Expected goals", "xgot": "Expected goals on target", "xa": 
               "tackles": "Tackles", "interceptions": "Interceptions", "ball_recoveries": "Ball recoveries",
               "blocks": "Blocks", "clearances": "Clearances"}
 STATE_KEY = "scout_controls"
+VIEW_KEY = "scout_view"
+LIVE_VIEW, FROZEN_VIEW = "Live", "Frozen snapshot"
 
 
 def apply_style() -> None:
@@ -100,13 +104,40 @@ def base_settings() -> Settings:
 
 
 @st.cache_data
-def player_season() -> pd.DataFrame:
-    return pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
+def live_meta() -> dict | None:
+    """meta.json of the weekly live overlay, or None when it has not been built (§15)."""
+    path = LIVE_DIR / "meta.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+
+
+def use_live() -> bool:
+    """True when the live overlay exists and the sidebar shows live squads (the default)."""
+    return live_meta() is not None and st.session_state.get(VIEW_KEY, LIVE_VIEW) == LIVE_VIEW
 
 
 @st.cache_data
+def _player_season(live: bool) -> pd.DataFrame:
+    base = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
+    if not live:
+        return base
+    return features.live_player_season(base, pd.read_parquet(LIVE_DIR / "squads.parquet"),
+                                       pd.read_parquet(LIVE_DIR / "contracts.parquet"),
+                                       date.fromisoformat(live_meta()["checked_on"]))
+
+
+def player_season() -> pd.DataFrame:
+    return _player_season(use_live())
+
+
+@st.cache_data
+def _squad_profiles(live: bool) -> pd.DataFrame:
+    if not live:
+        return pd.read_parquet(PROCESSED_DIR / "squad_profiles.parquet")
+    return features.squad_profiles(_player_season(True), base_settings())
+
+
 def squad_profiles() -> pd.DataFrame:
-    return pd.read_parquet(PROCESSED_DIR / "squad_profiles.parquet")
+    return _squad_profiles(use_live())
 
 
 @st.cache_data
@@ -115,8 +146,12 @@ def league_names() -> dict[str, str]:
 
 
 @st.cache_data
+def _clubs(live: bool) -> list[str]:
+    return needs.league_clubs(_player_season(live), base_settings().target_league)
+
+
 def clubs() -> list[str]:
-    return needs.league_clubs(player_season(), base_settings().target_league)
+    return _clubs(use_live())
 
 
 @st.cache_data
@@ -142,6 +177,11 @@ def sidebar() -> dict:
     base = base_settings()
     st.sidebar.title("AI Scout")
     st.sidebar.caption("Set your recruitment brief. Changes update the needs and target lists across pages.")
+    meta = live_meta()
+    if meta is not None:
+        st.sidebar.radio("Squads and market values", [LIVE_VIEW, FROZEN_VIEW], key=VIEW_KEY,
+                         help=f"Live: current clubs and SciSports values from FotMob, checked {meta['checked_on']}. "
+                              f"Frozen: the {base.as_of_date} Transfermarkt snapshot that the evaluation used.")
     st.sidebar.subheader("Club and ambition")
     club_list = clubs()
     club = st.sidebar.selectbox("Premier League club", club_list, index=club_list.index(base.target_club)
@@ -159,8 +199,12 @@ def sidebar() -> dict:
                 "age_max": int(age_max)}
     st.session_state[STATE_KEY] = controls
     st.sidebar.divider()
-    st.sidebar.caption(f"Player stats: {base.analysis_season} season. Squad and market value snapshot: "
-                       f"{base.as_of_date}.")
+    if not use_live():
+        st.sidebar.caption(f"Player stats: {base.analysis_season} season. Squad and market value snapshot: "
+                           f"{base.as_of_date}.")
+    else:
+        st.sidebar.caption(f"Player stats: {base.analysis_season} season. Clubs, squads and market values "
+                           f"(FotMob, SciSports estimates): {meta['checked_on']}, {meta['fotmob_season']} season.")
     return controls
 
 
@@ -170,18 +214,27 @@ def controls() -> dict:
 
 
 @st.cache_data(show_spinner="Scoring squad needs…")
-def club_needs(club: str, ambition: str) -> pd.DataFrame:
-    """Live §6.5 needs for one club and ambition."""
+def _club_needs(club: str, ambition: str, live: bool) -> pd.DataFrame:
     s = settings_for(club, ambition, base_settings().pool.budget_m, base_settings().pool.age_min,
                      base_settings().pool.age_max)
-    return needs.compute_needs(player_season(), club, s, profiles=squad_profiles())
+    return needs.compute_needs(_player_season(live), club, s, profiles=_squad_profiles(live))
+
+
+def club_needs(club: str, ambition: str) -> pd.DataFrame:
+    """Recomputed §6.5 needs for one club and ambition."""
+    return _club_needs(club, ambition, use_live())
 
 
 @st.cache_data(show_spinner="Ranking targets…")
-def club_shortlist(club: str, ambition: str, budget_m: float, age_min: int, age_max: int) -> pd.DataFrame:
-    """Live §6.6 shortlist for one club under the sidebar brief."""
+def _club_shortlist(club: str, ambition: str, budget_m: float, age_min: int, age_max: int,
+                    live: bool) -> pd.DataFrame:
     s = settings_for(club, ambition, budget_m, age_min, age_max)
-    return rank.rank_targets(player_season(), club_needs(club, ambition), s)
+    return rank.rank_targets(_player_season(live), _club_needs(club, ambition, live), s)
+
+
+def club_shortlist(club: str, ambition: str, budget_m: float, age_min: int, age_max: int) -> pd.DataFrame:
+    """Recomputed §6.6 shortlist for one club under the sidebar brief."""
+    return _club_shortlist(club, ambition, budget_m, age_min, age_max, use_live())
 
 
 def current_settings() -> Settings:

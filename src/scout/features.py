@@ -228,3 +228,48 @@ def squad_profiles(player_season: pd.DataFrame, settings: Settings) -> pd.DataFr
         profiles.loc[mask, "fully_rated"] = profiles.loc[mask, [s + "_pct" for s in role_stats]].notna().all(axis=1)
     profiles["rated_minutes"] = profiles["minutes"].where(profiles["fully_rated"], 0)
     return profiles.reset_index().sort_values("fotmob_id").reset_index(drop=True)
+
+
+def club_names(player_season: pd.DataFrame) -> pd.Series:
+    """FotMob team_id -> club name of the frozen player_season (Transfermarkt names), over every league (§15)."""
+    rows = player_season.dropna(subset=["current_club"])
+    return rows.groupby("team_id")["current_club"].agg(lambda c: c.value_counts().sort_index().idxmax())
+
+
+def live_player_season(
+    player_season: pd.DataFrame, squads: pd.DataFrame, contracts: pd.DataFrame, checked_on: date
+) -> pd.DataFrame:
+    """§15 live view: stats and percentiles unchanged; club, league, value, age and contract as of `checked_on`.
+
+    squads: fotmob_id, team_id, team_name, league, date_of_birth, market_value_eur (FotMob squads of every
+    tracked league). contracts: fotmob_id, contract_expiration_date (fetched profiles; NaT = no contract
+    listed). Clubs keep the frozen table's name when it knows the team, else the FotMob name. Players in no
+    tracked squad get current_club None and keep their frozen value and age; other players without a fetched
+    contract keep the frozen contract date. contract_months_left is recounted from `checked_on`.
+    """
+    out = player_season.copy()
+    live = squads.drop_duplicates("fotmob_id").set_index("fotmob_id").reindex(out["fotmob_id"])
+    live.index = out.index
+    found = live["team_id"].notna()
+    club = live["team_id"].map(club_names(player_season)).fillna(live["team_name"])
+    out["current_club"] = club.where(found, None)
+    out["current_club_id"] = live["team_id"].where(found, None)
+    out["current_league"] = live["league"].where(found, None)
+    out["club_status"] = np.where(found, "live", "not in tracked squads")
+
+    value = live["market_value_eur"] / 1e6
+    has_value = found & value.notna()
+    out["market_value_m"] = value.where(has_value, out["market_value_m"])
+    out["value_date"] = out["value_date"].where(~has_value, pd.Timestamp(checked_on))
+    out["value_source"] = np.where(has_value, "scisports_live", "frozen")
+
+    dob = pd.to_datetime(live["date_of_birth"])
+    out["age"] = full_years(dob, checked_on).where(dob.notna(), out["age"]).astype("Int64")
+
+    fetched = contracts.drop_duplicates("fotmob_id").set_index("fotmob_id")["contract_expiration_date"]
+    has_contract = out["fotmob_id"].isin(fetched.index)
+    expiry = pd.to_datetime(out["fotmob_id"].map(fetched))
+    out["contract_expiration_date"] = expiry.where(has_contract, pd.to_datetime(out["contract_expiration_date"]))
+    months = (out["contract_expiration_date"] - pd.Timestamp(checked_on)).dt.days / DAYS_PER_MONTH
+    out["contract_months_left"] = months.clip(lower=0).round(1)
+    return out

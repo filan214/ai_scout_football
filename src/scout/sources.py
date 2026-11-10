@@ -32,6 +32,17 @@ has a FotMob player-stats reader. Endpoints, verified live for all 10 leagues:
                    marketValues.values[] = {date, value, currency, source: "scisports", teamId, teamName}
   Season format is "YYYY/YYYY" ("2025/2026"); the project label is "2025-26".
 
+Live squads (weekly `live` stage, §15), verified live for all 10 leagues on 2026-11-10:
+  league page   www.fotmob.com/api/data/leagues?id={league_id} (default = current season)
+                -> details.selectedSeason "2026/2027"; table[].data.table.all[] = {id, name, ...};
+                   split phases (e.g. play-offs) put the groups under table[].data.tables[].table.all[]
+  team page     www.fotmob.com/api/data/teams?id={team_id}
+                -> details{id, name}; squad.squad[] = {title: "coach" | "keepers" | "defenders" |
+                   "midfielders" | "attackers", members[]: {id (= stat-list ParticiantId), name,
+                   dateOfBirth "YYYY-MM-DD", positionIdsDesc "CB,RB", transferValue (EUR)}}
+                transferValue equals the latest monthly SciSports value in playerData.marketValues.
+                No contract field: contracts come from playerData.contractEnd.
+
 ScraperFC 4.5.0 Transfermarkt (inspected ScraperFC/transfermarkt.py) for the Championship gap-fill:
   get_valid_seasons(league) loops forever if the season <select> is missing; get_player_links and
   scrape_player(player_link) use cloudscraper / plain requests without delays. NOT USED: every
@@ -241,6 +252,56 @@ def fetch_fotmob_player(player_id: str, settings: Settings) -> dict:
     """Profile of one FotMob player (birth date, contract, positions, market values) for the TM gap-fill (§5)."""
     payload = _get_json(f"{FOTMOB_API}/playerData?id={player_id}", settings)
     return {key: payload.get(key) for key in PLAYER_KEYS}
+
+
+def parse_fotmob_league_clubs(payload: dict) -> pd.DataFrame:
+    """Clubs in a FotMob league page's table(s): team_id, team_name, season ('2026/2027')."""
+    clubs: dict[str, str] = {}
+    for block in payload.get("table") or []:
+        data = block.get("data") or {}
+        tables = [data["table"]] if data.get("table") else []
+        tables += [t["table"] for t in data.get("tables") or [] if t.get("table")]
+        for table in tables:
+            for row in table.get("all") or []:
+                clubs.setdefault(str(row["id"]), row["name"])
+    season = (payload.get("details") or {}).get("selectedSeason")
+    return pd.DataFrame({"team_id": list(clubs), "team_name": list(clubs.values()), "season": season})
+
+
+def fetch_fotmob_league_clubs(league_id: int, settings: Settings) -> pd.DataFrame:
+    """Clubs of one league in FotMob's current season (§15 live squads)."""
+    return parse_fotmob_league_clubs(_get_json(f"{FOTMOB_API}/leagues?id={league_id}", settings))
+
+
+SQUAD_COLUMNS = ["fotmob_id", "player_name", "team_id", "team_name", "date_of_birth", "market_value_eur", "positions"]
+
+
+def parse_fotmob_squad(payload: dict) -> pd.DataFrame:
+    """Players of one FotMob team page, coach excluded; market_value_eur = SciSports transferValue."""
+    team = payload.get("details") or {}
+    rows = [
+        {
+            "fotmob_id": str(m["id"]),
+            "player_name": m.get("name"),
+            "team_id": str(team.get("id")),
+            "team_name": team.get("name"),
+            "date_of_birth": m.get("dateOfBirth"),
+            "market_value_eur": m.get("transferValue"),
+            "positions": m.get("positionIdsDesc"),
+        }
+        for group in (payload.get("squad") or {}).get("squad") or []
+        if group.get("title") != "coach"
+        for m in group.get("members") or []
+    ]
+    df = pd.DataFrame(rows, columns=SQUAD_COLUMNS).drop_duplicates("fotmob_id")
+    df["date_of_birth"] = pd.to_datetime(df["date_of_birth"], errors="coerce")
+    df["market_value_eur"] = pd.to_numeric(df["market_value_eur"], errors="coerce")
+    return df
+
+
+def fetch_fotmob_squad(team_id: str, settings: Settings) -> pd.DataFrame:
+    """Current squad of one FotMob team (§15 live squads)."""
+    return parse_fotmob_squad(_get_json(f"{FOTMOB_API}/teams?id={team_id}", settings))
 
 
 def download_transfermarkt_zip(dest_dir: Path, settings: Settings) -> Path:

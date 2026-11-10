@@ -11,6 +11,7 @@ import logging
 import sys
 import time
 from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "src"))
@@ -22,6 +23,7 @@ from scout import clean, evaluate, features, idmap, llm, needs, rank, report, so
 from scout.config import (  # noqa: E402
     DOCS_DIR,
     INTERIM_DIR,
+    LIVE_DIR,
     MANUAL_DIR,
     PROCESSED_DIR,
     RAW_DIR,
@@ -38,7 +40,7 @@ from scout.config import (  # noqa: E402
 
 log = logging.getLogger("pipeline")
 
-STAGES = ["ingest", "clean", "features", "needs", "rank", "reports", "eval"]
+STAGES = ["ingest", "clean", "features", "needs", "rank", "live", "reports", "eval"]
 
 
 def _short(path: Path) -> str:
@@ -316,6 +318,95 @@ def run_rank(settings: Settings, tiers: list[int], refresh: bool) -> None:
                  r.performance, r.age_score, r.value_score, r.verdict)
 
 
+def run_live(settings: Settings, tiers: list[int], refresh: bool) -> None:
+    """Stage live: current squads, SciSports values and contracts from FotMob over the frozen stats (§15).
+
+    Needs only committed files (player_season.parquet, coverage.json), so it runs on a CI runner. Writes
+    processed/live/{squads,contracts,needs,shortlist}.parquet and meta.json; the app rebuilds the live
+    player_season from them (`features.live_player_season`). Nothing is written if any request fails.
+    """
+    checked_on = datetime.now(UTC).date()
+    leagues = [lg for lg in load_leagues() if lg.tier in tiers]
+    ps = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
+    tables, squads = [], []
+    for lg in leagues:
+        table = sources.fetch_fotmob_league_clubs(lg.fotmob_id, settings).assign(league=lg.key)
+        if table.empty:
+            raise RuntimeError(f"FotMob league {lg.fotmob_id} ({lg.key}) lists no clubs")
+        tables.append(table)
+        for team_id in table["team_id"]:
+            squads.append(sources.fetch_fotmob_squad(team_id, settings).assign(league=lg.key))
+        log.info("live %-20s %s: %d clubs, %d players", lg.key, table["season"].iloc[0], len(table),
+                 sum(len(s) for s in squads[-len(table):]))
+    squads_df = pd.concat(squads, ignore_index=True)
+    doubles = squads_df["fotmob_id"].duplicated()
+    if doubles.any():
+        log.warning("live: %d players listed by two squads; keeping the first listing", int(doubles.sum()))
+    squads_df = squads_df[~doubles].reset_index(drop=True)
+
+    base_ids = set(ps.loc[ps["league"] == settings.target_league, "fotmob_id"])
+    found_share = len(base_ids & set(squads_df["fotmob_id"])) / len(base_ids)
+    log.info("live: %.1f%% of %d %s %s players found in a tracked squad", 100 * found_share, len(base_ids),
+             settings.target_league, settings.analysis_season)
+    if found_share < settings.live.min_found_share:
+        raise RuntimeError(f"only {found_share:.0%} of {settings.target_league} players found "
+                           f"(min_found_share {settings.live.min_found_share:.0%}); FotMob shape changed?")
+
+    contract_ids = sorted(set(squads_df.loc[squads_df["league"] == settings.target_league, "fotmob_id"])
+                          & set(ps["fotmob_id"]))
+    contracts = []
+    for n, pid in enumerate(contract_ids, 1):
+        try:
+            profile = sources.fetch_fotmob_player(pid, settings)
+        except sources.NotAvailable:
+            continue
+        expiry = ((profile.get("contractEnd") or {}).get("utcTime") or "")[:10] or None
+        contracts.append({"fotmob_id": pid, "contract_expiration_date": expiry})
+        if n % 100 == 0:
+            log.info("live contracts: %d/%d", n, len(contract_ids))
+    contracts_df = pd.DataFrame(contracts, columns=["fotmob_id", "contract_expiration_date"])
+    contracts_df["contract_expiration_date"] = pd.to_datetime(contracts_df["contract_expiration_date"])
+
+    live_ps = features.live_player_season(ps, squads_df, contracts_df, checked_on)
+    eff = effective_settings(settings)
+    all_needs = needs.compute_all_needs(live_ps, eff)
+    clubs = needs.league_clubs(live_ps, settings.target_league)
+    mine = all_needs[all_needs["club"] == settings.target_club]
+    if mine.empty:
+        log.warning("live: target_club %r is not a current %s club %s; no shortlist", settings.target_club,
+                    settings.target_league, clubs)
+        shortlist = pd.DataFrame(columns=rank.SHORTLIST_COLUMNS)
+    else:
+        shortlist = rank.rank_targets(live_ps, mine, eff)
+    q = live_ps[live_ps["qualifies"]]
+    meta = {
+        "checked_on": str(checked_on),
+        "fotmob_season": tables[0]["season"].iloc[0],
+        "stats_season": settings.analysis_season,
+        "frozen_as_of": str(settings.as_of_date),
+        "clubs_per_league": {t["league"].iloc[0]: len(t) for t in tables},
+        "squad_players": len(squads_df),
+        "target_league_found_share": round(found_share, 4),
+        "target_league_clubs": clubs,
+        "contracts_fetched": len(contracts_df),
+        "qualifying_value_source": q["value_source"].value_counts().to_dict(),
+        "qualifying_club_status": q["club_status"].value_counts().to_dict(),
+    }
+    LIVE_DIR.mkdir(parents=True, exist_ok=True)
+    _write_parquet(squads_df, LIVE_DIR / "squads.parquet")
+    _write_parquet(contracts_df, LIVE_DIR / "contracts.parquet")
+    _write_parquet(all_needs, LIVE_DIR / "needs.parquet")
+    _write_parquet(shortlist, LIVE_DIR / "shortlist.parquet")
+    (LIVE_DIR / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")
+    log.info("live %s: %d squad players, %d contracts; qualifying values %s, clubs %s", checked_on,
+             len(squads_df), len(contracts_df), meta["qualifying_value_source"], meta["qualifying_club_status"])
+    for r in mine.sort_values("need_score", ascending=False).itertuples():
+        log.info("  %s %-2s need %5.1f %-6s", r.club, r.position_group, r.need_score, r.priority)
+    for r in shortlist[shortlist["rank"] <= 3].itertuples():
+        log.info("  %-2s #%d %-24s %-22s age %2d €%5.1fm fit %5.1f %s", r.position_group, r.rank, r.player_name,
+                 r.current_club or "-", r.age, r.market_value_m, r.fit, r.verdict)
+
+
 def run_reports(settings: Settings, tiers: list[int], refresh: bool) -> None:
     """Stage reports: cached LLM scouting reports for the target club's shortlist (§6.7, §7.1)."""
     ps = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
@@ -521,6 +612,7 @@ RUNNERS: dict[str, Callable[[Settings, list[int], bool], None]] = {
     "features": run_features,
     "needs": run_needs,
     "rank": run_rank,
+    "live": run_live,
     "reports": run_reports,
     "eval": run_eval,
 }

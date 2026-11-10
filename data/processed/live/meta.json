@@ -1,0 +1,51 @@
+{
+  "checked_on": "2026-11-10",
+  "fotmob_season": "2026/2027",
+  "stats_season": "2025-26",
+  "frozen_as_of": "2026-07-06",
+  "clubs_per_league": {
+    "premier_league": 20,
+    "la_liga": 20,
+    "bundesliga": 18,
+    "serie_a": 20,
+    "ligue_1": 18,
+    "primeira_liga": 18,
+    "eredivisie": 18,
+    "belgian_pro_league": 18,
+    "championship": 24,
+    "super_lig": 18
+  },
+  "squad_players": 5524,
+  "target_league_found_share": 0.9013,
+  "target_league_clubs": [
+    "AFC Bournemouth",
+    "Arsenal FC",
+    "Aston Villa",
+    "Brentford FC",
+    "Brighton & Hove Albion",
+    "Chelsea FC",
+    "Coventry City",
+    "Crystal Palace",
+    "Everton FC",
+    "Fulham FC",
+    "Hull City",
+    "Ipswich Town",
+    "Leeds United",
+    "Liverpool FC",
+    "Manchester City",
+    "Manchester United",
+    "Newcastle United",
+    "Nottingham Forest",
+    "Sunderland AFC",
+    "Tottenham Hotspur"
+  ],
+  "contracts_fetched": 492,
+  "qualifying_value_source": {
+    "scisports_live": 2074,
+    "frozen": 458
+  },
+  "qualifying_club_status": {
+    "live": 2084,
+    "not in tracked squads": 448
+  }
+}

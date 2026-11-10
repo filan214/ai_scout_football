@@ -97,5 +97,10 @@ idmap: {name_threshold: 88, min_club_overlap: 3}
 # values are scaled to the Transfermarkt scale with a ratio fitted on a sample of players in both (§15).
 value_calibration: {sample_per_league: 25, seed: 7, max_date_gap_days: 92}
 
+# Weekly live overlay (`--stage live`, §15): current clubs, SciSports values and target-league contracts from
+# FotMob on top of the frozen analysis-season stats. Stops (writes nothing) when fewer than min_found_share of
+# the target league's analysis-season players appear in any tracked squad: a guard against API shape changes.
+live: {min_found_share: 0.6}
+
 scraping_delay_seconds: 3
 scraping_max_retries: 3

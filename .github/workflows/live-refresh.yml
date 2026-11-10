@@ -1,0 +1,45 @@
+# Weekly live squads: current clubs, SciSports market values and target-league contracts from FotMob, layered
+# over the frozen analysis-season stats (pipeline stage `live`). Commits data/processed/live/ to the branch.
+name: Live squads refresh
+
+on:
+  schedule:
+    - cron: "0 5 * * 1"   # Mondays 05:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Fetch live squads, values and contracts
+        run: python pipeline.py --stage live
+
+      - name: Tests
+        run: python -m pytest -q
+
+      - name: Commit refreshed overlay
+        run: |
+          git add data/processed/live
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refresh live squads and values ($(date -u +%F))"
+          git push

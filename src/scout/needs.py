@@ -28,7 +28,9 @@ def team_clubs(player_season: pd.DataFrame, league: str) -> pd.Series:
 
 
 def league_clubs(player_season: pd.DataFrame, league: str) -> list[str]:
-    """Transfermarkt names of the clubs in `league` (see `team_clubs`)."""
+    """Clubs in `league`: its current clubs in the live view (§15), else the frozen season's (see `team_clubs`)."""
+    if "current_league" in player_season:
+        return sorted(player_season.loc[player_season["current_league"] == league, "current_club"].dropna().unique())
     return sorted(team_clubs(player_season, league).unique())
 
 

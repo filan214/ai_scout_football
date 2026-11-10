@@ -113,3 +113,45 @@ def test_add_percentiles_within_group_among_qualifying():
     assert out.loc[3, "xg_pct"] == 100                                    # alone in its group
     assert np.isnan(out.loc[4, "xg_pct"])                                 # not qualifying
     assert out["shots_pct"].tolist()[:2] == pytest.approx([50, 50])       # ties share the average rank
+
+
+def _frozen_season() -> pd.DataFrame:
+    return pd.DataFrame({
+        "fotmob_id": ["stay", "move", "gone", "move"],
+        "league": ["pl", "pl", "pl", "ll"],
+        "team_id": ["10", "10", "10", "20"],
+        "current_club": ["Club Ten FC", "Club Ten FC", "Club Ten FC", "Club Ten FC"],
+        "market_value_m": [10.0, 20.0, 30.0, 20.0],
+        "value_date": pd.to_datetime(["2026-06-01"] * 4),
+        "age": pd.array([25, 22, 30, 22], dtype="Int64"),
+        "contract_expiration_date": pd.to_datetime(["2027-06-30", "2026-06-30", "2028-06-30", "2026-06-30"]),
+    })
+
+
+def test_live_player_season_overlays_club_value_age_and_contract():
+    squads = pd.DataFrame({
+        "fotmob_id": ["stay", "move"], "team_id": ["10", "30"], "team_name": ["Club Ten", "New Club"],
+        "league": ["pl", "pl"], "date_of_birth": pd.to_datetime(["2000-12-01", "2004-01-15"]),
+        "market_value_eur": [12e6, np.nan],
+    })
+    contracts = pd.DataFrame({"fotmob_id": ["stay"], "contract_expiration_date": pd.to_datetime(["2029-06-30"])})
+    out = features.live_player_season(_frozen_season(), squads, contracts, date(2026, 11, 10)).set_index(
+        ["fotmob_id", "league"])
+    stay, move, gone = out.loc[("stay", "pl")], out.loc[("move", "ll")], out.loc[("gone", "pl")]
+    # known team keeps the frozen (Transfermarkt) name; an unknown team gets FotMob's
+    assert (stay["current_club"], move["current_club"]) == ("Club Ten FC", "New Club")
+    assert out.loc[("move", "pl"), "current_league"] == "pl" and move["current_league"] == "pl"
+    assert pd.isna(gone["current_club"]) and gone["club_status"] == "not in tracked squads"
+    assert (stay["market_value_m"], stay["value_source"]) == (12.0, "scisports_live")
+    assert stay["value_date"] == pd.Timestamp("2026-11-10")
+    assert (move["market_value_m"], move["value_source"]) == (20.0, "frozen")   # no live value listed
+    assert (gone["market_value_m"], gone["age"]) == (30.0, 30)
+    assert (stay["age"], move["age"]) == (25, 22)
+    assert stay["contract_months_left"] == pytest.approx(31.6, abs=0.1)       # refetched contract
+    assert move["contract_months_left"] == 0                                    # frozen date, recounted
+    assert gone["contract_months_left"] == pytest.approx(19.6, abs=0.1)
+
+
+def test_club_names_spans_leagues():
+    names = features.club_names(_frozen_season())
+    assert names.to_dict() == {"10": "Club Ten FC", "20": "Club Ten FC"}

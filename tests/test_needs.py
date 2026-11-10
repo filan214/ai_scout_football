@@ -160,3 +160,11 @@ def test_evidence_threshold_is_inclusive(settings, league):
     above = settings.model_copy(update={"min_rated_share": share + 0.001})
     assert needs.compute_needs(league, "Club FC", exact).iloc[0]["evidence"] == "sufficient"
     assert needs.compute_needs(league, "Club FC", above).iloc[0]["evidence"] == "insufficient"
+
+
+def test_league_clubs_uses_live_current_league():
+    ps = pd.DataFrame({"league": ["pl", "pl", "ch"], "team_id": ["1", "2", "3"],
+                       "current_club": ["Stayed FC", None, "Promoted FC"],
+                       "current_league": ["pl", None, "pl"]})
+    assert needs.league_clubs(ps, "pl") == ["Promoted FC", "Stayed FC"]
+    assert needs.league_clubs(ps.drop(columns="current_league"), "pl") == ["Stayed FC"]
