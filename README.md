@@ -6,8 +6,8 @@
 
 ## Explore the product
 
-1. **Home:** Set the recruitment brief: club, ambition, market-value limit, and age range.
-2. **Squad needs:** Inspect quality shortfall, depth, age and contract urgency, ambition benchmarks, and rated-minute coverage. Grey badges identify insufficient evidence.
+1. **Home:** Set the recruitment brief: club, ambition, market-value limit, and age range. In the Live view the ambition is pre-selected from the club's place in the current league table; you can change it.
+2. **Squad needs:** See where the club stands now (position, points, xG for and against, full table), then inspect quality shortfall, depth, age and contract urgency, ambition benchmarks, and rated-minute coverage. Grey badges identify insufficient evidence.
 3. **Player targets:** Compare position-specific fit, upgrade margin against the current best rated regular, and ambition-benchmark warnings.
 4. **Scouting report:** Read a cached summary, strengths, and risks with fact-key citations and verification results.
 5. **Evaluation:** Inspect need calibration, report faithfulness, backtesting, sensitivity, league strength, and the frozen quality experiment.
@@ -16,7 +16,7 @@ The analytics make the decisions. Deterministic pandas functions calculate needs
 
 ## Results at a glance
 
-The evaluation uses 2025–26 statistics and the 2026-07-06 squad/value snapshot; the app defaults to live squads and values refreshed weekly (see *Live squads and values*). Backtesting uses 2024–25 → 2025–26. The West Ham/title case study and all 20-club acceptance tables are in [NEEDS_IMPLEMENTATION.md](docs/NEEDS_IMPLEMENTATION.md); [NEEDS_DIAGNOSIS.md](docs/NEEDS_DIAGNOSIS.md) preserves the earlier diagnosis.
+The evaluation uses 2025–26 statistics and the 2026-07-06 squad/value snapshot; the app defaults to live squads and values refreshed weekly (see *Live squads, values and table*). Backtesting uses 2024–25 → 2025–26. The West Ham/title case study and all 20-club acceptance tables are in [NEEDS_IMPLEMENTATION.md](docs/NEEDS_IMPLEMENTATION.md); [NEEDS_DIAGNOSIS.md](docs/NEEDS_DIAGNOSIS.md) preserves the earlier diagnosis.
 
 | Check | Current finding |
 |---|---|
@@ -60,13 +60,15 @@ The app reads prepared files from `data/processed/`; it does not scrape during a
 
 - **Coverage:** FotMob season statistics and team possession for 2024–25 and 2025–26 across the Premier League, La Liga, Bundesliga, Serie A, Ligue 1, Primeira Liga, Eredivisie, Belgian Pro League, EFL Championship, and Süper Lig. A Transfermarkt dataset snapshot supplies identity, club, contract, and market-value data for nine leagues; FotMob player profiles bridge the Championship. A weekly live overlay replaces clubs, squads and market values with FotMob's current ones (below). The cross-source match covers **99.79% of minutes** in the nine Transfermarkt leagues. [Data audit](docs/DATA_REALITY.md).
 - **Player features:** Per-90 statistics are adjusted for league strength; defensive volume is also adjusted for team possession. Players must meet the minute and match thresholds before position-group percentiles are calculated across the 10 leagues.
-- **Squad needs:** Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary). N = Q + (1−Q/100) × (0.20D+0.15A+0.15C). Bands remain 35/60. Combined squad profiles use the unchanged pool; ≥600-minute non-pool players can be placed on it. Under 50% fully rated minutes produces a grey insufficient-evidence badge and excludes that position from ranking. Missing stats are never invented.
+- **Squad needs:** Need = shortfall against the selected ambition (primary), plus depth, age and contract urgency within the remaining range (secondary). N = Q + (1−Q/100) × (0.20D+0.15A+0.15C). Bands remain 35/60. Combined squad profiles use the unchanged pool; ≥600-minute non-pool players can be placed on it. Under 50% fully rated minutes produces a grey insufficient-evidence badge and excludes that position from ranking. Missing stats are never invented. The current league table never enters the score: it is shown as context and only pre-selects the ambition (below).
 - **Targets:** Eligible players match the position, age, and market-value brief. They must beat the best current rated regular by ≥5 weighted percentile points. Fit combines need-weighted performance, age, and value; title/top4 benchmark deficits are flagged. The ranking and verdict are computed, not authored by the LLM.
 - **Reports:** The LLM writes a summary, strengths, and risks from a fact sheet. Numeric claims must match facts and cited keys must exist; a failed report is retried once and then flagged.
 
-### Live squads and values
+### Live squads, values and table
 
-Every Monday a GitHub Action ([`live-refresh.yml`](.github/workflows/live-refresh.yml)) runs `python pipeline.py --stage live` and commits `data/processed/live/`. The stage reads FotMob's current-season table for all 10 leagues, every club's squad page (club, birth date, SciSports market value), and the contract end date of every target-league squad player who has 2025–26 stats. Statistics, percentiles and league strength stay those of the 2025–26 season until the new season has enough matches; only club, league membership, market value, age and contract move. Promoted and relegated clubs therefore follow FotMob's current table. Players who are in no tracked squad (moved abroad, released) keep their frozen value and are shown without a current club. SciSports values are used unscaled: on 483 players valued by both sources the median Transfermarkt/SciSports ratio was 1.001.
+Every Monday a GitHub Action ([`live-refresh.yml`](.github/workflows/live-refresh.yml)) runs `python pipeline.py --stage live` and commits `data/processed/live/`. The stage reads FotMob's current-season table for all 10 leagues (clubs, position, points, goals, xG and xG against), every club's squad page (club, birth date, SciSports market value), and the contract end date of every target-league squad player who has 2025–26 stats. Statistics, percentiles and league strength stay those of the 2025–26 season until the new season has enough matches; only club, league membership, market value, age and contract move. Promoted and relegated clubs therefore follow FotMob's current table. Players who are in no tracked squad (moved abroad, released) keep their frozen value and are shown without a current club. SciSports values are used unscaled: on 483 players valued by both sources the median Transfermarkt/SciSports ratio was 1.001.
+
+In the Live view the sidebar suggests an ambition from the target club's place in the table: the most ambitious level whose benchmark place (1st, 4th, 10th, 17th) is within 0.3 points per match played of the club (3 points after 10 matches), otherwise *stay in the league*. There is no suggestion before 5 matches. Margin and minimum matches are set in `settings.yaml` (`live`). The suggestion only sets the benchmark the user can already choose, so the need formula and its evaluation are unchanged. Feeding results into the score itself is deferred until statistics switch to 2026–27, when it can be backtested on dated tables rebuilt from past seasons.
 
 The sidebar switches between **Live** and **Frozen snapshot** (2026-07-06). Evaluation, the backtest and the West Ham case study use the frozen snapshot. A second weekly Action ([`tm-snapshot-check.yml`](.github/workflows/tm-snapshot-check.yml)) opens an issue when transfermarkt-datasets publishes data newer than the snapshot.
 
@@ -75,7 +77,7 @@ Weights, thresholds, and league settings live in [`config/settings.yaml`](config
 ## Limitations
 
 - This is decision support, not a transfer recommendation or a forecast of fees. Market value is a proxy for affordability; there is no injury, tactical-video, wage, or scouting-observation input.
-- Live values are SciSports model estimates, not Transfermarkt valuations; they match Transfermarkt on average, but individual players can differ substantially (IQR of the ratio 0.78–1.30). Squad needs use live squads but 2025–26 minutes and statistics, so signings without 2025–26 minutes in the 10 leagues are not counted and players who moved are judged on last season's role. Contracts are refreshed only for the target league. The evaluation and backtest are frozen at **2026-07-06**.
+- Live values are SciSports model estimates, not Transfermarkt valuations; they match Transfermarkt on average, but individual players can differ substantially (IQR of the ratio 0.78–1.30). Squad needs use live squads but 2025–26 minutes and statistics, so signings without 2025–26 minutes in the 10 leagues are not counted and players who moved are judged on last season's role. Contracts are refreshed only for the target league. The league table is context only: early in a season it is noisy, and it says nothing about which position is the problem. The evaluation and backtest are frozen at **2026-07-06**.
 - FotMob does not publish every desired statistic (including aerial/duel success and crosses). Some features use available substitutes, and the minute/match thresholds exclude some rotation players.
 - The backtest covers **one season pair** and uses 2026 position labels, which can leak later information into eligibility. It does not establish causal improvement over the naive baseline.
 - Contract dates for Championship players are current rather than aligned with the frozen snapshot, and many are missing. Three used positions lack sufficient evidence: West Ham ST/AM and Sunderland W. Other-club minutes are flagged; the local dataset has no explicit loan-status field.
@@ -99,7 +101,7 @@ python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Open the local URL printed by Streamlit, normally **http://localhost:8501**. The default brief is Arsenal FC, top-four ambition, a €60m market-value limit, and ages 18–27.
+Open the local URL printed by Streamlit, normally **http://localhost:8501**. The default brief is Arsenal FC, a €60m market-value limit, and ages 18–27, with top-four ambition in the Frozen snapshot and the table's suggestion in the Live view.
 
 For the portfolio case study, switch the sidebar to **Frozen snapshot**, then select **West Ham United → title**, keeping the €60m limit and ages 18–27. Explore needs, compare DM and FB targets, open cached reports for Equi Fernández and Hugo Bueno, then inspect Evaluation. DM scores **58.5** and FB **35.7**; ST and AM carry insufficient-evidence warnings. Switch ambition to `survive` to see how the recruitment brief changes the scores, then return to `title` for the cached reports.
 

@@ -59,6 +59,12 @@ def page_header(kicker: str, title: str, description: str) -> None:
                 f'<h1>{escape(title)}</h1><p>{escape(description)}</p></div>', unsafe_allow_html=True)
 
 
+def ordinal(n: int) -> str:
+    """1 -> "1st", 12 -> "12th", 22 -> "22nd"."""
+    suffix = "th" if 10 <= n % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return f"{n}{suffix}"
+
+
 def position_label(group: str) -> str:
     """Show a readable position name alongside its abbreviation."""
     return f"{POSITION_NAMES.get(group, group)} ({group})"
@@ -140,6 +146,33 @@ def squad_profiles() -> pd.DataFrame:
 
 
 @st.cache_data
+def _standings() -> pd.DataFrame | None:
+    path = LIVE_DIR / "standings.parquet"
+    return pd.read_parquet(path) if path.exists() else None
+
+
+def standings() -> pd.DataFrame | None:
+    """Current target-league table in the live view; None in the frozen view or before the first refresh."""
+    table = _standings() if use_live() else None
+    if table is None:
+        return None
+    return table[table["league"] == base_settings().target_league].sort_values("position")
+
+
+def club_standing(club: str) -> pd.Series | None:
+    """The club's row of the current table, or None."""
+    table = standings()
+    rows = table[table["club"] == club] if table is not None else None
+    return rows.iloc[0] if rows is not None and len(rows) else None
+
+
+def suggested_ambition(club: str) -> str | None:
+    """Ambition suggested by the current table (`needs.suggest_ambition`), or None."""
+    table = standings()
+    return needs.suggest_ambition(table, club, base_settings()) if table is not None else None
+
+
+@st.cache_data
 def league_names() -> dict[str, str]:
     return {lg.key: lg.name for lg in load_leagues()}
 
@@ -178,18 +211,28 @@ def sidebar() -> dict:
     st.sidebar.caption("Set your recruitment brief. Changes update the needs and target lists across pages.")
     meta = live_meta()
     if meta is not None:
-        st.sidebar.radio("Squads and market values", [LIVE_VIEW, FROZEN_VIEW], key=VIEW_KEY,
-                         help=f"Live: current clubs and SciSports values from FotMob, checked {meta['checked_on']}. "
+        st.sidebar.radio("Squads, market values and table", [LIVE_VIEW, FROZEN_VIEW], key=VIEW_KEY,
+                         help=f"Live: current clubs, SciSports values and league table from FotMob, checked "
+                              f"{meta['checked_on']}. "
                               f"Frozen: the {base.as_of_date} Transfermarkt snapshot that the evaluation used.")
     st.sidebar.subheader("Club and ambition")
     club_list = clubs()
     club = st.sidebar.selectbox("Premier League club", club_list, index=club_list.index(base.target_club)
                                 if base.target_club in club_list else 0,
                                 help="Choose the squad whose needs and targets you want to explore.")
-    ambition = st.sidebar.select_slider("Season ambition", AMBITIONS, value=base.ambition,
+    suggested = suggested_ambition(club)
+    ambition = st.sidebar.select_slider("Season ambition", AMBITIONS, value=suggested or base.ambition,
                                         format_func=lambda value: AMBITION_LABELS[value],
                                         help="Quality benchmark = squad level of the 17th / 10th / 4th / 1st best "
                                              "club in the league, per stat")
+    standing = club_standing(club)
+    if suggested is not None:
+        st.sidebar.caption(f"Suggested from the current table: {AMBITION_LABELS[suggested].lower()} "
+                           f"({ordinal(int(standing['position']))}, {int(standing['points'])} points after "
+                           f"{int(standing['played'])} matches). You can change it.")
+    elif standing is not None:
+        st.sidebar.caption(f"Only {int(standing['played'])} matches played, too early to suggest an ambition "
+                           "from the table.")
     st.sidebar.subheader("Target filters")
     budget = st.sidebar.slider("Maximum market value (€m)", 5, 150, int(base.pool.budget_m), step=5,
                                help="Market value is an estimate, not a predicted transfer fee.")
@@ -202,8 +245,9 @@ def sidebar() -> dict:
         st.sidebar.caption(f"Player stats: {base.analysis_season} season. Squad and market value snapshot: "
                            f"{base.as_of_date}.")
     else:
-        st.sidebar.caption(f"Player stats: {base.analysis_season} season. Clubs, squads and market values "
-                           f"(FotMob, SciSports estimates): {meta['checked_on']}, {meta['fotmob_season']} season.")
+        st.sidebar.caption(f"Player stats: {base.analysis_season} season. Clubs, squads, market values "
+                           f"(FotMob, SciSports estimates) and league table: {meta['checked_on']}, "
+                           f"{meta['fotmob_season']} season.")
     return controls
 
 

@@ -16,10 +16,41 @@ nd["display_priority"] = [ui.need_label(r.evidence, r.priority) for r in nd.iter
 ui.page_header("Step 1 · Squad needs", f"Where does {c['club']} need help?",
                needs.NEED_DEFINITION)
 k = s.ambition_club_rank[c["ambition"]]
-suffix = "th" if 10 <= k % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(k % 10, "th")
-ordinal = "best" if k == 1 else f"{k}{suffix}-best"
+ordinal = "best" if k == 1 else f"{ui.ordinal(k)}-best"
 st.caption(f"Benchmark for {ui.AMBITION_LABELS[c['ambition']].lower()}: the {ordinal} Premier League "
            "squad, compared separately for each statistic.")
+
+standing = ui.club_standing(c["club"])
+if standing is not None:
+    st.subheader(f"Where {c['club']} stands now")
+    played = int(standing["played"])
+    pos, pts, mp, xg = st.columns(4)
+    pos.metric("League position", ui.ordinal(int(standing["position"])))
+    pts.metric("Points", int(standing["points"]),
+               help=f"{int(standing['wins'])} wins, {int(standing['draws'])} draws, {int(standing['losses'])} losses")
+    mp.metric("Matches played", played)
+    if pd.notna(standing["xg"]) and played:
+        per_match = f"{standing['xg'] / played:.2f} / {standing['xg_conceded'] / played:.2f}"
+        xg.metric("xG for / against per match", per_match, help="Expected goals created and conceded (FotMob).")
+    suggested = ui.suggested_ambition(c["club"])
+    note = ("The table is context only. It suggests the sidebar ambition but does not change the need score, which "
+            "compares squad quality with the benchmark.")
+    if suggested is not None and suggested != c["ambition"]:
+        st.info(f"The current table suggests **{ui.AMBITION_LABELS[suggested].lower()}**; this brief uses "
+                f"**{ui.AMBITION_LABELS[c['ambition']].lower()}**. {note}")
+    else:
+        st.caption(note)
+    with st.expander("Full Premier League table"):
+        table = ui.standings()
+        shown = pd.DataFrame({
+            "Pos": table["position"].astype(int), "Club": table["club"], "P": table["played"].astype(int),
+            "W": table["wins"].astype(int), "D": table["draws"].astype(int), "L": table["losses"].astype(int),
+            "GF": table["goals_for"], "GA": table["goals_against"], "Pts": table["points"].astype(int),
+            "xG": table["xg"].round(1), "xGA": table["xg_conceded"].round(1),
+        })
+        st.dataframe(shown.style.apply(lambda r: ["font-weight: 700" if r["Club"] == c["club"] else ""] * len(r),
+                                       axis=1),
+                     hide_index=True, width="stretch")
 
 used = nd[nd["used"]].sort_values("need_score", ascending=False)
 unused = nd[~nd["used"]]

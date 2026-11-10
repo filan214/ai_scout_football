@@ -36,7 +36,9 @@ Live squads (weekly `live` stage), verified live for all 10 leagues on 2026-11-1
   league page   www.fotmob.com/api/data/leagues?id={league_id} (default = current season)
                 -> details.selectedSeason "2026/2027"; table[].data.table.all[] = {id, name, ...};
                    split phases (e.g. play-offs) put the groups under table[].data.tables[].table.all[]
-  team page     www.fotmob.com/api/data/teams?id={team_id}
+                   all[] rows also carry idx (position), played, wins, draws, losses, scoresStr "30-7",
+                   pts; the sibling xg[] rows carry teamId, xg, xgConceded, xPoints (checked 2026-11-10)
+  team page    www.fotmob.com/api/data/teams?id={team_id}
                 -> details{id, name}; squad.squad[] = {title: "coach" | "keepers" | "defenders" |
                    "midfielders" | "attackers", members[]: {id (= stat-list ParticiantId), name,
                    dateOfBirth "YYYY-MM-DD", positionIdsDesc "CB,RB", transferValue (EUR)}}
@@ -250,23 +252,58 @@ def fetch_fotmob_player(player_id: str, settings: Settings) -> dict:
     return {key: payload.get(key) for key in PLAYER_KEYS}
 
 
+def _league_tables(payload: dict) -> list[dict]:
+    """Every table on a FotMob league page: the single league table, or each group of a split phase."""
+    tables = []
+    for block in payload.get("table") or []:
+        data = block.get("data") or {}
+        tables += [data["table"]] if data.get("table") else []
+        tables += [t["table"] for t in data.get("tables") or [] if t.get("table")]
+    return tables
+
+
 def parse_fotmob_league_clubs(payload: dict) -> pd.DataFrame:
     """Clubs in a FotMob league page's table(s): team_id, team_name, season ('2026/2027')."""
     clubs: dict[str, str] = {}
-    for block in payload.get("table") or []:
-        data = block.get("data") or {}
-        tables = [data["table"]] if data.get("table") else []
-        tables += [t["table"] for t in data.get("tables") or [] if t.get("table")]
-        for table in tables:
-            for row in table.get("all") or []:
-                clubs.setdefault(str(row["id"]), row["name"])
+    for table in _league_tables(payload):
+        for row in table.get("all") or []:
+            clubs.setdefault(str(row["id"]), row["name"])
     season = (payload.get("details") or {}).get("selectedSeason")
     return pd.DataFrame({"team_id": list(clubs), "team_name": list(clubs.values()), "season": season})
 
 
-def fetch_fotmob_league_clubs(league_id: int, settings: Settings) -> pd.DataFrame:
-    """Clubs of one league in FotMob's current season."""
-    return parse_fotmob_league_clubs(_get_json(f"{FOTMOB_API}/leagues?id={league_id}", settings))
+STANDINGS_COLUMNS = ["team_id", "team_name", "position", "played", "wins", "draws", "losses", "goals_for",
+                     "goals_against", "points", "xg", "xg_conceded", "xpoints"]
+SCORES_RE = re.compile(r"^\s*(\d+)\s*-\s*(\d+)\s*$")
+
+
+def parse_fotmob_standings(payload: dict) -> pd.DataFrame:
+    """League table per club joined with FotMob's xG table; a club in two split-phase groups keeps the first."""
+    rows: dict[str, dict] = {}
+    for table in _league_tables(payload):
+        xg = {str(r.get("teamId", r.get("id"))): r for r in table.get("xg") or []}
+        for r in table.get("all") or []:
+            team_id = str(r["id"])
+            if team_id in rows:
+                continue
+            scores = SCORES_RE.match(r.get("scoresStr") or "")
+            x = xg.get(team_id, {})
+            rows[team_id] = {
+                "team_id": team_id, "team_name": r.get("name"), "position": r.get("idx"),
+                "played": r.get("played"), "wins": r.get("wins"), "draws": r.get("draws"),
+                "losses": r.get("losses"), "goals_for": int(scores[1]) if scores else None,
+                "goals_against": int(scores[2]) if scores else None, "points": r.get("pts"),
+                "xg": x.get("xg"), "xg_conceded": x.get("xgConceded"), "xpoints": x.get("xPoints"),
+            }
+    df = pd.DataFrame(list(rows.values()), columns=STANDINGS_COLUMNS)
+    numeric = STANDINGS_COLUMNS[2:]
+    df[numeric] = df[numeric].apply(pd.to_numeric, errors="coerce")
+    return df
+
+
+def fetch_fotmob_league(league_id: int, settings: Settings) -> dict:
+    """FotMob league page in its current season: clubs, league table and xG table."""
+    return _get_json(f"{FOTMOB_API}/leagues?id={league_id}", settings)
 
 
 SQUAD_COLUMNS = ["fotmob_id", "player_name", "team_id", "team_name", "date_of_birth", "market_value_eur", "positions"]

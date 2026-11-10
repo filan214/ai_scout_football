@@ -127,6 +127,8 @@ class ValueCalibration(_Strict):
 
 class Live(_Strict):
     min_found_share: float = Field(default=0.6, ge=0, le=1)
+    standings_min_matches: int = Field(default=5, ge=0)
+    ambition_points_per_match: float = Field(default=0.3, ge=0)
 
 
 class PossessionAdjustment(_Strict):

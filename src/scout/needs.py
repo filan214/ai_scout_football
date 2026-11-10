@@ -34,6 +34,28 @@ def league_clubs(player_season: pd.DataFrame, league: str) -> list[str]:
     return sorted(team_clubs(player_season, league).unique())
 
 
+def suggest_ambition(standings: pd.DataFrame, club: str, settings: Settings) -> str | None:
+    """Most ambitious level whose benchmark place in the target league's table is within reach of `club`:
+    at most live.ambition_points_per_match × matches played points ahead. The least ambitious level when none
+    is; None when the club is not in the table or has played fewer than live.standings_min_matches matches.
+
+    Context only: the suggestion pre-selects the sidebar ambition and never enters the need score.
+    """
+    table = standings[standings["league"] == settings.target_league]
+    row = table[table["club"] == club]
+    if row.empty or row["played"].iloc[0] < settings.live.standings_min_matches:
+        return None
+    points = float(row["points"].iloc[0])
+    margin = settings.live.ambition_points_per_match * float(row["played"].iloc[0])
+    by_position = table.set_index("position")["points"]
+    levels = sorted(settings.ambition_club_rank.items(), key=lambda item: item[1])
+    for ambition, k in levels:
+        target = by_position.get(min(k, len(table)))
+        if target is not None and float(target) - points <= margin:
+            return ambition
+    return levels[-1][0]
+
+
 def squad_quality(group_rows: pd.DataFrame, stats: list[str]) -> dict[str, float | None]:
     """Minutes-weighted squad percentile per stat over players that have one; None when nobody has."""
     out: dict[str, float | None] = {}

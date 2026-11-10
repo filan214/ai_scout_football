@@ -168,3 +168,27 @@ def test_league_clubs_uses_live_current_league():
                        "current_league": ["pl", None, "pl"]})
     assert needs.league_clubs(ps, "pl") == ["Promoted FC", "Stayed FC"]
     assert needs.league_clubs(ps.drop(columns="current_league"), "pl") == ["Stayed FC"]
+
+
+def _table(points, played=10, league="premier_league"):
+    return pd.DataFrame({"club": [f"C{i}" for i in range(1, len(points) + 1)], "league": league,
+                         "position": range(1, len(points) + 1), "played": played, "points": points})
+
+
+def test_suggest_ambition_picks_highest_level_within_margin():
+    s = load_settings()
+    s = s.model_copy(update={"target_league": "premier_league",
+                             "ambition_club_rank": {"survive": 6, "midtable": 4, "top4": 2, "title": 1},
+                             "live": s.live.model_copy(update={"ambition_points_per_match": 0.3,
+                                                               "standings_min_matches": 5})})
+    table = _table([30, 28, 26, 19, 15, 12, 10, 2])
+    assert needs.suggest_ambition(table, "C1", s) == "title"
+    assert needs.suggest_ambition(table, "C2", s) == "title"
+    assert needs.suggest_ambition(table, "C3", s) == "top4"
+    assert needs.suggest_ambition(table, "C4", s) == "midtable"
+    assert needs.suggest_ambition(table, "C5", s) == "survive"
+    assert needs.suggest_ambition(table, "C7", s) == "survive"
+    assert needs.suggest_ambition(table, "C8", s) == "survive"
+    assert needs.suggest_ambition(table, "Elsewhere FC", s) is None
+    assert needs.suggest_ambition(_table([30, 28], played=4), "C1", s) is None
+    assert needs.suggest_ambition(_table([30, 28], league="la_liga"), "C1", s) is None

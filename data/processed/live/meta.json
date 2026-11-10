@@ -15,7 +15,7 @@
     "championship": 24,
     "super_lig": 18
   },
-  "squad_players": 5524,
+  "squad_players": 5525,
   "target_league_found_share": 0.9013,
   "target_league_clubs": [
     "AFC Bournemouth",
@@ -40,6 +40,7 @@
     "Tottenham Hotspur"
   ],
   "contracts_fetched": 492,
+  "target_league_matches_played": 10,
   "qualifying_value_source": {
     "scisports_live": 2074,
     "frozen": 458

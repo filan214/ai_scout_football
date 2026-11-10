@@ -322,15 +322,17 @@ def run_live(settings: Settings, tiers: list[int], refresh: bool) -> None:
     """Stage live: current squads, SciSports values and contracts from FotMob over the frozen stats.
 
     Needs only committed files (player_season.parquet, coverage.json), so it runs on a CI runner. Writes
-    processed/live/{squads,contracts,needs,shortlist}.parquet and meta.json; the app rebuilds the live
+    processed/live/{squads,contracts,standings,needs,shortlist}.parquet and meta.json; the app rebuilds the live
     player_season from them (`features.live_player_season`). Nothing is written if any request fails.
     """
     checked_on = datetime.now(UTC).date()
     leagues = [lg for lg in load_leagues() if lg.tier in tiers]
     ps = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
-    tables, squads = [], []
+    tables, squads, standings = [], [], []
     for lg in leagues:
-        table = sources.fetch_fotmob_league_clubs(lg.fotmob_id, settings).assign(league=lg.key)
+        page = sources.fetch_fotmob_league(lg.fotmob_id, settings)
+        table = sources.parse_fotmob_league_clubs(page).assign(league=lg.key)
+        standings.append(sources.parse_fotmob_standings(page).assign(league=lg.key))
         if table.empty:
             raise RuntimeError(f"FotMob league {lg.fotmob_id} ({lg.key}) lists no clubs")
         tables.append(table)
@@ -368,6 +370,10 @@ def run_live(settings: Settings, tiers: list[int], refresh: bool) -> None:
     contracts_df["contract_expiration_date"] = pd.to_datetime(contracts_df["contract_expiration_date"])
 
     live_ps = features.live_player_season(ps, squads_df, contracts_df, checked_on)
+    standings_df = pd.concat(standings, ignore_index=True)
+    names = standings_df["team_id"].map(features.club_names(ps)).fillna(standings_df["team_name"])
+    standings_df.insert(2, "club", names)
+    target_table = standings_df[standings_df["league"] == settings.target_league]
     eff = effective_settings(settings)
     all_needs = needs.compute_all_needs(live_ps, eff)
     clubs = needs.league_clubs(live_ps, settings.target_league)
@@ -389,12 +395,14 @@ def run_live(settings: Settings, tiers: list[int], refresh: bool) -> None:
         "target_league_found_share": round(found_share, 4),
         "target_league_clubs": clubs,
         "contracts_fetched": len(contracts_df),
+        "target_league_matches_played": int(target_table["played"].max()),
         "qualifying_value_source": q["value_source"].value_counts().to_dict(),
         "qualifying_club_status": q["club_status"].value_counts().to_dict(),
     }
     LIVE_DIR.mkdir(parents=True, exist_ok=True)
     _write_parquet(squads_df, LIVE_DIR / "squads.parquet")
     _write_parquet(contracts_df, LIVE_DIR / "contracts.parquet")
+    _write_parquet(standings_df, LIVE_DIR / "standings.parquet")
     _write_parquet(all_needs, LIVE_DIR / "needs.parquet")
     _write_parquet(shortlist, LIVE_DIR / "shortlist.parquet")
     (LIVE_DIR / "meta.json").write_text(json.dumps(meta, indent=2, ensure_ascii=False), encoding="utf-8")

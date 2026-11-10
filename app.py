@@ -35,7 +35,7 @@ def home() -> None:
 
     st.subheader("Explore the decision, step by step")
     steps = [
-        ("01", "Where does the squad need help?", "See every position and the reasons behind its need score.",
+        ("01", "Where does the squad need help?", "See where the club stands and the reasons behind each need score.",
          "pages/1_Squad_needs.py", "Explore squad needs", "📋"),
         ("02", "Who fits those needs?", "Compare affordable targets by fit, age and market value.",
          "pages/2_Targets.py", "Compare targets", "🎯"),
@@ -69,7 +69,7 @@ def home() -> None:
                 f"season's performance scored {100 * naive['uplift']:+.1f}%. "
                 f"Median market values were €{pooled['median_market_value_m']:.0f}m versus "
                 f"€{naive['median_market_value_m']:.0f}m. These are historical comparisons, not predictions.")
-    st.caption("Player stats: FotMob, 2025–26. Squad and market value snapshot: 2026-07-06. "
+    st.caption("Player stats: FotMob, 2025–26. Squads, market values and league table: see the sidebar. "
                "The sidebar changes the live needs and targets; the evaluation results use a fixed historical brief.")
 
 

@@ -220,6 +220,24 @@ def test_parse_fotmob_league_clubs_single_and_split_tables():
     assert sources.parse_fotmob_league_clubs(split)["team_id"].tolist() == ["1", "2"]
 
 
+def test_parse_fotmob_standings_joins_xg_table():
+    def row(i, idx, pts, scores):
+        return {"id": i, "name": f"T{i}", "idx": idx, "played": 11, "wins": 3, "draws": 2, "losses": 6,
+                "scoresStr": scores, "pts": pts}
+
+    payload = {"table": [{"data": {"table": {
+        "all": [row(1, 1, 29, "30-7"), row(2, 2, 11, "bad")],
+        "xg": [{"teamId": 1, "xg": 27.4, "xgConceded": 14.3, "xPoints": 21.9}],
+    }}}]}
+    out = sources.parse_fotmob_standings(payload).set_index("team_id")
+    assert out.loc["1", ["position", "points", "goals_for", "goals_against"]].tolist() == [1, 29, 30, 7]
+    assert out.loc["1", "xg_conceded"] == pytest.approx(14.3)
+    assert pd.isna(out.loc["2", "goals_for"]) and pd.isna(out.loc["2", "xg"])
+    split = {"table": [{"data": {"tables": [{"table": {"all": [row(1, 1, 9, "3-1")]}},
+                                            {"table": {"all": [row(1, 4, 2, "1-5")]}}]}}]}
+    assert sources.parse_fotmob_standings(split)["points"].tolist() == [9]
+
+
 def test_parse_fotmob_squad_skips_coach_and_types_fields():
     payload = {"details": {"id": 9825, "name": "Arsenal"}, "squad": {"squad": [
         {"title": "coach", "members": [{"id": 1, "name": "Coach"}]},

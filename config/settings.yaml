@@ -85,7 +85,7 @@ idmap: {name_threshold: 88, min_club_overlap: 3}
 
 value_calibration: {sample_per_league: 25, seed: 7, max_date_gap_days: 92}
 
-live: {min_found_share: 0.6}
+live: {min_found_share: 0.6, standings_min_matches: 5, ambition_points_per_match: 0.3}
 
 scraping_delay_seconds: 3
 scraping_max_retries: 3
