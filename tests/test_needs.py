@@ -1,4 +1,4 @@
-"""§6.5 needs: each component, league-relative benchmark, M = 0, stat weights. Synthetic data, no network."""
+"""Needs: each component, league-relative benchmark, M = 0, stat weights. Synthetic data, no network."""
 
 import json
 
@@ -34,8 +34,8 @@ def league():
     return pd.DataFrame([
         _player("a", "ST", 2000, 25, 6.0, xg=90, shots=50),
         _player("b", "ST", 500, 31, np.nan, xg=60, shots=70),
-        _player("c", "ST", 300, 34, 2.0),                                       # not qualifying: no percentiles
-        _player("k", None, 3000, 35, 1.0),                                      # goalkeeper: ignored
+        _player("c", "ST", 300, 34, 2.0),
+        _player("k", None, 3000, 35, 1.0),
         _player("x", "ST", 3000, 33, 1.0, xg=10, shots=10, club="Other FC", team="T2"),
         _player("y", "ST", 2500, 24, 30.0, xg=95, shots=95, club="Third FC", team="T3"),
     ]).astype({"age": "Int64"})
@@ -44,18 +44,18 @@ def league():
 def test_components_and_score(settings, league):
     st = needs.compute_needs(league, "Club FC", settings).set_index("position_group").loc["ST"]
     assert st["reliable"] == 1 and st["squad_players"] == 3 and st["minutes"] == 2800
-    regulars = 1 + 500 / 900 + 300 / 900                                  # fractional regulars
+    regulars = 1 + 500 / 900 + 300 / 900
     assert st["regulars"] == pytest.approx(regulars)
     assert st["depth_gap"] == pytest.approx(100 * (2 - regulars) / 2)
-    assert st["used"] and st["usage"] == 1.0                              # ST is a core group
+    assert st["used"] and st["usage"] == 1.0
     pct = json.loads(st["squad_pct"])
-    assert pct["xg"] == pytest.approx((2000 * 90 + 500 * 60) / 2500)     # 84: unrated player c left out
-    assert pct["shots"] == pytest.approx((2000 * 50 + 500 * 70) / 2500)  # 54
-    assert json.loads(st["benchmark"]) == {"xg": 95.0, "shots": 95.0}     # title = best club per stat
+    assert pct["xg"] == pytest.approx((2000 * 90 + 500 * 60) / 2500)
+    assert pct["shots"] == pytest.approx((2000 * 50 + 500 * 70) / 2500)
+    assert json.loads(st["benchmark"]) == {"xg": 95.0, "shots": 95.0}
     quality = 100 * ((95 - 84) / 95 + (95 - 54) / 95) / 2
     assert st["quality_gap"] == pytest.approx(quality)
-    assert st["age_risk"] == pytest.approx(100 * (500 + 300) / 2800)      # b and c are 30+
-    assert st["contract_risk"] == pytest.approx(100 * (2000 + 300) / 2800)  # b unknown = not at risk
+    assert st["age_risk"] == pytest.approx(100 * (500 + 300) / 2800)
+    assert st["contract_risk"] == pytest.approx(100 * (2000 + 300) / 2800)
     w = settings.need_weights
     urgency = (w["depth"] * 100 * (2 - regulars) / 2 + w["age"] * 100 * 800 / 2800
                + w["contract"] * 100 * 2300 / 2800)
@@ -66,13 +66,13 @@ def test_components_and_score(settings, league):
 
 
 def test_benchmark_is_kth_best_club(settings, league):
-    top2 = settings.model_copy(update={"ambition": "top4"})              # k = 2 in this 3-club league
+    top2 = settings.model_copy(update={"ambition": "top4"})
     assert needs.benchmarks(league, top2)["ST"] == {"xg": 84.0, "shots": 54.0}
     st = needs.compute_needs(league, "Club FC", top2).set_index("position_group").loc["ST"]
-    assert st["quality_gap"] == 0                                         # Club FC is the 2nd-best squad
+    assert st["quality_gap"] == 0
     worst = needs.compute_needs(league, "Other FC", top2).set_index("position_group").loc["ST"]
     assert worst["quality_gap"] == pytest.approx(100 * ((84 - 10) / 84 + (54 - 10) / 54) / 2)
-    survive = settings.model_copy(update={"ambition": "survive"})        # k = 3 = last club
+    survive = settings.model_copy(update={"ambition": "survive"})
     assert needs.benchmarks(league, survive)["ST"] == {"xg": 10.0, "shots": 10.0}
 
 
@@ -81,7 +81,7 @@ def test_unrated_squad_uses_league_median_level(settings, league):
     unrated = unrated.astype({"age": "Int64"})
     st = needs.compute_needs(unrated, "Fourth FC", settings).set_index("position_group").loc["ST"]
     assert json.loads(st["squad_pct"]) == {"xg": None, "shots": None}
-    median_xg, median_shots = 84.0, 54.0                                  # median of rated clubs 84/10/95, 54/10/95
+    median_xg, median_shots = 84.0, 54.0
     assert st["quality_gap"] == pytest.approx(100 * ((95 - median_xg) / 95 + (95 - median_shots) / 95) / 2)
     assert st["evidence"] == "insufficient" and st["rated_share"] == 0
     assert json.loads(st["imputed_stats"]) == ["xg", "shots"]
@@ -103,12 +103,12 @@ def test_optional_group_scaled_by_usage(settings, league):
     })
     rare = pd.concat([league, pd.DataFrame([_player("m", "AM", 100, 24, 30.0, xg=50)])]).astype({"age": "Int64"})
     am = needs.compute_needs(rare, "Club FC", s).set_index("position_group").loc["AM"]
-    usage = (100 / 2900) / (2 / 8)                                        # minutes share / typical share
-    assert am["usage"] == pytest.approx(usage) and not am["used"]        # 0.14 < 0.25: club plays no #10
+    usage = (100 / 2900) / (2 / 8)
+    assert am["usage"] == pytest.approx(usage) and not am["used"]
     assert am["need_score"] == 0 and am["priority"] == "Low"
     half = pd.concat([league, pd.DataFrame([_player("m", "AM", 450, 24, 30.0, xg=50)])]).astype({"age": "Int64"})
     am = needs.compute_needs(half, "Club FC", s).set_index("position_group").loc["AM"]
-    usage = (450 / 3250) / (2 / 8)                                        # 0.55: target 2 × 0.55
+    usage = (450 / 3250) / (2 / 8)
     assert am["used"] and am["usage"] == pytest.approx(usage)
     assert am["depth_gap"] == pytest.approx(100 * (2 * usage - 450 / 900) / (2 * usage))
 

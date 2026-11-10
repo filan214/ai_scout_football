@@ -1,4 +1,4 @@
-"""Settings and league loaders, data paths, logging setup. Implements IMPLEMENTATION_GUIDE §2-§3."""
+"""Settings and league loaders, data paths, logging setup."""
 
 from __future__ import annotations
 
@@ -19,29 +19,29 @@ INTERIM_DIR = DATA_DIR / "interim"
 PROCESSED_DIR = DATA_DIR / "processed"
 REPORTS_DIR = DATA_DIR / "reports"
 MANUAL_DIR = DATA_DIR / "manual"
-LIVE_DIR = PROCESSED_DIR / "live"  # weekly live squads/values overlay (§15)
+LIVE_DIR = PROCESSED_DIR / "live"
 DOCS_DIR = ROOT / "docs"
 
 SEASON_RE = re.compile(r"^\d{4}-\d{2}$")
 
 
 def fotmob_raw_path(league_key: str, season: str) -> Path:
-    """Raw FotMob stat lists for one league-season (§4)."""
+    """Raw FotMob stat lists for one league-season."""
     return RAW_DIR / "fotmob" / f"{league_key}_{season}.parquet"
 
 
 def fotmob_profiles_path() -> Path:
-    """Raw FotMob player profiles, one JSON object per line (§5 gap-fill)."""
+    """Raw FotMob player profiles, one JSON object per line."""
     return RAW_DIR / "fotmob_players" / "players.jsonl"
 
 
 def fotmob_teams_raw_path(league_key: str, season: str) -> Path:
-    """Raw FotMob club stat lists (team possession) for one league-season (§5)."""
+    """Raw FotMob club stat lists (team possession) for one league-season."""
     return RAW_DIR / "fotmob_teams" / f"{league_key}_{season}.parquet"
 
 
 def transfermarkt_db_path() -> Path:
-    """Local transfermarkt-datasets DuckDB file (§5)."""
+    """Local transfermarkt-datasets DuckDB file."""
     return RAW_DIR / "transfermarkt" / "transfermarkt-datasets.duckdb"
 
 
@@ -217,12 +217,12 @@ class League(_Strict):
     uefa_country: str | None = None
 
     def matches(self, season: str) -> int:
-        """Matches per club in `season` (§6.4 minutes_share denominator)."""
+        """Matches per club in `season`."""
         return self.matches_by_season.get(season, self.matches_per_season)
 
 
 def load_settings(path: Path | None = None) -> Settings:
-    """Load and validate config/settings.yaml (§3)."""
+    """Load and validate config/settings.yaml."""
     with open(path or CONFIG_DIR / "settings.yaml", encoding="utf-8") as fh:
         return Settings.model_validate(yaml.safe_load(fh))
 

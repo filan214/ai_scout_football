@@ -1,4 +1,4 @@
-"""OpenAI-compatible report client with free-only OpenRouter routing. Implements IMPLEMENTATION_GUIDE §6.7.
+"""OpenAI-compatible report client with free-only OpenRouter routing.
 
 openai 3.36.1 (checked): OpenAI(base_url, api_key, timeout).chat.completions.create(model, messages,
 temperature, response_format, extra_body). ZenMux (docs checked 2026-10-23, zenmux.ai/docs):
@@ -27,9 +27,8 @@ T = TypeVar("T", bound=BaseModel)
 FENCE_RE = re.compile(r"^\s*```(?:json)?\s*|\s*```\s*$")
 
 
-
 def api_key(settings: Settings) -> str | None:
-    """Resolve the configured key: explicit local .env first, OS environment second (§6.7)."""
+    """Resolve the configured key: explicit local .env first, OS environment second."""
     return _resolve_api_key(settings)[0]
 
 
@@ -72,7 +71,7 @@ def add_usage(a: Usage, b: Usage) -> Usage:
 
 
 def report_error_message(error: Exception) -> str:
-    """§9 actionable report-access errors without displaying provider internals or hiding player evidence."""
+    """Actionable report-access errors without displaying provider internals or hiding player evidence."""
     if getattr(error, "status_code", None) == 402:
         return ("The report provider rejected access. Check the API key's account and free-model access; "
                 "the app will not switch to a paid model. No new report was generated; "

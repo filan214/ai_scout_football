@@ -1,4 +1,4 @@
-"""§7.2-§7.4 evaluation helpers: backtest metrics, sensitivity, UEFA coefficient correlation, charts. No network."""
+"""Evaluation helpers: backtest metrics, sensitivity, UEFA coefficient correlation, charts. No network."""
 
 import numpy as np
 import pandas as pd
@@ -14,14 +14,14 @@ def settings():
 
 
 def test_compare_uplift_hit_rate_attrition_and_ci(settings):
-    picks = pd.Series([80.0, 90.0, 70.0, np.nan])                     # one pick lacked minutes next season
+    picks = pd.Series([80.0, 90.0, 70.0, np.nan])
     pool = pd.Series([40.0, 50.0, 60.0, 80.0, 90.0, np.nan])
     out = evaluate.compare(picks, pool, settings, np.random.default_rng(0))
     assert out["uplift"] == pytest.approx(80 / 60 - 1) and out["hit_rate"] == 1.0
     assert out["attrition"] == pytest.approx(0.25) and (out["picks_scored"], out["pool_scored"]) == (3, 5)
     assert out["ci_low"] <= out["uplift"] <= out["ci_high"]
     again = evaluate.compare(picks, pool, settings, np.random.default_rng(0))
-    assert again == out                                                 # seeded bootstrap is reproducible
+    assert again == out
     empty = evaluate.compare(pd.Series([np.nan]), pool, settings, np.random.default_rng(0))
     assert empty["uplift"] is None and empty["attrition"] == 1.0
 
@@ -31,7 +31,7 @@ def test_outcome_scores_use_qualifying_row_with_most_minutes():
                        "minutes": [900, 2000, 1500, 3000], "xg_pct": [10.0, 80.0, 50.0, 99.0],
                        "shots_pct": [10.0, 40.0, 50.0, 99.0]})
     out = evaluate.outcome_scores(ps, {"xg": 0.75, "shots": 0.25})
-    assert out.to_dict() == {"a": pytest.approx(70.0), "b": pytest.approx(50.0)}   # c did not qualify
+    assert out.to_dict() == {"a": pytest.approx(70.0), "b": pytest.approx(50.0)}
 
 
 def test_backtest_settings_drop_contract_without_changing_other_urgency(settings):
@@ -69,7 +69,7 @@ def test_calibration_reports_failure_without_tuning(settings):
     result = evaluate.calibrate_needs(nd, strength, values, settings, 38)
     checks = {c["check"]: c for c in result["checks"]}
     assert result["comparisons"] == 420 and checks["a"]["passed"]
-    assert not checks["b"]["passed"] and result["status"] == "failed"  # positive rho must fail
+    assert not checks["b"]["passed"] and result["status"] == "failed"
     assert checks["c"]["passed"] and checks["e"]["passed"]
     nd.loc[(nd.club == clubs[0]) & (nd.ambition == "title") & (nd.position_group == "ST"), "need_score"] = 0
     broken = evaluate.calibrate_needs(nd, strength, values, settings, 38)
@@ -98,7 +98,7 @@ def test_clubs_as_played_uses_season_team():
                        "team_name": ["Arsenal", "Arsenal", "Arsenal", "Real Sociedad"],
                        "current_club": ["Arsenal FC", "Arsenal FC", "Porto", "Arsenal FC"]})
     out = evaluate.clubs_as_played(ps, "premier_league")
-    assert out["current_club"].tolist() == ["Arsenal FC"] * 3 + ["Real Sociedad"]   # bought later: not yet at the club
+    assert out["current_club"].tolist() == ["Arsenal FC"] * 3 + ["Real Sociedad"]
 
 
 def test_jaccard_and_perturb():
@@ -106,7 +106,7 @@ def test_jaccard_and_perturb():
     assert evaluate.jaccard(set(), set()) == 1.0
     w = evaluate.perturb({"performance": 0.6, "age": 0.2, "value": 0.2}, "value", 0.1)
     assert sum(w.values()) == pytest.approx(1.0) and w["value"] == pytest.approx(0.3 / 1.1)
-    assert evaluate.perturb({"a": 0.05, "b": 0.95}, "a", -0.1)["a"] == 0.0   # floored at 0
+    assert evaluate.perturb({"a": 0.05, "b": 0.95}, "a", -0.1)["a"] == 0.0
 
 
 def test_sensitivity_counts_dropped_groups():
@@ -123,7 +123,7 @@ def test_league_uefa_and_strength_validation():
     coeffs = pd.DataFrame({"country_code": ["ENG", "ESP", "NED", "POR"], "position": [1, 3, 7, 6],
                            "coefficient": [119.5, 97.0, 67.9, 73.2], "season_points": [28.7, 22.1, 10.0, 20.5]})
     uefa = evaluate.league_uefa(coeffs, leagues).set_index("league")
-    assert "championship" not in uefa.index                              # second tier: no UEFA coefficient
+    assert "championship" not in uefa.index
     assert uefa.loc["la_liga", "uefa_coefficient"] == 97.0 and uefa.loc["eredivisie", "uefa_position"] == 7
     strength = pd.DataFrame({"league": ["premier_league", "la_liga", "eredivisie", "championship"],
                              "index_0_100": [100.0, 50.0, 0.0, 30.0]})

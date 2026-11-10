@@ -1,4 +1,4 @@
-"""Combined squad evidence on an unchanged percentile pool (§6.4–§6.5)."""
+"""Combined squad evidence on an unchanged percentile pool."""
 
 import numpy as np
 import pandas as pd

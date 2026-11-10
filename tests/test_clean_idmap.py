@@ -10,7 +10,7 @@ from scout import clean, idmap
 
 
 def _raw(stat: str, rows: list[tuple]) -> pd.DataFrame:
-    """rows: (player_id, minutes_played, matches_played, stat_value, sub_stat_value)."""
+    """Rows: (player_id, minutes_played, matches_played, stat_value, sub_stat_value)."""
     return pd.DataFrame(
         [{"league": "la_liga", "season": "2025-26", "stat_name": stat, "player_id": pid, "player_name": pid.upper(),
           "team_id": "1", "team_name": "Club", "positions": "115,104", "minutes_played": m, "matches_played": n,
@@ -22,19 +22,19 @@ def test_build_perf_totals_per90_and_absent_rule():
     raw = pd.concat([
         _raw("mins_played", [("p1", 1800, 20, 1800, 20), ("p2", 100, 3, 100, 3), ("p3", 900, 12, 900, 12),
                              ("p4", 500, 10, 500, 10), ("p5", 1500, 9, 1500, 9)]),
-        _raw("total_scoring_att", [("p1", 1800, 20, 2.0, 15.0), ("p4", 500, 10, 0.9, 10.0)]),  # per-90 list, floor 10
-        _raw("interception", [("p1", 1800, 20, 1.5, 30.0)]),                                  # total = sub_stat_value
-        _raw("accurate_pass", [("p1", 1800, 20, 40.0, 85.5)]),                                # pct = sub_stat_value
+        _raw("total_scoring_att", [("p1", 1800, 20, 2.0, 15.0), ("p4", 500, 10, 0.9, 10.0)]),
+        _raw("interception", [("p1", 1800, 20, 1.5, 30.0)]),
+        _raw("accurate_pass", [("p1", 1800, 20, 40.0, 85.5)]),
     ])
     perf = clean.build_perf(raw).set_index("fotmob_id")
-    assert perf.loc["p1", "shots"] == pytest.approx(40.0)          # 2.0 per 90 x 1800 / 90
-    assert perf.loc["p3", "shots"] == 0.0                          # absent, matches >= list floor (10)
-    assert np.isnan(perf.loc["p2", "shots"])                       # absent, below floor: unknown
-    assert np.isnan(perf.loc["p5", "shots"])                       # many minutes but too few matches: unknown
+    assert perf.loc["p1", "shots"] == pytest.approx(40.0)
+    assert perf.loc["p3", "shots"] == 0.0
+    assert np.isnan(perf.loc["p2", "shots"])
+    assert np.isnan(perf.loc["p5", "shots"])
     assert perf.loc["p1", "interceptions"] == 30.0
     assert perf.loc["p1", "accurate_passes_pct"] == 85.5
-    assert np.isnan(perf.loc["p3", "accurate_passes_pct"])         # pct stats are never filled with 0
-    assert np.isnan(perf.loc["p1", "xg"])                          # list missing entirely: unknown
+    assert np.isnan(perf.loc["p3", "accurate_passes_pct"])
+    assert np.isnan(perf.loc["p1", "xg"])
     assert tuple(perf.loc["p1", ["minutes", "matches", "fotmob_position"]]) == (1800, 20, "115")
 
 
@@ -67,10 +67,10 @@ def test_assign_position_groups_with_fotmob_fallback():
     id_map = pd.DataFrame({"fotmob_id": ["1"], "tm_id": ["t1"]})
     tm_players = pd.DataFrame({"tm_id": ["t1"], "sub_position": ["Left Winger"]})
     out = clean.assign_position_groups(perf, id_map, tm_players).set_index("fotmob_id")
-    assert out.loc["1", "position_group"] == "W" and not out.loc["1", "position_fallback"]   # TM wins over FotMob id
+    assert out.loc["1", "position_group"] == "W" and not out.loc["1", "position_fallback"]
     assert out.loc["2", "position_group"] == "CB" and out.loc["2", "position_fallback"]
-    assert pd.isna(out.loc["3", "position_group"])                                         # keeper
-    assert pd.isna(out.loc["4", "position_group"])                                         # unknown id
+    assert pd.isna(out.loc["3", "position_group"])
+    assert pd.isna(out.loc["4", "position_group"])
 
 
 def _profile(pid, short=None, generic="", values=()):
@@ -102,7 +102,7 @@ def test_fit_value_ratio_compares_same_dates():
     fm_vals = pd.DataFrame({"fotmob_id": ["a", "a", "b", "c"], "market_value_eur": [99e6, 10e6, 1.25e6, 5e6],
                             "date": pd.to_datetime(["2026-06-30", "2026-05-31", "2026-05-31", "2025-01-31"])})
     fit = clean.fit_value_ratio(pairs, tm_vals, fm_vals, date(2026, 7, 6), max_gap_days=92)
-    assert fit["n"] == 2                    # c: FotMob value too old; a: the June 30 value is after the TM date
+    assert fit["n"] == 2
     assert fit["ratio"] == pytest.approx(0.8)
 
 
@@ -128,7 +128,7 @@ def test_pair_clubs_by_shared_players_not_club_names():
     fm = pd.DataFrame({"team_id": ["inter"] * 3 + ["milan"] * 3,
                        "name_norm": ["lautaro martinez", "nicolo barella", "hakan calhanoglu",
                                      "rafael leao", "christian pulisic", "mike maignan"]})
-    tm = pd.DataFrame({"club_id": ["46"] * 3 + ["5"] * 3,                       # 46 = "Inter Milan", 5 = "AC Milan"
+    tm = pd.DataFrame({"club_id": ["46"] * 3 + ["5"] * 3,
                        "name_norm": ["lautaro martinez", "nicolo barella", "hakan calhanoglu",
                                      "rafael leao", "christian pulisic", "mike maignan"]})
     assert idmap.pair_clubs(fm, tm, name_threshold=88, min_overlap=2) == {"inter": "46", "milan": "5"}
@@ -144,7 +144,7 @@ def test_match_players_three_passes_and_ambiguity():
     assert got.loc["1", "tm_id"] == "a" and got.loc["1", "method"] == "token_sort"
     assert got.loc["2", "tm_id"] == "b" and got.loc["2", "method"] == "subset"
     assert got.loc["3", "tm_id"] == "c" and got.loc["3", "method"] == "surname"
-    assert "4" not in got.index            # two Gabriels: ambiguous, left for overrides
+    assert "4" not in got.index
     assert "5" not in got.index
     assert got["tm_id"].is_unique
 
@@ -160,7 +160,7 @@ def test_consolidate_keeps_most_frequent_tm_id_one_to_one():
     matches = pd.DataFrame({"fotmob_id": ["1", "1", "1", "2"], "tm_id": ["a", "a", "b", "a"],
                             "match_score": [90.0, 95.0, 100.0, 100.0], "method": ["token_sort"] * 4})
     out = idmap.consolidate(matches)
-    assert out[["fotmob_id", "tm_id"]].values.tolist() == [["1", "a"]]   # "2" loses tm "a" to the 2-season match
+    assert out[["fotmob_id", "tm_id"]].values.tolist() == [["1", "a"]]
 
 
 def test_choose_gap_fill_ids_unmatched_and_stale_tm():

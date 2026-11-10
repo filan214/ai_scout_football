@@ -1,4 +1,4 @@
-"""Coverage check, league strength, player_season table. Implements IMPLEMENTATION_GUIDE §6.2-§6.4."""
+"""Coverage check, league strength, player_season table."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ def stat_columns(perf: pd.DataFrame) -> list[str]:
 
 
 def squad_values(perf_season: pd.DataFrame, id_map: pd.DataFrame, values: pd.DataFrame) -> pd.DataFrame:
-    """§6.3 squad value per club: market values (as of as_of_date) of the players who played for it this season.
+    """Squad value per club: market values (as of as_of_date) of the players who played for it this season.
 
     perf_season: league, team_id, team_name, fotmob_id. values: tm_id, market_value_eur. Players without
     a value count as missing (column `valued`), not as zero.
@@ -36,7 +36,7 @@ def squad_values(perf_season: pd.DataFrame, id_map: pd.DataFrame, values: pd.Dat
 
 
 def league_strength(squads: pd.DataFrame, floor: float) -> pd.DataFrame:
-    """§6.3: median over clubs of log(squad value) -> index 0-100 across leagues -> factor floor..1."""
+    """Median over clubs of log(squad value) -> index 0-100 across leagues -> factor floor..1."""
     sq = squads[squads["squad_value_eur"] > 0]
     out = sq.groupby("league")["squad_value_eur"].agg(
         clubs="size",
@@ -58,7 +58,7 @@ def full_years(dob: pd.Series, as_of: date) -> pd.Series:
 
 
 def qualifies(ps: pd.DataFrame, pool: Pool) -> pd.Series:
-    """Percentile population: outfield players with enough minutes and matches (§6.4, matches rule §15)."""
+    """Percentile population: outfield players with enough minutes and matches."""
     return (ps["minutes_share"] >= pool.min_minutes_share) & (ps["matches_share"] >= pool.min_matches_share) & \
         ps["position_group"].notna()
 
@@ -68,10 +68,10 @@ def build_player_season(
     team_stats: pd.DataFrame, strength: pd.DataFrame, leagues: list[League], settings: Settings, season: str,
     as_of: date,
 ) -> pd.DataFrame:
-    """§6.4 one row per player × league in `season` with profile fields as of `as_of`, <stat>_p90 and <stat>_adj.
+    """One row per player × league in `season` with profile fields as of `as_of`, <stat>_p90 and <stat>_adj.
 
     Counting stats: _p90 = season_total / minutes × 90; _adj = _p90 × factor(league), and for
-    settings.possession_adjustment.stats also × reference / (1 − team possession) (§15). Rate stats
+    settings.possession_adjustment.stats also × reference / (1 − team possession). Rate stats
     are copied unchanged into both columns. Percentiles: `add_percentiles`.
     """
     matches_by_league = {lg.key: lg.matches(season) for lg in leagues}
@@ -110,7 +110,7 @@ def coverage_check(
     ps: pd.DataFrame, position_stats: dict[str, list[str]], fallbacks: dict[str, str], threshold: float,
     min_stats: int,
 ) -> tuple[dict[str, list[str]], pd.DataFrame]:
-    """§6.2: keep a stat if non-null for >= threshold of qualifying players in every league; else try its fallback.
+    """Keep a stat if non-null for >= threshold of qualifying players in every league; else try its fallback.
 
     Returns (final position_stats, coverage table stat × league as shares).
     """
@@ -140,14 +140,14 @@ def coverage_check(
 
 
 def add_percentiles(ps: pd.DataFrame, stats: list[str]) -> pd.DataFrame:
-    """§6.4 <stat>_pct = rank(<stat>_adj, pct=True) × 100 within position_group among qualifying players; else NaN."""
+    """<stat>_pct = rank(<stat>_adj, pct=True) × 100 within position_group among qualifying players; else NaN."""
     q = ps[ps["qualifies"]]
     pct = {f"{s}_pct": q.groupby("position_group")[f"{s}_adj"].rank(pct=True) * 100 for s in stats}
     return pd.concat([ps, pd.DataFrame(pct, index=q.index).reindex(ps.index)], axis=1)
 
 
 def empirical_percentile(values: pd.Series, reference: pd.Series) -> pd.Series:
-    """§6.4 placement on a fixed pool: average rank for exact ties, fraction below between observations."""
+    """Placement on a fixed pool: average rank for exact ties, fraction below between observations."""
     ref = np.sort(reference.dropna().to_numpy(float))
     out = pd.Series(np.nan, index=values.index, dtype=float)
     valid = values.dropna()
@@ -159,7 +159,7 @@ def empirical_percentile(values: pd.Series, reference: pd.Series) -> pd.Series:
 
 
 def squad_profiles(player_season: pd.DataFrame, settings: Settings) -> pd.DataFrame:
-    """§6.4: one profile per player; combine adjusted stats, preserve pool ratings, place non-pool players.
+    """One profile per player; combine adjusted stats, preserve pool ratings, place non-pool players.
 
     Input pool rows and percentiles are never changed. Missing stats remain missing. Fully rated
     profiles have every required role percentile; partial placements remain visible as partial evidence.
@@ -188,7 +188,7 @@ def squad_profiles(player_season: pd.DataFrame, settings: Settings) -> pd.DataFr
     else:
         profiles["other_club_minutes"] = 0
     profiles["other_club_flag"] = np.where(profiles["other_club_minutes"] > 0, "Other-club minutes", "")
-    profiles["loan_status"] = "unavailable"  # local players/transfers tables have no explicit loan-status field
+    profiles["loan_status"] = "unavailable"
     q = ps.get("qualifies", ps[[c for c in ps if c.endswith("_pct")]].notna().any(axis=1)).astype(bool)
     profiles["qualifies"] = q.groupby(ids).any()
     profiles["rated_by_placement"] = False
@@ -208,7 +208,6 @@ def squad_profiles(player_season: pd.DataFrame, settings: Settings) -> pd.DataFr
         denom = minutes.groupby(ids).sum().replace(0, np.nan)
         rated = (ps[col].fillna(0) * minutes).groupby(ids).sum() / denom
         counts = (q & ps[col].notna()).groupby(ids).sum()
-        # Copy a single qualifying row exactly, without a floating-point multiply/divide round trip.
         first = ps.loc[q & ps[col].notna()].groupby("fotmob_id")[col].first()
         profiles[col] = rated.where(counts != 1, first)
         if stat + "_adj" not in ps:
@@ -231,7 +230,7 @@ def squad_profiles(player_season: pd.DataFrame, settings: Settings) -> pd.DataFr
 
 
 def club_names(player_season: pd.DataFrame) -> pd.Series:
-    """FotMob team_id -> club name of the frozen player_season (Transfermarkt names), over every league (§15)."""
+    """FotMob team_id -> club name of the frozen player_season (Transfermarkt names), over every league."""
     rows = player_season.dropna(subset=["current_club"])
     return rows.groupby("team_id")["current_club"].agg(lambda c: c.value_counts().sort_index().idxmax())
 
@@ -239,7 +238,7 @@ def club_names(player_season: pd.DataFrame) -> pd.Series:
 def live_player_season(
     player_season: pd.DataFrame, squads: pd.DataFrame, contracts: pd.DataFrame, checked_on: date
 ) -> pd.DataFrame:
-    """§15 live view: stats and percentiles unchanged; club, league, value, age and contract as of `checked_on`.
+    """Live view: stats and percentiles unchanged; club, league, value, age and contract as of `checked_on`.
 
     squads: fotmob_id, team_id, team_name, league, date_of_birth, market_value_eur (FotMob squads of every
     tracked league). contracts: fotmob_id, contract_expiration_date (fetched profiles; NaT = no contract

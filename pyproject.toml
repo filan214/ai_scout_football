@@ -1,7 +1,6 @@
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
 testpaths = ["tests"]
-# %TEMP%\pytest-of-<user> is unreadable on the dev machine; keep pytest temp dirs in the project.
 addopts = ["--basetemp=.pytest_tmp"]
 
 [tool.ruff]

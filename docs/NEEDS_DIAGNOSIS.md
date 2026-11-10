@@ -22,7 +22,7 @@ The baseline title mean need correlates negatively with squad market value (Spea
 
 ## 2. What the current implementation actually computes
 
-Sources: [needs.py](../src/scout/needs.py), [features.py](../src/scout/features.py), [settings.yaml](../config/settings.yaml), [coverage.json](../data/processed/coverage.json), [IMPLEMENTATION_GUIDE §6.5](../IMPLEMENTATION_GUIDE.md#65-needs--needspy), and [§15](../IMPLEMENTATION_GUIDE.md#15-deviation-log). The final coverage-selected stats are used, including the npxg → xg fallback.
+Sources: [needs.py](../src/scout/needs.py), [features.py](../src/scout/features.py), [settings.yaml](../config/settings.yaml), [coverage.json](../data/processed/coverage.json), and the project's implementation spec (§6.5 needs, §15 deviation log; kept private, so § numbers in this document refer to it). The final coverage-selected stats are used, including the npxg → xg fallback.
 
 Let D, Q, A and C be depth_gap, quality_gap, age_risk and contract_risk, all on 0–100 scales:
 
@@ -468,7 +468,7 @@ No cached ClubElo club ratings were found. An attempt was made to obtain ratings
 | [ClubElo England dated page](http://clubelo.com/2026-07-06/ENG) | Redirect to HTTPS, then HTTP 403 challenge |
 | [ClubElo data page](http://clubelo.com/Data) | HTTP 403 challenge |
 
-The existing [HANDOFF](../HANDOFF.md) and §15 also record earlier ClubElo unavailability. **The baseline and all previews have ClubElo correlation N/A, n=0**. Zero was not substituted, and UEFA country coefficients were not used as club Elo. Completing that specific independent check requires accessible date-matched club ratings and an explicit club-name join.
+The project's handoff notes and §15 also record earlier ClubElo unavailability. **The baseline and all previews have ClubElo correlation N/A, n=0**. Zero was not substituted, and UEFA country coefficients were not used as club Elo. Completing that specific independent check requires accessible date-matched club ratings and an explicit club-name join.
 
 ### Ambition monotonicity
 
@@ -828,7 +828,7 @@ Verification completed during this diagnosis:
 - Existing lint check via `.venv\Scripts\python.exe -m ruff check .`: **All checks passed**, exit 0.
 - Baseline, both percentile counterfactuals and all three candidate formulas: **zero decreases across 420 adjacent ambition comparisons each**.
 - SHA-256 verification of **41 existing source/configuration/test/script/processed-input files** found **no changes** after the calculations and checks.
-- The pipeline portion of HANDOFF's resume command was intentionally not run: it can rewrite processed outputs, and this task requested diagnosis only. The exact cached-output comparison above verifies the current needs computation without that mutation.
+- The pipeline portion of the handoff notes' resume command was intentionally not run: it can rewrite processed outputs, and this task requested diagnosis only. The exact cached-output comparison above verifies the current needs computation without that mutation.
 
 Key input/source fingerprints:
 

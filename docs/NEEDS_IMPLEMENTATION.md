@@ -576,6 +576,6 @@ PROMPT_VERSION is v2 for the new evidence/upgrade contract (the earlier contract
 
 ## Verification and resumption
 
-Original player_season columns compare exactly, including every qualifying flag and percentile. Only sub_position was added. Streamlit AppTest rendered all five pages for West Ham/title with and without report access (10 page checks, zero exceptions). Final pytest/Ruff output is recorded in HANDOFF.md. No commit: calibration b fails and live reports remain blocked. No thresholds were adjusted.
+Original player_season columns compare exactly, including every qualifying flag and percentile. Only sub_position was added. Streamlit AppTest rendered all five pages for West Ham/title with and without report access (10 page checks, zero exceptions). Final pytest/Ruff output was recorded in the project's handoff notes. No commit: calibration b fails and live reports remain blocked. No thresholds were adjusted.
 
 After gateway access is enabled: run `python pipeline.py --stage reports --club 'West Ham United' --ambition title`, then rerun this audit. The requested two real report examples and faithfulness gate remain pending.

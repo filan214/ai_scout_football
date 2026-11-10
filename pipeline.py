@@ -1,4 +1,4 @@
-"""Offline pipeline CLI. Implements IMPLEMENTATION_GUIDE §8.
+"""Offline pipeline CLI.
 
 python pipeline.py --stage ingest|clean|features|needs|rank|reports|eval|all [--tiers 1,2] [--refresh]
 """
@@ -113,7 +113,7 @@ def ingest_transfermarkt(settings: Settings, refresh: bool) -> set[str]:
 
 
 def ingest_fotmob_profiles(settings: Settings, tiers: list[int], covered: set[str], refresh: bool) -> list[str]:
-    """Fetch FotMob player profiles for leagues missing from Transfermarkt plus a calibration sample (§15)."""
+    """Fetch FotMob player profiles for leagues missing from Transfermarkt plus a calibration sample."""
     leagues = [lg for lg in load_leagues() if lg.tier in tiers]
     gap = [lg.key for lg in leagues if lg.transfermarkt_id not in covered]
     if not gap:
@@ -152,7 +152,7 @@ def ingest_fotmob_profiles(settings: Settings, tiers: list[int], covered: set[st
 
 
 def run_ingest(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage ingest: FotMob stat lists, transfermarkt-datasets, FotMob profiles for TM gaps (§5)."""
+    """Stage ingest: FotMob stat lists, transfermarkt-datasets, FotMob profiles for TM gaps."""
     failures = ingest_fotmob(settings, tiers, refresh)
     covered = ingest_transfermarkt(settings, refresh)
     failures += ingest_fotmob_profiles(settings, tiers, covered, refresh)
@@ -161,7 +161,7 @@ def run_ingest(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def run_clean(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage clean: interim perf / tm tables, Championship gap-fill, processed id_map (§4, §5, §6.1)."""
+    """Stage clean: interim perf / tm tables, Championship gap-fill, processed id_map."""
     leagues = [lg for lg in load_leagues() if lg.tier in tiers]
     seasons = settings.ingest_seasons()
     raw = clean.read_fotmob_raw(leagues, seasons)
@@ -240,7 +240,7 @@ def run_clean(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def run_features(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage features: league strength, player_season with p90/adj/pct, coverage check (§6.2-§6.4)."""
+    """Stage features: league strength, player_season with p90/adj/pct, coverage check."""
     leagues = [lg for lg in load_leagues() if lg.tier in tiers]
     perf = pd.read_parquet(INTERIM_DIR / "perf.parquet")
     perf = perf[perf["league"].isin([lg.key for lg in leagues])]
@@ -278,13 +278,13 @@ def run_features(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def effective_settings(settings: Settings) -> Settings:
-    """Settings with position_stats replaced by the lists that passed the coverage check (§6.2)."""
+    """Settings with position_stats replaced by the lists that passed the coverage check."""
     coverage = json.loads((PROCESSED_DIR / "coverage.json").read_text(encoding="utf-8"))
     return settings.model_copy(update={"position_stats": coverage["position_stats"]})
 
 
 def run_needs(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage needs: need scores for every club of the target league (§6.5)."""
+    """Stage needs: need scores for every club of the target league."""
     ps = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
     eff = effective_settings(settings)
     clubs = needs.league_clubs(ps, settings.target_league)
@@ -302,7 +302,7 @@ def run_needs(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def run_rank(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage rank: shortlist per High/Medium need group of the target club (§6.6)."""
+    """Stage rank: shortlist per High/Medium need group of the target club."""
     ps = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
     all_needs = pd.read_parquet(PROCESSED_DIR / "needs.parquet")
     mine = all_needs[all_needs["club"] == settings.target_club]
@@ -319,7 +319,7 @@ def run_rank(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def run_live(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage live: current squads, SciSports values and contracts from FotMob over the frozen stats (§15).
+    """Stage live: current squads, SciSports values and contracts from FotMob over the frozen stats.
 
     Needs only committed files (player_season.parquet, coverage.json), so it runs on a CI runner. Writes
     processed/live/{squads,contracts,needs,shortlist}.parquet and meta.json; the app rebuilds the live
@@ -408,7 +408,7 @@ def run_live(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def run_reports(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage reports: cached LLM scouting reports for the target club's shortlist (§6.7, §7.1)."""
+    """Stage reports: cached LLM scouting reports for the target club's shortlist."""
     ps = pd.read_parquet(PROCESSED_DIR / "player_season.parquet")
     settings = effective_settings(settings)
     mine = needs.compute_needs(ps, settings.target_club, settings)
@@ -459,7 +459,7 @@ def run_reports(settings: Settings, tiers: list[int], refresh: bool) -> None:
 
 
 def load_uefa(season_year: int, settings: Settings, refresh: bool) -> pd.DataFrame:
-    """UEFA association coefficients for the season ending in `season_year`, cached in raw/uefa/ (§7.4)."""
+    """UEFA association coefficients for the season ending in `season_year`, cached in raw/uefa/."""
     path = RAW_DIR / "uefa" / f"coefficients_{season_year}.parquet"
     if path.exists() and not refresh:
         return pd.read_parquet(path)
@@ -469,7 +469,7 @@ def load_uefa(season_year: int, settings: Settings, refresh: bool) -> pd.DataFra
 
 
 def run_eval(settings: Settings, tiers: list[int], refresh: bool) -> None:
-    """Stage eval: backtest (§7.2), sensitivity (§7.3), league strength vs UEFA coefficients (§7.4), summary table."""
+    """Stage eval: backtest, sensitivity, league strength vs UEFA coefficients, summary table."""
     leagues = [lg for lg in load_leagues() if lg.tier in tiers]
     names = {lg.key: lg.name for lg in leagues}
     perf = pd.read_parquet(INTERIM_DIR / "perf.parquet")
@@ -483,7 +483,6 @@ def run_eval(settings: Settings, tiers: list[int], refresh: bool) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     img = DOCS_DIR / "img"
 
-    # §7.2 backtest: picks made on season_n data (as of backtest.as_of_date), outcomes in season_n1
     bt = settings.backtest
     ps_n, _ = evaluate.season_table(perf, *tables, leagues, eff, bt.season_n, bt.as_of_date)
     ps_n = evaluate.clubs_as_played(ps_n, settings.target_league)
@@ -494,7 +493,6 @@ def run_eval(settings: Settings, tiers: list[int], refresh: bool) -> None:
         indent=2, ensure_ascii=False), encoding="utf-8")
     evaluate.plot_backtest(result, img / "backtest.png")
 
-    # §7.3 sensitivity on the analysis season
     clubs = needs.league_clubs(ps, settings.target_league)
     base_needs = pd.read_parquet(PROCESSED_DIR / "needs.parquet")
     base = evaluate.shortlist_sets(ps, base_needs, clubs, eff)
@@ -526,7 +524,6 @@ def run_eval(settings: Settings, tiers: list[int], refresh: bool) -> None:
          "league_groups": [list(k) for k in league_keys], "variants": sens}, indent=2, ensure_ascii=False),
         encoding="utf-8")
 
-    # §7.4 league strength vs UEFA country coefficients (leagues with a uefa_country)
     season_year = int(settings.analysis_season[:4]) + 1
     try:
         uefa = evaluate.league_uefa(load_uefa(season_year, settings, refresh), leagues)
@@ -542,7 +539,6 @@ def run_eval(settings: Settings, tiers: list[int], refresh: bool) -> None:
     (out_dir / "league_strength_validation.json").write_text(json.dumps(validation, indent=2, ensure_ascii=False),
                                                              encoding="utf-8")
 
-    # §7.5 fixed league-wide need-calibration acceptance, independent of player values.
     target_league = next(lg for lg in leagues if lg.key == settings.target_league)
     results = evaluate.season_results(sources.load_club_games(
         transfermarkt_db_path(), target_league.transfermarkt_id, int(settings.analysis_season[:4])))
@@ -561,7 +557,6 @@ def run_eval(settings: Settings, tiers: list[int], refresh: bool) -> None:
         log.info("  need calibration %s: %s | %s | %s", check["check"], "PASS" if check["passed"] else "FAIL",
                  check["observed"], check["requirement"])
 
-    # summary table
     faith = json.loads((out_dir / "faithfulness.json").read_text(encoding="utf-8"))
     pct = lambda x: "n/a" if x is None else f"{100 * x:+.1f}%"  # noqa: E731
 
@@ -623,7 +618,7 @@ def _parse_tiers(value: str) -> list[int]:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="AI Scout offline pipeline (IMPLEMENTATION_GUIDE §8).")
+    parser = argparse.ArgumentParser(description="AI Scout offline pipeline.")
     parser.add_argument("--stage", required=True, choices=[*STAGES, "all"])
     parser.add_argument("--tiers", type=_parse_tiers, help="comma-separated tiers, e.g. 1,2 (default: tiers_enabled)")
     parser.add_argument("--refresh", action="store_true", help="re-download raw files that already exist")

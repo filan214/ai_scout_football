@@ -1,4 +1,4 @@
-"""Targets page: shortlist per ranked need group with the fit breakdown. Implements IMPLEMENTATION_GUIDE §9."""
+"""Targets page: shortlist per ranked need group with the fit breakdown."""
 
 import json
 

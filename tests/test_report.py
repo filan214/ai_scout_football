@@ -1,4 +1,4 @@
-"""§6.7 fact sheet, prompt v2, cached generation, regenerate-once, LLM JSON retry and usage. Fake LLM, no network."""
+"""Fact sheet, prompt v2, cached generation, regenerate-once, LLM JSON retry and usage. Fake LLM, no network."""
 
 import json
 from types import SimpleNamespace
@@ -33,7 +33,7 @@ NEED = pd.Series({"club": "Arsenal FC", "need_score": 17.23, "priority": "Low",
 def test_fact_sheet_rounding_sections_and_flags(settings):
     fs = report.build_fact_sheet(PLAYER, TARGET, NEED, settings, "Bundesliga")
     assert fs["player.market_value_m"] == 20.0 and fs["player.minutes"] == 987 and fs["player.league"] == "Bundesliga"
-    assert fs["player.minutes_share_pct"] == 32 and fs["player.small_sample"] is True    # 32% < 50%
+    assert fs["player.minutes_share_pct"] == 32 and fs["player.small_sample"] is True
     assert fs["stats.ball_recoveries.p90"] == 6.41 and fs["stats.ball_recoveries.pct"] == 91
     assert fs["stats.accurate_passes_pct.value"] == 88.4 and "stats.accurate_passes_pct.p90" not in fs
     assert fs["club_need.club"] == "Arsenal FC" and fs["club_need.position"] == "DM"
@@ -42,10 +42,10 @@ def test_fact_sheet_rounding_sections_and_flags(settings):
     assert fs["fit.upgrade_margin"] == 22.4 and fs["fit.current_best_composite"] == 70.1
     assert fs["club_need.definition"].startswith("Need = shortfall")
     assert report.PROMPT_VERSION == "v2"
-    assert "club_need.score" not in fs and "club_need.priority" not in fs                # v4: kept out
+    assert "club_need.score" not in fs and "club_need.priority" not in fs
     assert fs["fit.rank"] == 1 and fs["fit.age_score"] == 100
-    assert "player.contract_months_left" not in fs                   # unknown contract left out
-    assert json.loads(json.dumps(fs)) == fs                          # plain JSON values only
+    assert "player.contract_months_left" not in fs
+    assert json.loads(json.dumps(fs)) == fs
     regular = PLAYER.copy()
     regular["minutes_share"] = 0.8
     assert report.build_fact_sheet(regular, TARGET, NEED, settings, "Bundesliga")["player.small_sample"] is False
@@ -56,8 +56,8 @@ def test_messages_are_compact_nested_json(settings):
     system, user = report.build_messages(fs)
     facts = json.loads(user)
     assert facts["stats.ball_recoveries.pct"] == 91 and facts["club_need.position"] == "DM"
-    assert ": " not in user and "\n" not in user                     # no indentation or spaces
-    assert "small_sample" in system and "verdict" not in system      # verdict is computed, not written
+    assert ": " not in user and "\n" not in user
+    assert "small_sample" in system and "verdict" not in system
     assert report.nest({"a.b.c": 1, "a.b.d": 2, "e": 3}) == {"a": {"b": {"c": 1, "d": 2}}, "e": 3}
 
 
@@ -91,7 +91,7 @@ def test_generate_then_cache_hit_without_llm_call(settings, tmp_path):
     assert record["usage"] == USAGE and record["prompt_version"] == report.PROMPT_VERSION
     assert (tmp_path / f"{report.cache_key(fs, settings.llm.primary_model)}.json").exists()
     again, hit = report.generate_report(fs, settings, fake, tmp_path)
-    assert hit and fake.calls == 1 and again == record                 # second generation: cache hit, no call
+    assert hit and fake.calls == 1 and again == record
 
 
 def test_unfaithful_report_regenerated_once_then_flagged(settings, tmp_path):
@@ -99,7 +99,7 @@ def test_unfaithful_report_regenerated_once_then_flagged(settings, tmp_path):
     fixed = FakeLLM([_report_obj("7.9"), _report_obj("6.41")])
     record, _ = report.generate_report(fs, settings, fixed, tmp_path)
     assert fixed.calls == 2 and record["attempts"] == 2 and not record["flagged"]
-    assert record["usage"]["total"] == 2 * USAGE["total"]              # both calls counted
+    assert record["usage"]["total"] == 2 * USAGE["total"]
     stubborn = FakeLLM([_report_obj("7.9"), _report_obj("7.9", key="stats.tackles.pct")])
     record, _ = report.generate_report(fs | {"fit.rank": 2}, settings, stubborn, tmp_path)
     assert stubborn.calls == 2 and record["flagged"]
@@ -110,7 +110,7 @@ def test_unfaithful_report_regenerated_once_then_flagged(settings, tmp_path):
 def test_cache_key_changes_with_facts_and_model(settings):
     fs = report.build_fact_sheet(PLAYER, TARGET, NEED, settings, "Bundesliga")
     key = report.cache_key(fs, "a/model")
-    assert key == report.cache_key(dict(reversed(list(fs.items()))), "a/model")   # key order irrelevant
+    assert key == report.cache_key(dict(reversed(list(fs.items()))), "a/model")
     assert key != report.cache_key(fs | {"fit.rank": 2}, "a/model") != report.cache_key(fs, "b/model")
 
 
@@ -173,7 +173,7 @@ def test_completer_retries_invalid_json_sums_usage_and_sends_options(settings):
     parsed, model, usage = llm.make_completer(settings, report.ScoutingReport, client=client)("sys", "user")
     assert parsed == _report_obj("6.41") and model == "deepseek/x"
     assert usage == {"prompt": 1200, "completion": 400, "reasoning": 0, "total": 1600}
-    assert len(client.kwargs) == 2 and client.kwargs[1]["messages"][-1]["role"] == "user"   # error fed back once
+    assert len(client.kwargs) == 2 and client.kwargs[1]["messages"][-1]["role"] == "user"
     first = client.kwargs[0]
     assert first["model"] == settings.llm.primary_model and first["response_format"] == {"type": "json_object"}
     assert first["max_tokens"] == settings.llm.max_completion_tokens

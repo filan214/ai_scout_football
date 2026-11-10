@@ -1,4 +1,4 @@
-"""Backtest, sensitivity, UEFA-coefficient validation and charts. Implements IMPLEMENTATION_GUIDE §7.2-§7.4."""
+"""Backtest, sensitivity, UEFA-coefficient validation and charts."""
 
 from __future__ import annotations
 
@@ -17,16 +17,14 @@ import pandas as pd  # noqa: E402
 from scout import clean, features, needs, rank  # noqa: E402
 from scout.config import League, Settings  # noqa: E402
 
-# Reference palette (dataviz skill): one series, ink for text, recessive grid.
 SURFACE, INK, INK_MUTED, SERIES, GRID = "#fcfcfb", "#0b0b0b", "#52514e", "#2a78d6", "#e4e3df"
 
 
-# ---------------------------------------------------------------- shared
 def season_table(
     perf: pd.DataFrame, id_map: pd.DataFrame, tm_players: pd.DataFrame, tm_vals: pd.DataFrame,
     team_stats: pd.DataFrame, leagues: list[League], settings: Settings, season: str, as_of: date,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """(player_season with percentiles, league strength) for one season, valued as of `as_of` (§6.3-§6.4)."""
+    """(player_season with percentiles, league strength) for one season, valued as of `as_of`."""
     squads = features.squad_values(perf[perf["season"] == season], id_map, clean.value_as_of(tm_vals, as_of))
     strength = features.league_strength(squads, settings.league_strength_floor)
     ps = features.build_player_season(perf, id_map, tm_players, tm_vals, team_stats, strength, leagues, settings,
@@ -35,7 +33,7 @@ def season_table(
 
 
 def clubs_as_played(player_season: pd.DataFrame, target_league: str) -> pd.DataFrame:
-    """§7.2 step 2: each row's club = the team it played for that season (Transfermarkt name for teams of
+    """Step 2: each row's club = the team it played for that season (Transfermarkt name for teams of
     the target league, FotMob name elsewhere), instead of the 2026 current club."""
     out = player_season.copy()
     names = needs.team_clubs(out, target_league)
@@ -44,14 +42,13 @@ def clubs_as_played(player_season: pd.DataFrame, target_league: str) -> pd.DataF
     return out
 
 
-# ---------------------------------------------------------------- §7.2 backtest
 def backtest_settings(settings: Settings) -> Settings:
-    """§7.2: no historical contract evidence; set its secondary urgency to zero, retain other coefficients."""
+    """No historical contract evidence; set its secondary urgency to zero, retain other coefficients."""
     return settings.model_copy(update={"need_weights": {**settings.need_weights, "contract": 0.0}})
 
 
 def season_results(club_games: pd.DataFrame) -> pd.DataFrame:
-    """§7.5 independent strength: played-game points per game and total goal difference."""
+    """Independent strength: played-game points per game and total goal difference."""
     if club_games.duplicated(["club_id", "game_id"]).any():
         raise ValueError("duplicate club-game result")
     rows = club_games.copy()
@@ -69,7 +66,7 @@ def season_results(club_games: pd.DataFrame) -> pd.DataFrame:
 def calibrate_needs(
     all_needs: pd.DataFrame, results: pd.DataFrame, values: pd.Series, settings: Settings, expected_matches: int,
 ) -> dict:
-    """§7.5 fixed acceptance checks a–e; no fitting, threshold search or silent exclusion of failed clubs."""
+    """Fixed acceptance checks a–e; no fitting, threshold search or silent exclusion of failed clubs."""
     ev = settings.evaluation
     ambitions = ["survive", "midtable", "top4", "title"]
     pivot = all_needs.pivot(index=["club", "position_group"], columns="ambition", values="need_score")
@@ -147,7 +144,7 @@ def calibrate_needs(
 
 
 def outcome_scores(ps_next: pd.DataFrame, weights: dict[str, float]) -> pd.Series:
-    """§7.2 step 5: Σ w_s × <stat>_pct next season per fotmob_id, qualifying rows only (most minutes wins)."""
+    """Step 5: Σ w_s × <stat>_pct next season per fotmob_id, qualifying rows only (most minutes wins)."""
     q = ps_next[ps_next["qualifies"]].sort_values(["minutes", "fotmob_id"], ascending=[False, True])
     q = q.drop_duplicates("fotmob_id")
     score = sum(w * q[f"{s}_pct"] for s, w in weights.items())
@@ -155,7 +152,7 @@ def outcome_scores(ps_next: pd.DataFrame, weights: dict[str, float]) -> pd.Serie
 
 
 def compare(picks: pd.Series, pool: pd.Series, settings: Settings, rng: np.random.Generator) -> dict:
-    """§7.2 step 6: uplift = median(picks) / median(pool) − 1, hit rate, attrition, bootstrap CI.
+    """Step 6: uplift = median(picks) / median(pool) − 1, hit rate, attrition, bootstrap CI.
 
     picks / pool: next-season outcome per player, NaN when he lacked the minutes (attrition).
     """
@@ -181,10 +178,10 @@ NAIVE_FIT = {"performance": 1.0, "age": 0.0, "value": 0.0}
 
 
 def club_samples(ps_n: pd.DataFrame, ps_next: pd.DataFrame, club: str, settings: Settings) -> list[dict]:
-    """§7.2 steps 3-5 for one club: needs + rank on season_n (backtest settings), outcomes in season_n1.
+    """Steps 3-5 for one club: needs + rank on season_n (backtest settings), outcomes in season_n1.
 
     Also records the picks of a naive baseline (fit = last season's performance only) and each pick's
-    season_n performance, age and market value (§15).
+    season_n performance, age and market value.
     """
     s = backtest_settings(settings)
     naive_s = s.model_copy(update={"fit_weights": NAIVE_FIT})
@@ -218,8 +215,8 @@ def _profile(picks: pd.Series, profile: pd.DataFrame) -> dict:
 
 
 def backtest(ps_n: pd.DataFrame, ps_next: pd.DataFrame, club: str, clubs: list[str], settings: Settings) -> dict:
-    """§7.2: the target club per group and overall, plus every club of the target league pooled, each
-    compared with a naive performance-only picker (§15)."""
+    """The target club per group and overall, plus every club of the target league pooled, each
+    compared with a naive performance-only picker."""
     rng = np.random.default_rng(settings.evaluation.seed)
     target = club_samples(ps_n, ps_next, club, settings)
     groups = {s["group"]: {"need_score": s["need_score"], "priority": s["priority"],
@@ -239,14 +236,13 @@ def backtest(ps_n: pd.DataFrame, ps_next: pd.DataFrame, club: str, clubs: list[s
                                "target_club": pooled(target, "naive"), "league_pooled": pooled(league, "naive")}}
 
 
-# ---------------------------------------------------------------- §7.3 sensitivity
 def jaccard(a: set, b: set) -> float:
     """|a ∩ b| / |a ∪ b|; 1.0 for two empty sets."""
     return len(a & b) / len(a | b) if a | b else 1.0
 
 
 def perturb(weights: dict[str, float], key: str, delta: float) -> dict[str, float]:
-    """weights[key] + delta (floored at 0), all weights renormalized to sum 1 (§7.3)."""
+    """Weights[key] + delta (floored at 0), all weights renormalized to sum 1."""
     w = dict(weights)
     w[key] = max(0.0, w[key] + delta)
     total = sum(w.values())
@@ -266,10 +262,10 @@ def shortlist_sets(ps: pd.DataFrame, needs_df: pd.DataFrame, clubs: list[str], s
 def sensitivity(
     base: dict, variants: dict[str, Callable[[], dict]], target_keys: list, league_keys: list
 ) -> dict:
-    """§7.3: top-10 Jaccard of each variant against the baseline, mean and minimum over groups.
+    """Top-10 Jaccard of each variant against the baseline, mean and minimum over groups.
 
     A baseline group the variant no longer ranks counts as 0 in mean/min and is also counted in
-    `groups_dropped`; `players_mean` is the Jaccard over groups ranked in both (§15).
+    `groups_dropped`; `players_mean` is the Jaccard over groups ranked in both.
     """
     out = {}
     for name, make in variants.items():
@@ -285,7 +281,6 @@ def sensitivity(
     return out
 
 
-# ---------------------------------------------------------------- §7.4 league strength vs UEFA coefficients
 def league_uefa(coeffs: pd.DataFrame, leagues: list[League]) -> pd.DataFrame:
     """UEFA country coefficient (5 seasons) and that season's points for each league with a uefa_country."""
     by_code = coeffs.set_index("country_code")
@@ -298,7 +293,7 @@ def league_uefa(coeffs: pd.DataFrame, leagues: list[League]) -> pd.DataFrame:
 
 
 def strength_validation(strength: pd.DataFrame, external: pd.DataFrame, column: str) -> dict:
-    """§7.4: Pearson and Spearman (Pearson on ranks) between index_0_100 and an external measure."""
+    """Pearson and Spearman (Pearson on ranks) between index_0_100 and an external measure."""
     df = strength[["league", "index_0_100"]].merge(external, on="league").dropna(subset=[column])
     return {
         "measure": column,
@@ -309,7 +304,6 @@ def strength_validation(strength: pd.DataFrame, external: pd.DataFrame, column: 
     }
 
 
-# ---------------------------------------------------------------- charts
 def _style(ax: plt.Axes) -> None:
     ax.set_facecolor(SURFACE)
     for side in ("top", "right", "left"):
@@ -330,7 +324,7 @@ def plot_backtest(result: dict, path: Path) -> None:
     fig, ax = plt.subplots(figsize=(7.5, 0.6 * len(rows) + 1.4), facecolor=SURFACE)
     _style(ax)
     for i, (label, r) in enumerate(reversed(rows)):
-        color = INK_MUTED if label.startswith("Naive") else SERIES   # the baseline is a reference, not a result
+        color = INK_MUTED if label.startswith("Naive") else SERIES
         ax.plot([100 * r["ci_low"], 100 * r["ci_high"]], [i, i], color=color, linewidth=2, solid_capstyle="round")
         ax.plot(100 * r["uplift"], i, "o", color=color, markersize=8, markeredgecolor=SURFACE, markeredgewidth=2)
         ax.annotate(f"{100 * r['uplift']:+.0f}%  (n={r['picks_scored']})", (100 * r["ci_high"], i),

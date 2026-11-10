@@ -177,7 +177,7 @@ def test_ingest_skips_existing_files(monkeypatch, tmp_path, settings):
     pipeline._write_parquet(pd.DataFrame({"x": [1]}), config.fotmob_raw_path(tier1[0].key, "2024-25"))
 
     assert pipeline.ingest_fotmob(settings, [1], refresh=False) == []
-    assert len(fetched) == 2 * len(tier1) * 2 - 1                      # player + club lists, one player file existed
+    assert len(fetched) == 2 * len(tier1) * 2 - 1
     saved = pd.read_parquet(config.fotmob_raw_path(tier1[0].key, "2025-26"))
     assert (saved.loc[0, "league"], saved.loc[0, "season"]) == (tier1[0].key, "2025-26")
 

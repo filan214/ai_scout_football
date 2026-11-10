@@ -1,9 +1,3 @@
-# League registry (IMPLEMENTATION_GUIDE §2). Validated by scout.config.League.
-# fotmob_id: FotMob league id (www.fotmob.com/api/data/leagues?id=...), verified 2026-10-22.
-# transfermarkt_id: transfermarkt-datasets competition_id.
-# matches_per_season: matches per club per season, used for minutes_share (§6.4);
-# matches_by_season overrides it for seasons with a different league size.
-# uefa_country: UEFA association code for the country coefficient check (§7.4); null for second tiers.
 leagues:
   premier_league:     {name: "Premier League",     tier: 1, fotmob_id: 47, transfermarkt_id: GB1, matches_per_season: 38, uefa_country: ENG}
   la_liga:            {name: "La Liga",            tier: 1, fotmob_id: 87, transfermarkt_id: ES1, matches_per_season: 38, uefa_country: ESP}
@@ -12,8 +6,6 @@ leagues:
   ligue_1:            {name: "Ligue 1",            tier: 1, fotmob_id: 53, transfermarkt_id: FR1, matches_per_season: 34, uefa_country: FRA}
   primeira_liga:      {name: "Primeira Liga",      tier: 2, fotmob_id: 61, transfermarkt_id: PO1, matches_per_season: 34, uefa_country: POR}
   eredivisie:         {name: "Eredivisie",         tier: 2, fotmob_id: 57, transfermarkt_id: NL1, matches_per_season: 34, uefa_country: NED}
-  # 30 regular season + 10 play-off; FotMob club maxima 2024-25/2025-26 range 32-41, mode 40.
   belgian_pro_league: {name: "Belgian Pro League", tier: 2, fotmob_id: 40, transfermarkt_id: BE1, matches_per_season: 40, uefa_country: BEL}
   championship:       {name: "EFL Championship",   tier: 2, fotmob_id: 48, transfermarkt_id: GB2, matches_per_season: 46, uefa_country: null}
-  # 19 clubs in 2024-25 (36 matches each), 18 from 2025-26.
   super_lig:          {name: "Süper Lig",          tier: 2, fotmob_id: 71, transfermarkt_id: TR1, matches_per_season: 34, matches_by_season: {"2024-25": 36}, uefa_country: TUR}

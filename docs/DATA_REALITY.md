@@ -1,6 +1,6 @@
 # DATA_REALITY: what the data actually looks like (P1)
 
-Written 2026-10-22 from the real P1 run (`python pipeline.py --stage ingest` + `--stage clean`). Seasons 2024-25 and 2025-26, 10 leagues. Spec deviations referenced here are logged in `IMPLEMENTATION_GUIDE.md` §15.
+Written 2026-10-22 from the real P1 run (`python pipeline.py --stage ingest` + `--stage clean`). Seasons 2024-25 and 2025-26, 10 leagues. Section numbers (§) refer to the project's implementation spec, which is kept private; §15 is its deviation log.
 
 ## 1. Sources and snapshot dates
 

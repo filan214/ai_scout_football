@@ -1,10 +1,9 @@
-"""Report verification: every number in a report must come from its fact sheet. Implements IMPLEMENTATION_GUIDE §7.1."""
+"""Report verification: every number in a report must come from its fact sheet."""
 
 from __future__ import annotations
 
 import re
 
-# 2,640 / 42 / 0.58 / .5 is not a number on its own; a digit glued to a letter before it (U21, xG2) is skipped.
 NUMBER_RE = re.compile(r"(?<![\w.,])(\d{1,3}(?:,\d{3})+|\d+)(\.\d+)?")
 PER_90_RE = re.compile(r"\bper[\s-]*90\b|\bp90\b", re.IGNORECASE)
 
@@ -30,7 +29,7 @@ def number_matches(value: float, is_integer: bool, facts: list[float]) -> bool:
 
 
 def verify(report: dict, fact_sheet: dict) -> dict:
-    """Check one report (summary, strengths, risks) against its fact sheet. Implements §7.1.
+    """Check one report (summary, strengths, risks) against its fact sheet.
 
     Returns numbers, verified, verified_rate (1.0 when the text has no numbers), unverified numbers,
     missing_fact_keys (cited keys absent from the fact sheet) and fully_verified.
@@ -53,7 +52,7 @@ def verify(report: dict, fact_sheet: dict) -> dict:
 
 
 def aggregate(checks: list[dict]) -> dict:
-    """Faithfulness across reports: pooled verified-number rate and report-level counts (§7.1)."""
+    """Faithfulness across reports: pooled verified-number rate and report-level counts."""
     numbers = sum(c["numbers"] for c in checks)
     verified = sum(c["verified"] for c in checks)
     return {

@@ -1,4 +1,4 @@
-"""Need-driven target ranking (pure). Implements IMPLEMENTATION_GUIDE §6.6."""
+"""Need-driven target ranking (pure)."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ SHORTLIST_COLUMNS = [
 
 
 def verdict(fit_rank: int, need_priority: str, verdict_ranks: dict[str, int]) -> str:
-    """Computed verdict (§15): High need and fit rank ≤ priority_target -> "priority target";
+    """Computed verdict: High need and fit rank ≤ priority_target -> "priority target";
     fit rank ≤ strong_option -> "strong option"; else "monitor"."""
     if need_priority == "High" and fit_rank <= verdict_ranks["priority_target"]:
         return "priority target"
@@ -37,9 +37,9 @@ def eligible_pool(
     player_season: pd.DataFrame, group: str, club: str, weights: dict[str, float], settings: Settings,
     need: Mapping | None = None,
 ) -> pd.DataFrame:
-    """Every eligible candidate for one need group, scored and sorted best first (§6.6 steps 1-6).
+    """Every eligible candidate for one need group, scored and sorted best first.
 
-    Eligible: same position group, qualifying (minutes and matches, §6.4), age_min ≤ age ≤ age_max,
+    Eligible: same position group, qualifying (minutes and matches), age_min ≤ age ≤ age_max,
     market value known and ≤ budget, current club ≠ `club`. performance = Σ w_s × <stat>_pct.
     Sort fit ↓, performance ↓, market value ↑, fotmob_id ↑; a player listed in two leagues keeps his best row.
     """
@@ -77,7 +77,7 @@ def eligible_pool(
 
 
 def ranked_groups(needs_for_club: pd.DataFrame, settings: Settings) -> pd.DataFrame:
-    """Need rows to rank: High/Medium groups plus the `min_ranked_groups` highest-need used groups (§15)."""
+    """Need rows to rank: High/Medium groups plus the `min_ranked_groups` highest-need used groups."""
     ordered = needs_for_club.sort_values(["need_score", "position_group"], ascending=[False, True])
     if "used" in ordered:
         ordered = ordered[ordered["used"].astype(bool)]
@@ -88,8 +88,8 @@ def ranked_groups(needs_for_club: pd.DataFrame, settings: Settings) -> pd.DataFr
 
 
 def rank_targets(player_season: pd.DataFrame, needs_for_club: pd.DataFrame, settings: Settings) -> pd.DataFrame:
-    """Top `shortlist_size` targets for each ranked need group of one club (§6.6): High/Medium groups plus
-    the `min_ranked_groups` highest-need groups whatever their priority (§15). See `eligible_pool`.
+    """Top `shortlist_size` targets for each ranked need group of one club: High/Medium groups plus
+    the `min_ranked_groups` highest-need groups whatever their priority. See `eligible_pool`.
     """
     out = []
     for need in ranked_groups(needs_for_club, settings).itertuples():

@@ -1,7 +1,7 @@
-"""Shared Streamlit helpers: cached data, sidebar, live needs and shortlist. Implements IMPLEMENTATION_GUIDE §9.
+"""Shared Streamlit helpers: cached data, sidebar, live needs and shortlist.
 
 The app only reads data/processed/ and data/reports/ (rule 2); needs and ranking are recomputed live with the
-same pure functions as the pipeline. When the weekly live overlay exists (processed/live/, §15), clubs,
+same pure functions as the pipeline. When the weekly live overlay exists (processed/live/), clubs,
 market values, ages and contracts come from it; stats stay those of the analysis season.
 """
 
@@ -18,7 +18,6 @@ import streamlit as st
 from scout import features, llm, needs, rank
 from scout.config import DOCS_DIR, LIVE_DIR, PROCESSED_DIR, Settings, load_leagues, load_settings
 
-# Status palette (dataviz skill): priority is a state, always shown with its label.
 PRIORITY_COLORS = {"High": "#d03b3b", "Medium": "#fab219", "Low": "#2e8b73",
                    "Insufficient evidence": "#6b7280"}
 AMBITIONS = ["survive", "midtable", "top4", "title"]
@@ -38,7 +37,7 @@ LIVE_VIEW, FROZEN_VIEW = "Live", "Frozen snapshot"
 
 
 def apply_style() -> None:
-    """Add the presentation styles used by the Streamlit pages (§9)."""
+    """Add the presentation styles used by the Streamlit pages."""
     st.markdown("""<style>
     .block-container {max-width: 1180px; padding-top: 2rem; padding-bottom: 4rem;}
     .scout-hero {background: linear-gradient(120deg, #123a32, #225d4d); border-radius: 20px;
@@ -55,28 +54,28 @@ def apply_style() -> None:
 
 
 def page_header(kicker: str, title: str, description: str) -> None:
-    """Render a consistent plain-language page heading (§9)."""
+    """Render a consistent plain-language page heading."""
     st.markdown(f'<div class="scout-hero"><p class="scout-kicker">{escape(kicker)}</p>'
                 f'<h1>{escape(title)}</h1><p>{escape(description)}</p></div>', unsafe_allow_html=True)
 
 
 def position_label(group: str) -> str:
-    """Show a readable position name alongside its abbreviation (§9)."""
+    """Show a readable position name alongside its abbreviation."""
     return f"{POSITION_NAMES.get(group, group)} ({group})"
 
 
 def stat_label(stat: str) -> str:
-    """Show a readable name for a player statistic (§9)."""
+    """Show a readable name for a player statistic."""
     return STAT_NAMES.get(stat, stat.replace("_", " ").capitalize())
 
 
 def need_label(evidence: str, priority: str) -> str:
-    """§9 evidence takes precedence over a score's ordinary priority band."""
+    """Evidence takes precedence over a score's ordinary priority band."""
     return "Insufficient evidence" if evidence == "insufficient" else priority
 
 
 def evidence_badge(evidence: str, priority: str) -> None:
-    """§9 distinct grey, text-labelled badge for insufficient evidence."""
+    """Distinct grey, text-labelled badge for insufficient evidence."""
     label = need_label(evidence, priority)
     color = PRIORITY_COLORS.get(label, "#6b7280")
     st.markdown(f'<span style="display:inline-block;border-radius:6px;padding:3px 9px;'
@@ -85,7 +84,7 @@ def evidence_badge(evidence: str, priority: str) -> None:
 
 
 def fact_label(key: str) -> str:
-    """Translate a report fact key into a reader-facing label (§9)."""
+    """Translate a report fact key into a reader-facing label."""
     parts = key.split(".")
     if len(parts) == 3 and parts[0] == "stats":
         unit = {"p90": " per 90 minutes", "pct": " percentile", "value": ""}.get(parts[2], "")
@@ -98,14 +97,14 @@ def fact_label(key: str) -> str:
 
 @st.cache_resource
 def base_settings() -> Settings:
-    """settings.yaml with position_stats replaced by the lists that passed the coverage check (§6.2)."""
+    """settings.yaml with position_stats replaced by the lists that passed the coverage check."""
     coverage = json.loads((PROCESSED_DIR / "coverage.json").read_text(encoding="utf-8"))
     return load_settings().model_copy(update={"position_stats": coverage["position_stats"]})
 
 
 @st.cache_data
 def live_meta() -> dict | None:
-    """meta.json of the weekly live overlay, or None when it has not been built (§15)."""
+    """meta.json of the weekly live overlay, or None when it has not been built."""
     path = LIVE_DIR / "meta.json"
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
 
@@ -221,7 +220,7 @@ def _club_needs(club: str, ambition: str, live: bool) -> pd.DataFrame:
 
 
 def club_needs(club: str, ambition: str) -> pd.DataFrame:
-    """Recomputed §6.5 needs for one club and ambition."""
+    """Recomputed needs for one club and ambition."""
     return _club_needs(club, ambition, use_live())
 
 
@@ -233,7 +232,7 @@ def _club_shortlist(club: str, ambition: str, budget_m: float, age_min: int, age
 
 
 def club_shortlist(club: str, ambition: str, budget_m: float, age_min: int, age_max: int) -> pd.DataFrame:
-    """Recomputed §6.6 shortlist for one club under the sidebar brief."""
+    """Recomputed shortlist for one club under the sidebar brief."""
     return _club_shortlist(club, ambition, budget_m, age_min, age_max, use_live())
 
 
@@ -248,6 +247,6 @@ def api_key_available() -> bool:
     try:
         if name in st.secrets and not os.environ.get(name):
             os.environ[name] = st.secrets[name]
-    except Exception:  # no secrets file locally
+    except Exception:
         pass
     return llm.api_key(base_settings()) is not None

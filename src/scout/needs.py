@@ -1,4 +1,4 @@
-"""Squad need scores and need-driven stat weights (pure). Implements IMPLEMENTATION_GUIDE §6.5."""
+"""Squad need scores and need-driven stat weights (pure)."""
 
 from __future__ import annotations
 
@@ -28,7 +28,7 @@ def team_clubs(player_season: pd.DataFrame, league: str) -> pd.Series:
 
 
 def league_clubs(player_season: pd.DataFrame, league: str) -> list[str]:
-    """Clubs in `league`: its current clubs in the live view (§15), else the frozen season's (see `team_clubs`)."""
+    """Clubs in `league`: its current clubs in the live view, else the frozen season's (see `team_clubs`)."""
     if "current_league" in player_season:
         return sorted(player_season.loc[player_season["current_league"] == league, "current_club"].dropna().unique())
     return sorted(team_clubs(player_season, league).unique())
@@ -47,7 +47,7 @@ def squad_quality(group_rows: pd.DataFrame, stats: list[str]) -> dict[str, float
 def league_levels(
     player_season: pd.DataFrame, settings: Settings, profiles: pd.DataFrame | None = None,
 ) -> tuple[dict[str, dict[str, float]], dict[str, dict[str, float]]]:
-    """§6.5 squad levels of the target league's clubs per group and stat: (benchmark B_s, median club level).
+    """Squad levels of the target league's clubs per group and stat: (benchmark B_s, median club level).
 
     B_s = level of the k-th best club, k from the ambition. Clubs without a rated player for a stat are not
     ranked; with fewer rated clubs than k the last one counts; with none, both levels are 100.
@@ -70,19 +70,19 @@ def league_levels(
 
 
 def benchmarks(player_season: pd.DataFrame, settings: Settings) -> dict[str, dict[str, float]]:
-    """§6.5 B_s per group and stat (see `league_levels`)."""
+    """B_s per group and stat (see `league_levels`)."""
     return league_levels(player_season, settings)[0]
 
 
 def stat_weights(gaps: dict[str, float], blend: float) -> dict[str, float]:
-    """§6.5: w_s = blend × gap_s / Σ gap + (1 − blend) / k; equal weights when every gap is 0."""
+    """w_s = blend × gap_s / Σ gap + (1 − blend) / k; equal weights when every gap is 0."""
     k = len(gaps)
     total = sum(gaps.values())
     return {s: blend * (g / total if total > 0 else 1 / k) + (1 - blend) / k for s, g in gaps.items()}
 
 
 def combine_need(depth: float, quality: float, age: float, contract: float, weights: dict[str, float]) -> float:
-    """§6.5 Candidate A: quality shortfall plus secondary urgency within the remaining range."""
+    """Quality shortfall plus secondary urgency within the remaining range."""
     urgency = weights["depth"] * depth + weights["age"] * age + weights["contract"] * contract
     return float(quality + (1 - quality / 100) * urgency)
 
@@ -91,15 +91,15 @@ def compute_needs(
     player_season: pd.DataFrame, club: str, settings: Settings, *, profiles: pd.DataFrame | None = None,
     levels: tuple[dict, dict] | None = None,
 ) -> pd.DataFrame:
-    """Need score per position group for `club` (§6.5); one row per group in settings.squad.depth_targets.
+    """Need score per position group for `club`; one row per group in settings.squad.depth_targets.
 
     Squad = combined profiles whose current Transfermarkt club is `club`, weighted by season minutes.
     Depth counts fractional regulars, Σ min(1, minutes / reliable_minutes). For squad.optional_groups the
     target is scaled by usage = min(1, club share of outfield minutes / typical share); below
-    squad.min_usage the club does not play that position and its need is 0 (§15).
+    squad.min_usage the club does not play that position and its need is 0.
     Quality compares the squad's minutes-weighted percentile per stat with B_s (`league_levels`):
     quality_gap = 100 × mean_s(max(0, B_s − squad_pct_s) / B_s). A stat nobody in the squad is rated on
-    takes the league's median club level only behind an explicit insufficient-evidence state (§15).
+    takes the league's median club level only behind an explicit insufficient-evidence state.
     Unknown age or contract = not at risk.
     """
     profiles = features.squad_profiles(player_season, settings) if profiles is None else profiles
@@ -171,7 +171,7 @@ def compute_needs(
 
 
 def compute_all_needs(player_season: pd.DataFrame, settings: Settings) -> pd.DataFrame:
-    """§6.5 all target-league clubs, sharing the same combined profiles and benchmark."""
+    """All target-league clubs, sharing the same combined profiles and benchmark."""
     profiles = features.squad_profiles(player_season, settings)
     levels = league_levels(player_season, settings, profiles)
     return pd.concat([compute_needs(player_season, club, settings, profiles=profiles, levels=levels)

@@ -1,4 +1,4 @@
-"""External data adapters: FotMob, Transfermarkt, UEFA coefficients. Implements IMPLEMENTATION_GUIDE §5.
+"""External data adapters: FotMob, Transfermarkt, UEFA coefficients.
 
 Library / API notes, checked 2026-10-22 against the installed versions (CLAUDE.md rule 5):
 
@@ -32,7 +32,7 @@ has a FotMob player-stats reader. Endpoints, verified live for all 10 leagues:
                    marketValues.values[] = {date, value, currency, source: "scisports", teamId, teamName}
   Season format is "YYYY/YYYY" ("2025/2026"); the project label is "2025-26".
 
-Live squads (weekly `live` stage, §15), verified live for all 10 leagues on 2026-11-10:
+Live squads (weekly `live` stage), verified live for all 10 leagues on 2026-11-10:
   league page   www.fotmob.com/api/data/leagues?id={league_id} (default = current season)
                 -> details.selectedSeason "2026/2027"; table[].data.table.all[] = {id, name, ...};
                    split phases (e.g. play-offs) put the groups under table[].data.tables[].table.all[]
@@ -47,20 +47,18 @@ ScraperFC 4.5.0 Transfermarkt (inspected ScraperFC/transfermarkt.py) for the Cha
   get_valid_seasons(league) loops forever if the season <select> is missing; get_player_links and
   scrape_player(player_link) use cloudscraper / plain requests without delays. NOT USED: every
   client (botasaurus request, cloudscraper, requests) gets Transfermarkt's AWS WAF "Human
-  Verification" page (HTTP 405). FotMob player profiles fill the gap instead (§15).
+  Verification" page (HTTP 405). FotMob player profiles fill the gap instead.
 
 transfermarkt-datasets: the official DuckDB file (pub-e682421888d945d684bcae8890b0ec20.r2.dev) is
   blocked by the same ISP, so the Kaggle mirror (davidcariboo/player-scores, same tables as CSV) is
   downloaded and loaded into a local DuckDB file. Upstream data stops at 2026-07-06 (its README).
 
-UEFA country coefficients (§7.4, replaces ClubElo: api.clubelo.com answered HTTP 502 on 2026-10-23).
+UEFA country coefficients (replace ClubElo: api.clubelo.com answered HTTP 502 on 2026-10-23).
   comp.uefa.com/v2/coefficients?coefficientRange=OVERALL&coefficientType=MEN_ASSOCIATION&language=EN
   &page=1&pagesize=60&seasonYear={season end year}: the JSON behind UEFA's ranking pages (undocumented).
   data.members[]: member.countryCode ("ENG"), overallRanking{position, totalValue (5-season coefficient),
   baseSeasonYear, targetSeasonYear}, seasonRankings[]{seasonYear, totalValue}. Checked 2026-10-23: the
   2026 totals equal kassiesa.net's independent table (England 119.519, Spain 97.046, Netherlands 67.929).
-
-All deviations from the spec are logged in IMPLEMENTATION_GUIDE §15.
 """
 
 from __future__ import annotations
@@ -88,14 +86,12 @@ FOTMOB_API = "https://www.fotmob.com/api/data"
 FOTMOB_STATS = "https://data.fotmob.com/stats"
 KAGGLE_TM_URL = "https://www.kaggle.com/api/v1/datasets/download/davidcariboo/player-scores"
 HTTP_TIMEOUT_SECONDS = 60
-CLUB_STAT_RE = re.compile(r"_team(_|$)")  # club lists: rating_team, goals_team_match, ...
+CLUB_STAT_RE = re.compile(r"_team(_|$)")
 USER_AGENT = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/141.0 Safari/537.36"
 )
 
-# (FotMob stat list, raw column) -> (canonical stat, unit); unit is "total", "per90" or "pct".
-# Totals are preferred where FotMob publishes them (SubStatValue of the per-90 defensive lists).
 FOTMOB_TO_CANONICAL: dict[tuple[str, str], tuple[str, str]] = {
     ("mins_played", "stat_value"): ("minutes", "total"),
     ("mins_played", "sub_stat_value"): ("matches", "total"),
@@ -212,7 +208,7 @@ def parse_fotmob_stat(payload: dict) -> pd.DataFrame:
 
 
 def fetch_fotmob(league_id: int, season_id: int, settings: Settings) -> pd.DataFrame:
-    """Every published player stat list for one league-season, long format, uncleaned (§5)."""
+    """Every published player stat list for one league-season, long format, uncleaned."""
     base = f"{FOTMOB_STATS}/{league_id}/season/{season_id}"
     index = _get_json(f"{base}/topstats.json", settings)
     stat_names = [t["StatName"] for t in index["TopLists"] if not CLUB_STAT_RE.search(t["StatName"])]
@@ -232,11 +228,11 @@ def fetch_fotmob(league_id: int, season_id: int, settings: Settings) -> pd.DataF
     return df
 
 
-TEAM_STATS = ["possession_percentage_team"]   # club lists ingested next to the player lists (§6.4)
+TEAM_STATS = ["possession_percentage_team"]
 
 
 def fetch_fotmob_team_stats(league_id: int, season_id: int, settings: Settings) -> pd.DataFrame:
-    """Club stat lists in TEAM_STATS for one league-season: stat_name, team_id, team_name, stat_value (§5)."""
+    """Club stat lists in TEAM_STATS for one league-season: stat_name, team_id, team_name, stat_value."""
     rows = []
     for stat in TEAM_STATS:
         top = _get_json(f"{FOTMOB_STATS}/{league_id}/season/{season_id}/{stat}.json", settings)["TopLists"][0]
@@ -249,7 +245,7 @@ PLAYER_KEYS = ["id", "name", "birthDate", "contractEnd", "primaryTeam", "positio
 
 
 def fetch_fotmob_player(player_id: str, settings: Settings) -> dict:
-    """Profile of one FotMob player (birth date, contract, positions, market values) for the TM gap-fill (§5)."""
+    """Profile of one FotMob player (birth date, contract, positions, market values) for the TM gap-fill."""
     payload = _get_json(f"{FOTMOB_API}/playerData?id={player_id}", settings)
     return {key: payload.get(key) for key in PLAYER_KEYS}
 
@@ -269,7 +265,7 @@ def parse_fotmob_league_clubs(payload: dict) -> pd.DataFrame:
 
 
 def fetch_fotmob_league_clubs(league_id: int, settings: Settings) -> pd.DataFrame:
-    """Clubs of one league in FotMob's current season (§15 live squads)."""
+    """Clubs of one league in FotMob's current season."""
     return parse_fotmob_league_clubs(_get_json(f"{FOTMOB_API}/leagues?id={league_id}", settings))
 
 
@@ -300,7 +296,7 @@ def parse_fotmob_squad(payload: dict) -> pd.DataFrame:
 
 
 def fetch_fotmob_squad(team_id: str, settings: Settings) -> pd.DataFrame:
-    """Current squad of one FotMob team (§15 live squads)."""
+    """Current squad of one FotMob team."""
     return parse_fotmob_squad(_get_json(f"{FOTMOB_API}/teams?id={team_id}", settings))
 
 
@@ -320,7 +316,7 @@ def download_transfermarkt_zip(dest_dir: Path, settings: Settings) -> Path:
 def snapshot_end_dates(zip_path: Path) -> dict[str, date | None]:
     """Latest `date` in the games and player_valuations tables of a transfermarkt-datasets zip.
 
-    The weekly freshness check compares these with `as_of_date`: upstream updates paused at 2026-07-06 (§15).
+    The weekly freshness check compares these with `as_of_date`: upstream updates paused at 2026-07-06.
     """
     ends: dict[str, date | None] = {}
     with zipfile.ZipFile(zip_path) as zf:
@@ -370,7 +366,7 @@ def query_transfermarkt(db_path: Path, sql: str) -> pd.DataFrame:
 
 
 def load_club_games(db_path: Path, competition_id: str, season: int) -> pd.DataFrame:
-    """§7.5 completed club results from the local games/club_games tables, no network."""
+    """Completed club results from the local games/club_games tables, no network."""
     with duckdb.connect(str(db_path), read_only=True) as con:
         return con.execute("""
             SELECT cg.game_id, CAST(cg.club_id AS VARCHAR) AS club_id, c.name AS club,
@@ -384,7 +380,7 @@ def load_club_games(db_path: Path, competition_id: str, season: int) -> pd.DataF
 
 
 def probe_clubelo(settings: Settings) -> dict:
-    """§7.5 exactly one dated ClubElo attempt per eval run; failure is explicit, never a zero rating."""
+    """Exactly one dated ClubElo attempt per eval run; failure is explicit, never a zero rating."""
     url = f"http://api.clubelo.com/{settings.as_of_date}"
     try:
         response = _session.get(url, timeout=settings.evaluation.clubelo_timeout_seconds)
@@ -401,7 +397,7 @@ def probe_clubelo(settings: Settings) -> dict:
 
 
 def probe_llm_access(settings: Settings, key: str) -> dict:
-    """§6.7 one minimal request, no retries/fallbacks or optional model parameters; redact credentials."""
+    """One minimal request, no retries/fallbacks or optional model parameters; redact credentials."""
     url = settings.llm.base_url.rstrip("/") + "/chat/completions"
     result = {"model": settings.llm.primary_model, "attempts": 1, "http_status": None,
               "error_type": None, "error_message": None, "request_id": None}
@@ -438,7 +434,7 @@ UEFA_COEFFICIENTS = "https://comp.uefa.com/v2/coefficients"
 
 
 def fetch_uefa_coefficients(season_year: int, settings: Settings) -> pd.DataFrame:
-    """UEFA men's association coefficients for the season ending in `season_year` (§7.4).
+    """UEFA men's association coefficients for the season ending in `season_year`.
 
     One row per association: country_code, country, position, coefficient (5-season total),
     season_points (that season alone), base_season_year, target_season_year.

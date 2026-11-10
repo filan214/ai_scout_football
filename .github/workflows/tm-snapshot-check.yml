@@ -1,10 +1,8 @@
-# Weekly check whether transfermarkt-datasets has resumed publishing (upstream paused at 2026-07-06).
-# It changes nothing in the repo: when newer data exists it opens one issue with the refresh steps.
 name: Transfermarkt snapshot check
 
 on:
   schedule:
-    - cron: "0 6 * * 1"   # Mondays 06:00 UTC
+    - cron: "0 6 * * 1"
   workflow_dispatch:
 
 permissions:

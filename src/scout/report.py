@@ -1,4 +1,4 @@
-"""Fact sheet, prompt, output schema, cached report generation. Implements IMPLEMENTATION_GUIDE §6.7."""
+"""Fact sheet, prompt, output schema, cached report generation."""
 
 from __future__ import annotations
 
@@ -29,8 +29,6 @@ class ScoutingReport(BaseModel):
     risks: list[Claim] = Field(min_length=1, max_length=2)
 
 
-# User-requested evidence/upgrade prompt v2 supersedes the earlier v4 contract (§15).
-# Club context and player evidence are explicitly distinguished; verdict remains deterministic.
 SYSTEM_PROMPT = """Write a scouting report from the JSON facts. Reply with JSON only:
 {"summary":"","strengths":[{"text":"","fact_keys":[""]}],"risks":[{"text":"","fact_keys":[""]}]}
 Rules:
@@ -50,7 +48,7 @@ upgrade margin; benchmark warnings use the supplied flag, never your own calcula
 def build_fact_sheet(
     player: Mapping, target: Mapping, need: Mapping, settings: Settings, league_name: str
 ) -> dict:
-    """Display-ready facts with stable dotted keys (§6.7): € millions 1 dp, per-90 2 dp, percentiles integers.
+    """Display-ready facts with stable dotted keys: € millions 1 dp, per-90 2 dp, percentiles integers.
 
     Sections: player, stats (the need group's stats; rate stats as `.value` %), fit, club_need (club,
     position, ambition, budget, definition, evidence, benchmarks). Club facts explain the shortlist;
@@ -126,14 +124,14 @@ def build_messages(fact_sheet: dict) -> tuple[str, str]:
 
 
 def cache_key(fact_sheet: dict, primary_model: str) -> str:
-    """sha256(fact sheet JSON + PROMPT_VERSION + primary model) (§6.7)."""
+    """sha256(fact sheet JSON + PROMPT_VERSION + primary model)."""
     payload = (json.dumps(fact_sheet, sort_keys=True, ensure_ascii=False)
                + PROMPT_VERSION + SYSTEM_PROMPT + primary_model)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
 def generation_summary(checks: list[dict], expected: int, error: str | None = None) -> dict:
-    """§7.1 failed/partial batches must not inherit old faithfulness or claim 100% from zero reports."""
+    """Failed/partial batches must not inherit old faithfulness or claim 100% from zero reports."""
     summary = faithfulness.aggregate(checks)
     if not checks:
         summary["verified_rate"] = None
@@ -146,9 +144,9 @@ def generate_report(
     fact_sheet: dict, settings: Settings, complete: Callable[[str, str], tuple[ScoutingReport, str, Usage]],
     cache_dir: Path,
 ) -> tuple[dict, bool]:
-    """Cached report for one fact sheet: (record, cache_hit). Implements §6.7 generation.
+    """Cached report for one fact sheet: (record, cache_hit).
 
-    On a miss: call the LLM, verify (§7.1), regenerate once if not fully verified, save
+    On a miss: call the LLM, verify, regenerate once if not fully verified, save
     data/reports/{key}.json with the faithfulness check, `flagged` and the token usage of all calls.
     """
     key = cache_key(fact_sheet, settings.llm.primary_model)

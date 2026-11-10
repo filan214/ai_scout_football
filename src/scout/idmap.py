@@ -1,4 +1,4 @@
-"""FotMob <-> Transfermarkt ID matching. Implements IMPLEMENTATION_GUIDE §6.1 (club pairing and passes 2-3: §15)."""
+"""FotMob <-> Transfermarkt ID matching."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ ID_MAP_COLUMNS = ["fotmob_id", "tm_id", "match_score", "method"]
 
 
 def normalize_name(name: str) -> str:
-    """unidecode -> lowercase -> drop apostrophes and dots -> other punctuation to spaces -> collapse spaces."""
+    """Unidecode -> lowercase -> drop apostrophes and dots -> other punctuation to spaces -> collapse spaces."""
     text = re.sub(r"['’`.]", "", unidecode(str(name)).lower())
     return re.sub(r"\s+", " ", re.sub(r"[^a-z0-9 ]", " ", text)).strip()
 
@@ -98,7 +98,7 @@ def match_players(fm: pd.DataFrame, tm: pd.DataFrame, name_threshold: float) -> 
 def build_id_map(
     perf: pd.DataFrame, roster: pd.DataFrame, name_threshold: float, min_club_overlap: int
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Match every perf row whose league-season has a TM roster. Implements §6.1 steps 1-3.
+    """Match every perf row whose league-season has a TM roster.
 
     perf: fotmob_id, player_name, team_id, league, season. roster: tm_id, player_name, club_id, league, season
     (TM appearances). Returns (id_map with one row per fotmob_id, row-level matches incl. league/season).
@@ -142,7 +142,7 @@ def consolidate(matches: pd.DataFrame) -> pd.DataFrame:
 
 
 def apply_overrides(id_map: pd.DataFrame, overrides: pd.DataFrame) -> pd.DataFrame:
-    """Manual overrides (fotmob_id, tm_id) replace automatic matches. Implements §6.1 step 4."""
+    """Manual overrides (fotmob_id, tm_id) replace automatic matches."""
     if overrides.empty:
         return id_map
     manual = overrides[["fotmob_id", "tm_id"]].astype(str).assign(match_score=100.0, method="override")
@@ -151,7 +151,7 @@ def apply_overrides(id_map: pd.DataFrame, overrides: pd.DataFrame) -> pd.DataFra
 
 
 def unmatched_report(perf: pd.DataFrame, roster: pd.DataFrame, matched_ids: set[str], top_n: int) -> pd.DataFrame:
-    """Top unmatched perf rows by minutes with the closest TM name in the same league-season (§6.1 step 5)."""
+    """Top unmatched perf rows by minutes with the closest TM name in the same league-season."""
     todo = perf[~perf["fotmob_id"].isin(matched_ids)].nlargest(top_n, "minutes")
     rows = []
     for r in todo.itertuples():
@@ -169,7 +169,7 @@ def unmatched_report(perf: pd.DataFrame, roster: pd.DataFrame, matched_ids: set[
 
 
 def match_rates(perf: pd.DataFrame, matched_ids: set[str]) -> pd.DataFrame:
-    """Row and minutes-weighted match rate per league and overall. Implements §6.1 step 5."""
+    """Row and minutes-weighted match rate per league and overall."""
     df = perf.assign(matched=perf["fotmob_id"].isin(matched_ids))
     df["matched_minutes"] = df["minutes"].where(df["matched"], 0)
 

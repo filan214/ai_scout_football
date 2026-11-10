@@ -1,4 +1,4 @@
-"""Canonical stats, position groups, interim tables, Championship gap-fill. Implements IMPLEMENTATION_GUIDE §4-§5."""
+"""Canonical stats, position groups, interim tables, Championship gap-fill."""
 
 from __future__ import annotations
 
@@ -11,7 +11,6 @@ import pandas as pd
 from scout.config import League, fotmob_raw_path, fotmob_teams_raw_path
 from scout.sources import FOTMOB_TO_CANONICAL, query_transfermarkt
 
-# §4 position groups; None = excluded (goalkeepers).
 TM_SUBPOSITION_GROUPS: dict[str, str | None] = {
     "Centre-Forward": "ST", "Second Striker": "ST",
     "Left Winger": "W", "Right Winger": "W",
@@ -23,21 +22,16 @@ TM_SUBPOSITION_GROUPS: dict[str, str | None] = {
     "Goalkeeper": None,
 }
 
-# FotMob profile positions (strPosShort of the main position) as Transfermarkt sub_position labels.
 FOTMOB_SHORT_TO_SUBPOSITION = {
     "ST": "Centre-Forward", "LW": "Left Winger", "RW": "Right Winger", "AM": "Attacking Midfield",
     "CM": "Central Midfield", "LM": "Left Midfield", "RM": "Right Midfield", "DM": "Defensive Midfield",
     "LB": "Left-Back", "RB": "Right-Back", "LWB": "Left-Back", "RWB": "Right-Back",
     "CB": "Centre-Back", "GK": "Goalkeeper",
 }
-# Profiles without a main position carry only a generic label (§4 fallback: F->ST, M->CM, D->CB).
 FOTMOB_GENERIC_TO_SUBPOSITION = {
     "forward": "Centre-Forward", "midfielder": "Central Midfield", "defender": "Centre-Back", "keeper": "Goalkeeper",
 }
 
-# §4 fallback for players without Transfermarkt data: FotMob pitch-grid position id (first id of `positions`)
-# -> majority group of TM-matched players with that id, 2024-25/2025-26, 10 leagues (docs/DATA_REALITY.md).
-# Ids 1/2/3 are generic defender/midfielder/forward labels (spec fallback D->CB, M->CM, F->ST); 0/11 keepers.
 FOTMOB_POSITION_GROUPS: dict[str, str | None] = {
     "0": None, "11": None, "1": "CB", "2": "CM", "3": "ST",
     "32": "FB", "33": "CB", "34": "CB", "35": "CB", "36": "CB", "37": "CB", "38": "FB",
@@ -65,12 +59,12 @@ def season_window(season: str) -> tuple[date, date]:
 
 
 def position_group(sub_position: str | None) -> str | None:
-    """Transfermarkt sub_position -> position group (§4); None for goalkeepers and unknown labels."""
+    """Transfermarkt sub_position -> position group; None for goalkeepers and unknown labels."""
     return TM_SUBPOSITION_GROUPS.get(sub_position) if isinstance(sub_position, str) else None
 
 
 def assign_position_groups(perf: pd.DataFrame, id_map: pd.DataFrame, tm_players: pd.DataFrame) -> pd.DataFrame:
-    """perf rows + position_group (from sub_position, else FotMob position id) and position_fallback (§4).
+    """Perf rows + position_group (from sub_position, else FotMob position id) and position_fallback.
 
     Goalkeepers get position_group None (excluded in v1).
     """
@@ -103,7 +97,7 @@ def read_fotmob_teams_raw(leagues: list[League], seasons: list[str]) -> pd.DataF
 
 
 def build_team_stats(raw_teams: pd.DataFrame) -> pd.DataFrame:
-    """Club lists -> one row per club × league × season with possession as a share 0-1 (§6.4)."""
+    """Club lists -> one row per club × league × season with possession as a share 0-1."""
     poss = raw_teams[raw_teams["stat_name"] == "possession_percentage_team"]
     out = poss[["league", "season", "team_id", "team_name"]].assign(possession=poss["stat_value"] / 100)
     return out.sort_values(["league", "season", "team_id"]).reset_index(drop=True)
@@ -118,7 +112,7 @@ def select_profile_ids(
     per_league: int,
     seed: int,
 ) -> list[str]:
-    """FotMob ids needing a profile: every player of a gap league plus a seeded calibration sample (§15).
+    """FotMob ids needing a profile: every player of a gap league plus a seeded calibration sample.
 
     `mins` is the raw `mins_played` list (league, season, player_id, minutes_played). The sample takes
     `per_league` players with at least `min_minutes` in `calibration_season` from each covered league.
@@ -134,7 +128,7 @@ def select_profile_ids(
 
 
 def build_perf(raw: pd.DataFrame) -> pd.DataFrame:
-    """Raw FotMob lists -> one row per player x league x season with canonical stats (§4 interim/perf).
+    """Raw FotMob lists -> one row per player x league x season with canonical stats (interim/perf).
 
     Counting stats are season totals: published totals where FotMob has them, else per-90 x minutes / 90.
     A player missing from a counting-stat list with at least that list's minimum matches played has a
@@ -168,7 +162,7 @@ def build_perf(raw: pd.DataFrame) -> pd.DataFrame:
 
 
 def load_tm_roster(db_path: Path, leagues: list[League], seasons: list[str]) -> pd.DataFrame:
-    """TM appearances aggregated to player x club x league x season (candidates for §6.1)."""
+    """TM appearances aggregated to player x club x league x season."""
     by_comp = {lg.transfermarkt_id: lg.key for lg in leagues}
     first, last = season_window(min(seasons))[0], season_window(max(seasons))[1]
     comps = ", ".join(f"'{c}'" for c in by_comp)
@@ -186,7 +180,7 @@ def load_tm_roster(db_path: Path, leagues: list[League], seasons: list[str]) -> 
 
 
 def load_tm_players(db_path: Path, min_last_season: int, as_of: date) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """interim tm_players and tm_valuations (§4) from transfermarkt-datasets, market value as of `as_of`."""
+    """Interim tm_players and tm_valuations from transfermarkt-datasets, market value as of `as_of`."""
     players = query_transfermarkt(db_path, f"""
         SELECT player_id AS tm_id, name AS player_name, date_of_birth, sub_position,
                current_club_name AS current_club, current_club_id, contract_expiration_date
@@ -249,7 +243,7 @@ def parse_profiles(profiles: list[dict], as_of: date) -> tuple[pd.DataFrame, pd.
 def fit_value_ratio(
     pairs: pd.DataFrame, tm_vals: pd.DataFrame, fm_vals: pd.DataFrame, as_of: date, max_gap_days: int
 ) -> dict:
-    """Transfermarkt / SciSports value ratio on players in both sources, compared on the same date (§15).
+    """Transfermarkt / SciSports value ratio on players in both sources, compared on the same date.
 
     pairs: fotmob_id, tm_id. For each pair: latest TM value on or before `as_of` (date d) against the latest
     FotMob value on or before d, if no more than `max_gap_days` older. Returns the median ratio and spread.
@@ -282,7 +276,7 @@ def choose_gap_fill_ids(
     id_map: pd.DataFrame, tm_players: pd.DataFrame, gap_ids: set[str], profile_ids: set[str], as_of: date,
     max_gap_days: int,
 ) -> set[str]:
-    """Gap-league players described by their FotMob profile instead of Transfermarkt (§15).
+    """Gap-league players described by their FotMob profile instead of Transfermarkt.
 
     Unmatched players, plus TM matches whose latest TM value is more than `max_gap_days` before `as_of`
     (Transfermarkt stops updating players who leave its leagues). Only players with a profile qualify.

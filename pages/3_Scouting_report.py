@@ -1,5 +1,6 @@
-"""Scouting report page: cached LLM report with fact-key chips and a faithfulness badge. Implements
-IMPLEMENTATION_GUIDE §9. Reports are generated only on request and only when the API key is set."""
+"""Scouting report page: cached LLM report with fact-key chips and a faithfulness badge.
+
+Reports are generated only on request and only when the API key is set."""
 
 import json
 

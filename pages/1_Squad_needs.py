@@ -1,4 +1,4 @@
-"""Squad needs page: need score per position group and its components. Implements IMPLEMENTATION_GUIDE §9."""
+"""Squad needs page: need score per position group and its components."""
 
 import json
 
@@ -57,7 +57,6 @@ bars = base.mark_bar(cornerRadiusEnd=4, height=22).encode(
              alt.Tooltip("age_risk:Q", title="Age risk", format=".1f"),
              alt.Tooltip("contract_risk:Q", title="Contract risk", format=".1f")],
 )
-# Palette secondary text per theme; st.context.theme can be unknown on first load -> mid grey readable on both.
 label_color = {"dark": "#c3c2b7", "light": "#52514e"}.get(st.context.theme.type, "#8f8e88")
 labels = base.mark_text(align="left", dx=6, color=label_color).encode(text="label:N")
 st.altair_chart((bars + labels).properties(height=36 * len(used) + 40), width="stretch")

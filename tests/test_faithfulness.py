@@ -1,4 +1,4 @@
-"""§7.1 faithfulness: tolerance, integers, missing fact keys, injected wrong number. No network."""
+"""Faithfulness: tolerance, integers, missing fact keys, injected wrong number. No network."""
 
 import pytest
 
@@ -26,7 +26,7 @@ GOOD = _report(
 
 def test_faithful_report_fully_verified():
     check = faithfulness.verify(GOOD, FACTS)
-    assert check["numbers"] == 6                     # 6.41, 91, 88.4, 20.0, 2640, 23; per 90 / season / 04 ignored
+    assert check["numbers"] == 6
     assert check["verified_rate"] == 1.0 and check["fully_verified"]
 
 
@@ -37,18 +37,18 @@ def test_extract_numbers_units_and_strings():
 
 def test_decimal_tolerance_and_integer_exactness():
     facts = [6.41, 20.0, 91.0, 0.58]
-    assert faithfulness.number_matches(6.5, False, facts)          # within 2% of 6.41
-    assert not faithfulness.number_matches(6.6, False, facts)      # 0.19 > max(0.05, 0.128)
-    assert faithfulness.number_matches(0.62, False, facts)         # within the 0.05 floor
+    assert faithfulness.number_matches(6.5, False, facts)
+    assert not faithfulness.number_matches(6.6, False, facts)
+    assert faithfulness.number_matches(0.62, False, facts)
     assert not faithfulness.number_matches(0.64, False, facts)
-    assert faithfulness.number_matches(20, True, facts)            # integer equal to 20.0
-    assert not faithfulness.number_matches(92, True, facts)        # integers must match exactly
-    assert not faithfulness.number_matches(6, True, facts)         # no rounding 6.41 -> 6
+    assert faithfulness.number_matches(20, True, facts)
+    assert not faithfulness.number_matches(92, True, facts)
+    assert not faithfulness.number_matches(6, True, facts)
 
 
 def test_injected_wrong_number_is_caught():
     bad = _report(
-        "Wins the ball back 7.9 times per 90 (91st percentile).",   # 6.41 replaced by an invented 7.9
+        "Wins the ball back 7.9 times per 90 (91st percentile).",
         "Completes 88.4% of passes.",
     )
     check = faithfulness.verify(bad, FACTS)
@@ -59,7 +59,7 @@ def test_injected_wrong_number_is_caught():
 def test_missing_fact_key_is_caught():
     check = faithfulness.verify(_report("Strong passer.", "Young.", keys=("stats.tackles.pct",)), FACTS)
     assert check["missing_fact_keys"] == ["stats.tackles.pct"] and not check["fully_verified"]
-    assert check["verified_rate"] == 1.0                            # no numbers at all
+    assert check["verified_rate"] == 1.0
 
 
 def test_summary_numbers_are_checked_too():

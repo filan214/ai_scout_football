@@ -1,4 +1,4 @@
-"""Streamlit entry point: shared sidebar, home page, navigation. Implements IMPLEMENTATION_GUIDE §9.
+"""Streamlit entry point: shared sidebar, home page, navigation.
 
 Run: streamlit run app.py
 """

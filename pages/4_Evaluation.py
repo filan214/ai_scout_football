@@ -1,4 +1,4 @@
-"""Evaluation page: faithfulness, backtest, sensitivity, league strength vs UEFA. Implements IMPLEMENTATION_GUIDE §9.
+"""Evaluation page: faithfulness, backtest, sensitivity, league strength vs UEFA.
 
 All numbers are read from data/processed/eval/*.json (written by `python pipeline.py --stage eval`).
 """
@@ -32,7 +32,6 @@ if faith and bt:
     st.info(comparison + f" Median market values: model €{model['median_market_value_m']:.0f}m; "
             f"baseline €{naive['median_market_value_m']:.0f}m. One season pair cannot establish future results.")
 
-# --- faithfulness
 st.header("1. Can we trust the report numbers?")
 access = ui.eval_json("fallback_probe")
 if access:
@@ -55,7 +54,6 @@ if faith:
                  f"{faith.get('tokens', {}).get('total', 'n/a')} tokens for all reports.")
         st.write("Integers must match exactly; decimals may differ by max(0.05, 2%).")
 
-# --- backtest
 st.header("2. Did past picks perform well a season later?")
 if bt:
     st.write(f"We built shortlists using {bt['season_n']} data, then measured those players in "
@@ -92,7 +90,6 @@ if bt:
         with st.expander("See the backtest chart"):
             st.image(image, width="stretch")
 
-# --- sensitivity
 sens = ui.eval_json("sensitivity")
 st.header("3. Do small scoring changes reshuffle the shortlist?")
 if sens:
@@ -114,7 +111,6 @@ if sens:
         st.caption("Target = the saved evaluation brief; league High/Medium = those priority groups "
                    "across the 20 Premier League clubs.")
 
-# --- league strength vs UEFA
 val = ui.eval_json("league_strength_validation")
 st.header("4. Does the league adjustment reflect wider results?")
 if val and val.get("status") == "ok":
@@ -141,7 +137,6 @@ if val and val.get("status") == "ok":
 elif val:
     st.warning(f"UEFA coefficients were unavailable at the last run: {val.get('error', '')}")
 
-# --- need calibration
 st.header("5. Need calibration")
 calibration = ui.eval_json("need_calibration")
 if calibration:

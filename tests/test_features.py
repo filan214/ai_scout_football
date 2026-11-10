@@ -23,12 +23,11 @@ def test_league_strength_median_log_index_and_factor():
     squads = pd.DataFrame({
         "league": ["rich"] * 3 + ["mid"] * 3 + ["poor"] * 3,
         "team_id": list("abcdefghi"),
-        # one rich outlier, one club without values
         "squad_value_eur": [100e6, 400e6, 9_000e6, 50e6, 60e6, 70e6, 10e6, 10e6, 0.0],
     })
     out = features.league_strength(squads, floor=0.6).set_index("league")
-    assert out.loc["rich", "median_log_squad_value"] == pytest.approx(np.log(400e6))   # median, not the 9bn outlier
-    assert out.loc["poor", "clubs"] == 2                                              # zero-value club skipped
+    assert out.loc["rich", "median_log_squad_value"] == pytest.approx(np.log(400e6))
+    assert out.loc["poor", "clubs"] == 2
     assert (out.loc["rich", "index_0_100"], out.loc["poor", "index_0_100"]) == (100.0, 0.0)
     expected_mid = 100 * (np.log(60e6) - np.log(10e6)) / (np.log(400e6) - np.log(10e6))
     assert out.loc["mid", "index_0_100"] == pytest.approx(expected_mid)
@@ -48,7 +47,7 @@ def settings():
 
 
 def _perf(rows):
-    """rows: (fotmob_id, league, minutes, matches, tackles_total, pass_pct)."""
+    """Rows: (fotmob_id, league, minutes, matches, tackles_total, pass_pct)."""
     return pd.DataFrame([
         {"league": lg, "season": "2025-26", "fotmob_id": fid, "player_name": fid, "team_id": "1", "team_name": "T",
          "minutes": m, "matches": n, "fotmob_position": "34", "tackles": t, "accurate_passes_pct": pp}
@@ -72,23 +71,23 @@ def test_build_player_season_p90_adj_shares_and_profile(settings):
                League(key="y", name="Y", tier=2, fotmob_id=2, transfermarkt_id="Y1", matches_per_season=20)]
     ps = features.build_player_season(perf, id_map, tm_players, tm_vals, team_stats, strength, leagues, settings,
                                       "2025-26", date(2026, 7, 6)).set_index("fotmob_id")
-    assert ps.loc["a", "tackles_p90"] == pytest.approx(2.0)               # 40 / 1800 × 90 (raw, unadjusted)
-    assert ps.loc["a", "tackles_adj"] == pytest.approx(2.0 * 1.0 * 0.5 / 0.4)   # 60% possession side: × 1.25
-    assert ps.loc["b", "tackles_adj"] == pytest.approx(1.0 * 0.6 * 0.5 / 0.6)   # factor 0.6, 40% possession
-    assert ps.loc["b", "accurate_passes_pct_adj"] == 80.0                 # rate stat copied, not adjusted
+    assert ps.loc["a", "tackles_p90"] == pytest.approx(2.0)
+    assert ps.loc["a", "tackles_adj"] == pytest.approx(2.0 * 1.0 * 0.5 / 0.4)
+    assert ps.loc["b", "tackles_adj"] == pytest.approx(1.0 * 0.6 * 0.5 / 0.6)
+    assert ps.loc["b", "accurate_passes_pct_adj"] == 80.0
     assert ps.loc["a", "minutes_share"] == pytest.approx(1800 / (38 * 90))
     assert ps.loc["b", "matches_share"] == pytest.approx(0.5)
-    assert ps.loc["a", "market_value_m"] == 3.0                           # latest value on or before as_of
+    assert ps.loc["a", "market_value_m"] == 3.0
     assert (ps.loc["a", "age"], ps.loc["b", "age"]) == (25, 35)
     assert ps.loc["a", "contract_months_left"] == pytest.approx(12.0, abs=0.1)
-    assert ps.loc["b", "contract_months_left"] == 0                       # expired contract clipped at 0
-    assert pd.isna(ps.loc["c", "contract_months_left"])                   # unknown stays unknown
+    assert ps.loc["b", "contract_months_left"] == 0
+    assert pd.isna(ps.loc["c", "contract_months_left"])
     assert ps.loc["a", "qualifies"] and ps.loc["b", "qualifies"]
-    assert not ps.loc["c", "qualifies"]                                   # goalkeeper (and < half the matches)
+    assert not ps.loc["c", "qualifies"]
 
 
 def _ps(rows):
-    """rows: (league, position_group, qualifies, xg_p90, npxg_p90)."""
+    """Rows: (league, position_group, qualifies, xg_p90, npxg_p90)."""
     return pd.DataFrame([{"league": lg, "position_group": g, "qualifies": q, "xg_p90": x, "xg_adj": x,
                           "shots_p90": s, "shots_adj": s} for lg, g, q, x, s in rows])
 
@@ -97,9 +96,9 @@ def test_coverage_check_drops_low_coverage_and_uses_fallback():
     ps = _ps([("a", "ST", True, 0.5, 2.0)] * 19 + [("a", "ST", True, 0.4, np.nan)]
              + [("b", "ST", True, 0.3, 1.0)] * 10 + [("b", "ST", False, np.nan, np.nan)] * 5)
     final, cov = features.coverage_check(ps, {"ST": ["npxg", "shots", "xg"]}, {"npxg": "xg"}, 0.95, 4)
-    assert cov.loc["shots", "a"] == pytest.approx(0.95) and cov.loc["xg", "b"] == 1.0   # non-qualifying ignored
+    assert cov.loc["shots", "a"] == pytest.approx(0.95) and cov.loc["xg", "b"] == 1.0
     assert cov.loc["npxg"].tolist() == [0.0, 0.0]
-    assert final == {"ST": ["xg", "shots"]}                                           # npxg -> xg once, shots kept
+    assert final == {"ST": ["xg", "shots"]}
 
     final, _ = features.coverage_check(ps, {"ST": ["shots"]}, {}, 0.96, 1)
     assert final == {"ST": []}
@@ -110,9 +109,9 @@ def test_add_percentiles_within_group_among_qualifying():
               ("a", "CB", True, 0.9, 0.0), ("a", "ST", False, 0.9, 9.0)])
     out = features.add_percentiles(ps, ["xg", "shots"])
     assert out["xg_pct"].tolist()[:3] == pytest.approx([100 / 3, 100, 200 / 3])
-    assert out.loc[3, "xg_pct"] == 100                                    # alone in its group
-    assert np.isnan(out.loc[4, "xg_pct"])                                 # not qualifying
-    assert out["shots_pct"].tolist()[:2] == pytest.approx([50, 50])       # ties share the average rank
+    assert out.loc[3, "xg_pct"] == 100
+    assert np.isnan(out.loc[4, "xg_pct"])
+    assert out["shots_pct"].tolist()[:2] == pytest.approx([50, 50])
 
 
 def _frozen_season() -> pd.DataFrame:
@@ -138,17 +137,16 @@ def test_live_player_season_overlays_club_value_age_and_contract():
     out = features.live_player_season(_frozen_season(), squads, contracts, date(2026, 11, 10)).set_index(
         ["fotmob_id", "league"])
     stay, move, gone = out.loc[("stay", "pl")], out.loc[("move", "ll")], out.loc[("gone", "pl")]
-    # known team keeps the frozen (Transfermarkt) name; an unknown team gets FotMob's
     assert (stay["current_club"], move["current_club"]) == ("Club Ten FC", "New Club")
     assert out.loc[("move", "pl"), "current_league"] == "pl" and move["current_league"] == "pl"
     assert pd.isna(gone["current_club"]) and gone["club_status"] == "not in tracked squads"
     assert (stay["market_value_m"], stay["value_source"]) == (12.0, "scisports_live")
     assert stay["value_date"] == pd.Timestamp("2026-11-10")
-    assert (move["market_value_m"], move["value_source"]) == (20.0, "frozen")   # no live value listed
+    assert (move["market_value_m"], move["value_source"]) == (20.0, "frozen")
     assert (gone["market_value_m"], gone["age"]) == (30.0, 30)
     assert (stay["age"], move["age"]) == (25, 22)
-    assert stay["contract_months_left"] == pytest.approx(31.6, abs=0.1)       # refetched contract
-    assert move["contract_months_left"] == 0                                    # frozen date, recounted
+    assert stay["contract_months_left"] == pytest.approx(31.6, abs=0.1)
+    assert move["contract_months_left"] == 0
     assert gone["contract_months_left"] == pytest.approx(19.6, abs=0.1)
 
 

@@ -218,7 +218,7 @@ def evaluate_variant(name, p24, p25, stats, s):
     s = s.model_copy(update={"position_stats": stats})
     path = OUT / (name + ".json")
     if path.exists():
-        return read(path)  # resume saved results; never repeat a completed evaluation
+        return read(path)
     nd = pd.concat([needs.compute_all_needs(p25, s.model_copy(update={"ambition": a}))
                     for a in ("survive", "midtable", "top4", "title")], ignore_index=True)
     played = sources.load_club_games(transfermarkt_db_path(), "GB1", 2025)
