@@ -19,3 +19,10 @@ __pycache__/
 .pytest_tmp/
 .ruff_cache/
 *.part
+
+# Unedited browser recording takes and temporary QA images
+docs/demo/raw/
+docs/demo/walkthrough-raw.webm
+docs/demo/preview.png
+docs/demo/*-preview.png
+docs/demo/recording-error.png

@@ -2,18 +2,21 @@
 
 **From a squad weakness to a shortlist you can inspect.** AI Scout helps explore where a Premier League club needs reinforcement, which players fit its brief, and why. It covers players from 10 European leagues in a five-page Streamlit dashboard.
 
-> **Project status:** Local app updated; need calibration has an open failed check and new report generation is blocked by gateway access. A public demo has not been deployed.
+> **Project status:** Available locally on `main`. The app includes Candidate A need scoring, evidence coverage, upgrade checks, and 20 regenerated West Ham scouting reports. Four of five need-calibration checks pass; the remaining failure is documented below. Public deployment is pending.
 
-[![Watch the AI Scout portfolio walkthrough](docs/demo/thumbnail.png)](docs/demo/ai-scout-portfolio-demo.mp4)
+[![Watch the silent AI Scout walkthrough](docs/demo/silent-thumbnail.png)](docs/demo/ai-scout-silent-walkthrough.mp4)
 
-[Watch the 2-minute narrated walkthrough](docs/demo/ai-scout-portfolio-demo.mp4). It captures the previous dashboard version and its historical evaluation, before the evidence/need update. Current behavior and results are documented below.
+**[Watch the silent portfolio walkthrough](docs/demo/ai-scout-silent-walkthrough.mp4)** — a 1080p recording of the running Streamlit app, with no narration, music, or audio track. Follow West Ham from ambition selection through squad needs, DM/FB targets, cited scouting reports, and evaluation. [Recording details and chapters](docs/demo/WALKTHROUGH.md).
+
+The [archived narrated demo](docs/demo/ai-scout-portfolio-demo.mp4) shows the earlier dashboard and historical results.
 
 ## Explore the product
 
-1. **[Squad needs](docs/img/app_needs.png):** Choose a Premier League club and ambition level; see which positions need attention and what drives each score.
-2. **[Player targets](docs/img/app_targets.png):** Set a budget and age range; compare candidates against the club's position-specific gaps.
-3. **[Scouting report](docs/img/app_scouting_report.png):** Read a concise, evidence-cited summary, strengths, and risks for a shortlisted player.
-4. **[Evaluation](docs/img/app_evaluation.png):** Inspect report faithfulness, historical picks, sensitivity, and league-strength validation.
+1. **Home:** Set the recruitment brief: club, ambition, market-value limit, and age range.
+2. **Squad needs:** Inspect quality shortfall, depth, age and contract urgency, ambition benchmarks, and rated-minute coverage. Grey badges identify insufficient evidence.
+3. **Player targets:** Compare position-specific fit, upgrade margin against the current best rated regular, and ambition-benchmark warnings.
+4. **Scouting report:** Read a cached summary, strengths, and risks with fact-key citations and verification results.
+5. **Evaluation:** Inspect need calibration, report faithfulness, backtesting, sensitivity, league strength, and the frozen quality experiment.
 
 The analytics make the decisions. Deterministic pandas functions calculate needs, rankings, and verdicts; the LLM only explains a supplied fact sheet. Its numeric claims and cited fact keys are checked before a report is shown.
 
@@ -33,7 +36,7 @@ The current run uses 2025–26 statistics and the 2026-07-06 squad/value snapsho
 | Stability | Mean league top-ten Jaccard across ten variants 0.856 (previously 0.849); floor −0.1 worsened from 0.843 to 0.656. |
 | League-strength check | UEFA five-season Pearson 0.933 / Spearman 0.867 across nine leagues. ClubElo's single retry returned 502; its correlation is unavailable. |
 
-No parameters were tuned after seeing acceptance results. The work remains uncommitted because calibration and new live-report requirements have not all passed. Backtest selection grew from 400 to 439 picks, so the before/after figures are pipeline comparisons over different selections, not paired causal improvements.
+No parameters were tuned after seeing acceptance results. The completed implementation and experiment are committed on `main`; the failed calibration check remains an explicit limitation. Backtest selection grew from 400 to 439 picks, so the before/after figures are pipeline comparisons over different selections, not paired causal improvements. Validation: **93 tests passed**, Ruff clean, and all five Streamlit pages passed checks with and without report access.
 
 ![Backtest of model and naive picks](docs/img/backtest.png)
 
@@ -57,7 +60,7 @@ League-adjusted player features             Inspect player facts and cached repo
 Processed data → needs → rankings → grounded reports → evaluation
 ```
 
-The app reads prepared files from `data/processed/`; it does not scrape during a session. Changing the brief recomputes needs and rankings with the same deterministic functions used by the offline pipeline. Reports are generated from a bounded fact sheet, checked against it, and cached by a hash of the facts, prompt version, and model.
+The app reads prepared files from `data/processed/`; it does not scrape during a session. Changing the brief recomputes needs and rankings with the same deterministic functions used by the offline pipeline. Reports are generated from a bounded fact sheet, checked against it, and cached by a hash of the facts, prompt text, prompt version, and model.
 
 ### Data and decisions
 
@@ -79,7 +82,15 @@ Weights, thresholds, and league settings live in [`config/settings.yaml`](config
 
 ## Run locally
 
-Requires Windows PowerShell and Python 3.11. This working copy has prepared `data/processed/` files and cached `data/reports/` reports, so you can launch the dashboard without an API key or a new ingest:
+Requires Python 3.11. The commands below use Windows PowerShell. This working copy includes prepared `data/processed/` files and cached `data/reports/` reports, so you can launch the dashboard without an API key or a new ingest.
+
+If the project environment is already installed:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+For first-time setup:
 
 ```powershell
 py -3.11 -m venv .venv
@@ -88,7 +99,11 @@ python -m pip install -r requirements.txt
 python -m streamlit run app.py
 ```
 
-Open the local URL printed by Streamlit. The default brief is Arsenal FC, top-four ambition, a €60m market-value limit, and ages 18–27. Other briefs work for needs and targets; an uncached report needs `OPENROUTER_API_KEY`. Create your own key at [OpenRouter API keys](https://openrouter.ai/settings/keys) and put it in the local .env. The configured free router requires no top-up; current free limits are 50 requests/day and 20/minute, with failed attempts also counting. Paid fallbacks are disabled and report requests enforce a zero-price cap. [Official free-model details](https://openrouter.ai/collections/free-models). The router may choose different free models; each saved report records the model that answered. New faithfulness results must be measured after generation.
+Open the local URL printed by Streamlit, normally **http://localhost:8501**. The default brief is Arsenal FC, top-four ambition, a €60m market-value limit, and ages 18–27.
+
+For the portfolio case study, select **West Ham United → title**, keeping the €60m limit and ages 18–27. Explore needs, compare DM and FB targets, open cached reports for Equi Fernández and Hugo Bueno, then inspect Evaluation. DM scores **58.5** and FB **35.7**; ST and AM carry insufficient-evidence warnings. Switch ambition to `survive` to see how the recruitment brief changes the scores, then return to `title` for the cached reports.
+
+Other briefs work for needs and targets; an uncached report needs `OPENROUTER_API_KEY`. Create your own key at [OpenRouter API keys](https://openrouter.ai/settings/keys) and put it in the local `.env`. The app uses `openrouter/free`, disables paid fallbacks, and enforces a zero-price cap on report requests. Provider quotas and availability still apply; see [official free-model details](https://openrouter.ai/collections/free-models). The router may choose different free models; each saved report records the model that answered. The completed 20-report batch used approximately **113,072 tokens** and verified all 278 numeric claims. This verifies numbers and citation keys; it does not establish the correctness of every interpretation or unit description.
 
 Run `python scripts/check_llm_access.py` for a single minimal access check. Restart Streamlit after changing the key. For deployment, add `OPENROUTER_API_KEY` to Streamlit Cloud secrets yourself; do not publish the key.
 
