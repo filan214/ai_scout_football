@@ -20,9 +20,9 @@ __pycache__/
 .ruff_cache/
 *.part
 
-# Unedited browser recording takes and temporary QA images
-docs/demo/raw/
-docs/demo/walkthrough-raw.webm
-docs/demo/preview.png
-docs/demo/*-preview.png
-docs/demo/recording-error.png
+# Local-only working documents and demo recordings (kept on disk, not published)
+PRD.md
+IMPLEMENTATION_GUIDE.md
+CLAUDE.md
+HANDOFF.md
+docs/demo/

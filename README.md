@@ -4,12 +4,6 @@
 
 > **Project status:** Available locally on `main`. The app includes Candidate A need scoring, evidence coverage, upgrade checks, and 20 regenerated West Ham scouting reports. Four of five need-calibration checks pass; the remaining failure is documented below. Public deployment is pending.
 
-[![Watch the silent AI Scout walkthrough](docs/demo/silent-thumbnail.png)](docs/demo/ai-scout-silent-walkthrough.mp4)
-
-**[Watch the silent portfolio walkthrough](docs/demo/ai-scout-silent-walkthrough.mp4)** — a 1080p recording of the running Streamlit app, with no narration, music, or audio track. Follow West Ham from ambition selection through squad needs, DM/FB targets, cited scouting reports, and evaluation. [Recording details and chapters](docs/demo/WALKTHROUGH.md).
-
-The [archived narrated demo](docs/demo/ai-scout-portfolio-demo.mp4) shows the earlier dashboard and historical results.
-
 ## Explore the product
 
 1. **Home:** Set the recruitment brief: club, ambition, market-value limit, and age range.
@@ -70,7 +64,7 @@ The app reads prepared files from `data/processed/`; it does not scrape during a
 - **Targets:** Eligible players match the position, age, and market-value brief. They must beat the best current rated regular by ≥5 weighted percentile points. Fit combines need-weighted performance, age, and value; title/top4 benchmark deficits are flagged. The ranking and verdict are computed, not authored by the LLM.
 - **Reports:** The LLM writes a summary, strengths, and risks from a fact sheet. Numeric claims must match facts and cited keys must exist; a failed report is retried once and then flagged.
 
-Weights, thresholds, and league settings live in [`config/settings.yaml`](config/settings.yaml). The decision code is in [`src/scout/needs.py`](src/scout/needs.py), [`src/scout/rank.py`](src/scout/rank.py), and [`src/scout/report.py`](src/scout/report.py). For the detailed design and documented deviations, see [`PRD.md`](PRD.md) and [`IMPLEMENTATION_GUIDE.md`](IMPLEMENTATION_GUIDE.md).
+Weights, thresholds, and league settings live in [`config/settings.yaml`](config/settings.yaml). The decision code is in [`src/scout/needs.py`](src/scout/needs.py), [`src/scout/rank.py`](src/scout/rank.py), and [`src/scout/report.py`](src/scout/report.py).
 
 ## Limitations
 
