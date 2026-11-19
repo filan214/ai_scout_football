@@ -6,9 +6,7 @@
 
 ## Demo
 
-[![AI Scout walkthrough: home page and recruitment brief](docs/demo/silent-thumbnail.png)](docs/demo/ai-scout-silent-walkthrough.mp4)
-
-**[Watch the 4:25 walkthrough](docs/demo/ai-scout-silent-walkthrough.mp4)** (MP4, 1920 × 1080, 18 MB, no audio). It is a screen recording of the real Streamlit app, driven by Playwright, with nothing staged or edited into the UI. The brief is West Ham United, title ambition, up to €60m market value, ages 18–27. It was recorded on 2026-10-31 with the 2026-07-06 squad snapshot, so it predates the live squads and league table.
+**[Download the 4:25 walkthrough](docs/demo/ai-scout-silent-walkthrough.mp4?raw=true)** (MP4, 1920 × 1080, 18 MB, no audio). It is a screen recording of the real Streamlit app. The brief is West Ham United, title ambition, up to €60m market value, ages 18–27. It was recorded on 2026-10-31 with the 2026-07-06 squad snapshot, so it predates the live squads and league table.
 
 | Time | Section |
 |---|---|
