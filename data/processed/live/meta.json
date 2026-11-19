@@ -1,5 +1,5 @@
 {
-  "checked_on": "2026-11-10",
+  "checked_on": "2026-11-16",
   "fotmob_season": "2026/2027",
   "stats_season": "2025-26",
   "frozen_as_of": "2026-07-06",
@@ -15,7 +15,7 @@
     "championship": 24,
     "super_lig": 18
   },
-  "squad_players": 5525,
+  "squad_players": 5342,
   "target_league_found_share": 0.9013,
   "target_league_clubs": [
     "AFC Bournemouth",
@@ -42,11 +42,11 @@
   "contracts_fetched": 492,
   "target_league_matches_played": 10,
   "qualifying_value_source": {
-    "scisports_live": 2074,
-    "frozen": 458
+    "scisports_live": 2073,
+    "frozen": 459
   },
   "qualifying_club_status": {
-    "live": 2084,
-    "not in tracked squads": 448
+    "live": 2082,
+    "not in tracked squads": 450
   }
 }
