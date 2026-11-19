@@ -21,4 +21,6 @@ PRD.md
 IMPLEMENTATION_GUIDE.md
 CLAUDE.md
 HANDOFF.md
-docs/demo/
+docs/demo/*
+!docs/demo/ai-scout-silent-walkthrough.mp4
+!docs/demo/silent-thumbnail.png

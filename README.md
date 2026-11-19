@@ -4,6 +4,22 @@
 
 > **Project status:** Available locally on `main`. The app includes Candidate A need scoring, evidence coverage, upgrade checks, and 20 regenerated West Ham scouting reports. Four of five need-calibration checks pass; the remaining failure is documented below. Public deployment is pending.
 
+## Demo
+
+[![AI Scout walkthrough: home page and recruitment brief](docs/demo/silent-thumbnail.png)](docs/demo/ai-scout-silent-walkthrough.mp4)
+
+**[Watch the 4:25 walkthrough](docs/demo/ai-scout-silent-walkthrough.mp4)** (MP4, 1920 × 1080, 18 MB, no audio). It is a screen recording of the real Streamlit app, driven by Playwright, with nothing staged or edited into the UI. The brief is West Ham United, title ambition, up to €60m market value, ages 18–27. It was recorded on 2026-10-31 with the 2026-07-06 squad snapshot, so it predates the live squads and league table.
+
+| Time | Section |
+|---|---|
+| 0:00 | Home and recruitment brief |
+| 0:17 | Squad needs and ambition comparison |
+| 1:24 | DM and FB targets with upgrade checks |
+| 2:09 | Scouting reports and cited facts |
+| 3:07 | Evaluation: verification, backtest and stability |
+| 3:52 | Calibration limitation and frozen experiment |
+| 4:15 | Return to the recruitment brief |
+
 ## Explore the product
 
 1. **Home:** Set the recruitment brief: club, ambition, market-value limit, and age range. In the Live view the ambition is pre-selected from the club's place in the current league table; you can change it.
